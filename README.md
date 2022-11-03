@@ -1,5 +1,9 @@
 # Whitewater_MN_sedimentation
-Whitewater Watershed (MN) sedimentation survey data and corresponding digitizing and landscape change analysis codes.
+Repository for Whitewater River Watershed (MN) sedimentation survey data and programs for data processing and analysis. Products towards a master's thesis. 
 
-# Author
-Jimmy Wood
+**Date of creation:** Fall 2022
+
+## Author
+Jimmy Wood, MS student
+
+University of Minnesota Twin Cities, Department of Earth & Environmental Sciences, St. Anthony Falls Laboratory, [MNiMORPH research group](https://mnimorph.science)
