@@ -4,6 +4,7 @@
 # ======================================================================================================================
 
 # SIGNAL START ---------------------------------------------------------------------------------------------------------
+import pandas as pd
 
 print('\n\033[1m' + 'START SEDIMENTATION ANALYSES!!!' + '\033[0m', '\n...\n')  # Displays string. Makes font bold and
 # adds new line(s).
@@ -14,26 +15,57 @@ print('\n\033[1m' + 'START SEDIMENTATION ANALYSES!!!' + '\033[0m', '\n...\n')  #
 
 # IMPORT MODULES -------------------------------------------------------------------------------------------------------
 
-import time, os  # Imports "Time and access conversions" and "Miscellaneous operating system interfaces". Enables use
+import time
+    #, os  # Imports "Time and access conversions" and "Miscellaneous operating system interfaces". Enables use
 # of various time–related functions and operating system dependent functionality.
+# import pandas as pd  # Imports "Python data analysis library" with alias. Enables DataFrame array functionality.
+from Cross_section_analyzer import *
+
 
 # START TIMER ----------------------------------------------------------------------------------------------------------
 
 startTime0 = time.time()  # Starts clock. Measures program run time.
 
-# ======================================================================================================================
-# PART 1: INITIALIZATION -----------------------------------------------------------------------------------------------
-# ======================================================================================================================
+# SET UP PARAMETERS ----------------------------------------------------------------------------------------------------
 
-# IMPORT MODULES -------------------------------------------------------------------------------------------------------
+# Data operations ------------------------------------------------------------------------------------------------------
 
-import time  # Imports time access and conversions module. Enables time related functions.
-import os  # Imports miscellaneous operating system interfaces module. Enables interaction with the computer's
-# operating system.
+# Calculate sediment thickness
+Depth = 0  # Defines variable as integer. Sets binary toggle for operation selection.
 
-# START TIMER ----------------------------------------------------------------------------------------------------------
+# Calculate sediment cross-sectional area
+Area = 0  # Defines variable as integer. Sets binary toggle for operation selection.
 
-startTime = time.time()  # Starts clock to measure program length.
+# Calculate sediment volume
+Volume = 0  # Defines variable as integer. Sets binary toggle for operation selection.
+
+# Calculate stream channel hydraulic geometry
+Hydraulic_geometry = 0  # Defines variable as integer. Sets binary toggle for operation selection.
+
+# Digitize cross-sections
+Digitize = 0  # Defines variable as integer. Sets binary toggle for operation selection.
+
+# Data selection -------------------------------------------------------------------------------------------------------
+
+# Survey ranges
+Range_start = 70
+Range_end = 71
+start=Range_start
+end=Range_end
+array_label='range'
+step=1
+
+forward_range(array_label,start,end,step)
+
+Survey_start = 4
+Survey_end = 3
+
+start= Survey_start
+end= Survey_end
+array_label = 'survey'
+step=-1
+
+reverse_range(array_label,start,end,step)
 
 # SET UP DIRECTORIES ---------------------------------------------------------------------------------------------------
 
@@ -58,43 +90,22 @@ lvl1_fldrs = [inpt_fldr, opt_fldr]  # Defines list. Inserts folder end paths int
 lvl2_fldrs = [xsctn_fldr, dgtz_fldr]  # Defines list. Inserts folder end paths into list to speed up directory creation
 # via loop.
 
+# mak drs
 for a in lvl1_fldrs:  # Begins loop. Loops through each element in list.
     for b in lvl2_fldrs:  # Begins loop. Loops through each element in list.
         lvl_paths = [a, a + b]  # Defines list. Inserts folder paths into list for each element combination in previous
         # lists.
         for c in lvl_paths:  # Begins loop. Loops through each element in list.
-            elm_index = lvl_paths.index(c) + 1  # Defines variable. Sets value based in list element index for display.
-            if not os.path.exists(c):  # Checks if directory does not exist. Skips step if directory exists.
-                os.mkdir(c)  # Creates directory if it does not exist.
-                print('New directory level', elm_index, '\033[0;32m' + c + '\033[0m', 'created')  # Displays string.
-                # Makes font green.
+            level = lvl_paths.index(c) + 1  # Defines variable. Sets value based in list element index for display.
+            path = c
+            create_folder(level, path)
 
-# SET UP PARAMETERS ----------------------------------------------------------------------------------------------------
+#make dataframe
+path = '/Users/jimmywood/github/Whitewater_MN_sedimentation/PyCharm_Venv/Input/Cross_sectional_analysis/Trout_Creek_survey_data.csv'
+stream_channel = 'TROUT CREEK! '
+upload_csv(path,stream_channel)
 
-# Data operations ------------------------------------------------------------------------------------------------------
-
-# Calculate sediment thickness
-Depth = 0  # Defines variable as integer. Sets binary toggle for operation selection.
-
-# Calculate sediment cross-sectional area
-Area = 0  # Defines variable as integer. Sets binary toggle for operation selection.
-
-# Calculate sediment volume
-Volume = 0  # Defines variable as integer. Sets binary toggle for operation selection.
-
-# Calculate stream channel hydraulic geometry
-Hydraulic_geometry = 0  # Defines variable as integer. Sets binary toggle for operation selection.
-
-# Digitize cross-sections
-Digitize = 0  # Defines variable as integer. Sets binary toggle for operation selection.
-
-# Data selection -------------------------------------------------------------------------------------------------------
-
-# Survey ranges
-Range_start = 1
-Range_end = 2
+print(Cross_section_analyzer.df)
 
 
-# ======================================================================================================================
-# PART 2: FUNCTION CALLING ---------------------------------------------------------------------------------------------
-# ======================================================================================================================
+
