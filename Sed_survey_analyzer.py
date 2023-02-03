@@ -24,48 +24,46 @@ from Cross_section_analyzer import *
 
 # START TIMER ----------------------------------------------------------------------------------------------------------
 
-startTime0 = time.time()  # Starts clock. Measures program run time.
+strtTm0 = time.time()  # Starts clock. Measures program run time.
 
 # SET UP PARAMETERS ----------------------------------------------------------------------------------------------------
 
 # Data operations ------------------------------------------------------------------------------------------------------
 
 # Calculate sediment thickness
-Depth = 0  # Defines variable as integer. Sets binary toggle for operation selection.
+Dpth = 0  # Defines variable as integer. Sets binary toggle for operation selection.
 
 # Calculate sediment cross-sectional area
 Area = 0  # Defines variable as integer. Sets binary toggle for operation selection.
 
 # Calculate sediment volume
-Volume = 0  # Defines variable as integer. Sets binary toggle for operation selection.
+Volm = 0  # Defines variable as integer. Sets binary toggle for operation selection.
 
 # Calculate stream channel hydraulic geometry
-Hydraulic_geometry = 0  # Defines variable as integer. Sets binary toggle for operation selection.
+Hydr_geom = 0  # Defines variable as integer. Sets binary toggle for operation selection.
 
 # Digitize cross-sections
-Digitize = 0  # Defines variable as integer. Sets binary toggle for operation selection.
+Dgtz = 0  # Defines variable as integer. Sets binary toggle for operation selection.
 
 # Data selection -------------------------------------------------------------------------------------------------------
 
 # Survey ranges
-Range_start = 70
-Range_end = 71
-start=Range_start
-end=Range_end
-array_label='range'
+rng_strt = 70
+rng_end = 71
+start=rng_strt
+end=rng_end
 step=1
 
-forward_range(array_label,start,end,step)
+rgn_nums = forward_range(start,end,step)
 
-Survey_start = 4
-Survey_end = 3
+srvy_strt = 4
+srvy_end = 3
 
-start= Survey_start
-end= Survey_end
-array_label = 'survey'
+start= srvy_strt
+end= srvy_end
 step=-1
 
-reverse_range(array_label,start,end,step)
+srvy_nums = reverse_range(start,end,step)
 
 # SET UP DIRECTORIES ---------------------------------------------------------------------------------------------------
 
@@ -97,15 +95,44 @@ for a in lvl1_fldrs:  # Begins loop. Loops through each element in list.
         # lists.
         for c in lvl_paths:  # Begins loop. Loops through each element in list.
             level = lvl_paths.index(c) + 1  # Defines variable. Sets value based in list element index for display.
-            path = c
-            create_folder(level, path)
+
+            create_folder(level, c)
 
 #make dataframe
 path = '/Users/jimmywood/github/Whitewater_MN_sedimentation/PyCharm_Venv/Input/Cross_sectional_analysis/Trout_Creek_survey_data.csv'
-stream_channel = 'TROUT CREEK! '
-upload_csv(path,stream_channel)
+label = 'TROUT CREEK! '
+df_srvy_dt = upload_csv(path, label)
 
-print(Cross_section_analyzer.df)
+for a in rgn_nums:
+    for b in srvy_nums:
+        slice1 = a
+        slice2 = b
+        dataframe = df_srvy_dt
+        column1 = 'Range_num'
+        label1 = 'RANGE NUMBER'
+        column2 = 'Srvy_num'
+        label2 = 'SURVEY NUMBER'
+        df_srvy = slice_DataFrame_rows2(dataframe, column1,slice1,label1,column2,slice2,label2)
 
+        column1='Offset_ft'
+        label1 = 'OFFSET'
+        dataframe=df_srvy
 
+        df_offst = slice_DataFrame_column1(dataframe,column1,label1)
 
+        df_elvtn = slice_DataFrame_column1(df_srvy, 'Elv_lcl_ft', 'ELEVATION')
+
+        number=1
+        figure_size=(5,3)
+        x=df_offst
+        y=df_srvy
+        label=1994
+        color='Blue'
+        marker='o'
+        alpha=0.9
+        xlabel='Survey offset (ft)'
+        fontsize_axis=8
+        ylabel='Local elevation (ft)'
+        title='Survey cross-section'
+        pause=0
+        fig1 = plot_line(1, (5,3), df_offst, df_elvtn, 1994, 'Cyan', marker, alpha, xlabel, fontsize_axis, ylabel, title,pause)
