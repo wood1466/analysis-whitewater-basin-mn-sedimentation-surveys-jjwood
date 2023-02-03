@@ -1,1 +1,1 @@
-This will be the documentation for associated program.
+This will be the documentation file for associated primary program.
