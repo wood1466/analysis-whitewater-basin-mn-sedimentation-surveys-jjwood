@@ -19,32 +19,6 @@ import pandas as pd, numpy as np, matplotlib.pyplot as plt  # Imports "Python da
 # PART 1: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
 # ======================================================================================================================
 # initialization general
-def create_folder(level, path):
-    if not os.path.exists(path):
-        os.mkdir(path)
-        print('New directory level', level, '\033[0;32m' + path + '\033[0m', 'created')
-
-def upload_csv(path, label):
-    csv_data = pd.read_csv(path)
-    df = pd.DataFrame(csv_data)
-    pd.set_option('display.max_columns', None)
-    print('\033[1m' + 'UPLOADED .CSV DATA FOR ' + label + '\033[0m', '\n...\n', df, '\n')  # Displays objects.
-    # Makes font bold and adds new lines.
-    return df
-
-
-def forward_range(start, end, step):
-    end = end + 1
-    frwd_rng = np.arange(start, end, step)
-    print(frwd_rng)
-    return frwd_rng
-
-def reverse_range(start, end, step):
-    end = end - 1
-    rev_rng = np.arange(start, end, step)
-    print(rev_rng)
-    return rev_rng
-
 def slice_DataFrame_rows2(dataframe, column1, slice1, label1, column2, slice2, label2):
     df_slc_r2=dataframe[(dataframe[column1] ==slice1) & (dataframe[column2] ==slice2)]
     print('\033[1m'+ label1 + ' ' + str(slice1) +' '+ label2 +' '+str(slice2)+ ' DATA'+'\033[0m','\n..\n', df_slc_r2,'\n')
@@ -68,3 +42,12 @@ def plot_line(number, figure_size, x, y, label, color, marker, alpha, xlabel, fo
         plt.pause(2)  # Displays and updates active figure before pausing for interval seconds.
     elif pause == 0:
         plt.show()
+
+def slice_DataFrame_rows2(dataframe, column1, rows1, label1, column2, rows2,
+                          label2):  # Defines function. For slicing DataFrame with row value selection in two columns.
+    df_slc_r2 = dataframe[
+        (dataframe[column1] == rows1) & (dataframe[column2] == rows2)]  # Defines format of function.
+    if chck == 1:  # Conditional statement.
+        print('\033[1m' + label1 + ' ' + str(rows1) + ' ' + label2 + ' ' + str(rows2) + ' DATA' + '\033[0m',
+              '\n..\n', df_slc_r2, '\n')  # Displays objects.
+    return df_slc_r2  # Ends execution of function.
