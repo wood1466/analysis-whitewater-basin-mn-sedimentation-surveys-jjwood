@@ -18,6 +18,18 @@ import pandas as pd, numpy as np, matplotlib.pyplot as plt  # Imports "Python da
 # ======================================================================================================================
 # PART 1: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
 # ======================================================================================================================
+# location = ['upper left', 'upper right', 'lower left', 'lower right', 'upper center', 'lower center', 'center left', 'center right', 'center', 'best']  # Defines list. Complete list of matplotlib legend placements.
+ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
+# Sets muted Tol colorblind friendly palette in color hex color codes for indigo, cyan, teal, green, olive, sand, rose, wine, purple, and pale grey.
+# 2008 = 0, 1994 = 3, 1978 = 2, 1975 = 4, 1964 = 5, 1939 = 6, 1850S = 7.
+# tol_vibrant = ['#0077BB', '#33BBEE', '#009988', '#EE7733', '#CC3311', '#EE3377', '#BBBBBB']  # Defines list. Sets
+# vibrant Tol colorblind friendly palette in color hex color codes for blue, cyan, teal, orange, red, magenta, grey.
+# marker_mpltlib = ['.', ',', 'o', 'v', '^', '<', '>',
+#                           '1', '2', '3', '4', '8',
+#                           's', 'p', 'P', '*', 'h', 'H', '+', 'x', 'X', 'D', 'd',
+#                           '|', '_', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ' ']  # Defines list. Complete list of matplotlib plot markers.
+
+
 # initialization general
 def slice_DataFrame_rows2(dataframe, column1, slice1, label1, column2, slice2, label2):
     df_slc_r2=dataframe[(dataframe[column1] ==slice1) & (dataframe[column2] ==slice2)]
