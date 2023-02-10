@@ -27,12 +27,20 @@ strtTm0 = time.time()  # Starts clock. Measures program run time.
 
 # Data operations ------------------------------------------------------------------------------------------------------
 
+Xsctns_1 = 1
+
+# Calculate channel hydraulic geometry
+Hydr_geom = 1  # Defines variable as integer. Sets binary toggle for operation selection.
+
+# Analyze subsequent cross-sections
+Xsctns_2 = 0
 # Calculate sediment thickness
-Hydr_geom = 1
-Dpth = 1  # Defines variable as integer. Sets binary toggle for operation selection.
-Plot = 1
-# Digitize survey data
-Dgtz = 0  # Defines variable as integer. Sets binary toggle for operation selection.
+Dpth = 0  # Defines variable as integer. Sets binary toggle for operation selection.
+
+# Plot data
+Xsctn_sngl = 0  # Defines variable as integer. Sets binary toggle for operation selection—plotting a single cross-section.
+Xsctn_dbl = 0
+Hydr_rad = 1
 
 # Data selection -------------------------------------------------------------------------------------------------------
 
@@ -41,44 +49,34 @@ rng_strt = 70  # Defines variable as integer. Sets starting range for analysis.
 rng_end = 73  # Defines variable as integer. Sets end range for analysis.
 
 # Range surveys
-srvy_strt = 4  # Defines variable as integer. Sets starting survey for analysis.
+srvy_strt = 5  # Defines variable as integer. Sets starting survey for analysis.
 srvy_end = 2  # Defines variable as integer. Sets end survey for analysis.
 
 # Data plotting --------------------------------------------------------------------------------------------------------
 
 # General format
-width = 4.5  # Defines variable as integer. Sets cross-sectional plot width.
-height = width * 1.618  # Defines variable as integer. Sets cross-sectional plot height.
-figure_size = (height, width)  # Defines object. Input for function.
-fontsize_ticks = 8  # Defines variable as integer. Sets font size for axes tick marks.
-fontsize_axis = 10  # Defines variable as integer. Sets font size for axis labels.
-label_pad = 10  # Defines variable as integer. Sets plot-axes label spacing.
+wdth = 4.5  # Defines variable as integer. Sets cross-sectional plot width.
+hght = wdth * 1.618  # Defines variable as integer. Sets cross-sectional plot height.
+fig_sz = (hght, wdth)  # Defines object. Input for function.
+fntsz_tcks = 8  # Defines variable as integer. Sets font size for axes tick marks.
+fntsz_ax = 10  # Defines variable as integer. Sets font size for axis labels.
+lbl_pd = 10  # Defines variable as integer. Sets plot-axes label spacing.
 
 # Data display format
-ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
 tol_muted = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDD']  # Defines list.
-# Sets muted Tol colorblind friendly palette in color hex color codes for indigo, cyan, teal, green, olive, sand, rose, wine, purple, and pale grey.
-# 2008 = 0, 1994 = 3, 1978 = 2, 1975 = 4, 1964 = 5, 1939 = 6, 1850S = 7.
-tol_vibrant = ['#0077BB', '#33BBEE', '#009988', '#EE7733', '#CC3311', '#EE3377', '#BBBBBB']  # Defines list. Sets
-# vibrant Tol colorblind friendly palette in color hex color codes for blue, cyan, teal, orange, red, magenta, grey.
-marker_mpltlib = ['.', ',', 'o', 'v', '^', '<', '>',
-                          '1', '2', '3', '4', '8',
-                          's', 'p', 'P', '*', 'h', 'H', '+', 'x', 'X', 'D', 'd',
-                          '|', '_', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ' ']  # Defines list. Complete list of matplotlib plot markers.
-marker_mpltlib = ['o', 'v', '^', '<', '>', '8', 's', 'p', 'P', 'h', 'H', 'X', 'D', 'd', ' ']  # Defines list. Complete list of matplotlib plot markers.
-
-marker_size = 4  # Defines variable as integer. Sets plot marker size.
-line_width = 2  # Defines variable as integer. Sets plot line width.
+lin_wdth = 2  # Defines variable as integer. Sets plot line width.
+mrkr_mpltlib = ['o', 'v', '^', '<', '>', '8', 's', 'p', 'P', 'h', 'H', 'X', 'D', 'd', ' ']  # Defines list. Complete list of matplotlib plot markers.
+mrkr_sz = 4  # Defines variable as integer. Sets plot marker size.
 alpha = 0.5  # Defines variable as integer. Sets plotted object transparency.
 
 # Legend display format
-location = ['upper left', 'upper right', 'lower left', 'lower right', 'upper center', 'lower center', 'center left', 'center right', 'center', 'best']  # Defines list. Complete list of matplotlib legend placements.
-location = 'best'
-marker_scale = 2  # Defines variable as integer. Sets marker size on legend.
-frame_alpha = 0.7  # Defines variable as integer. Sets legend box transparency.
-label_spacing = 0.7  # Defines variable as integer. Sets legend object spacing.
+lctn = 'best'  # Defines variable as string. Sets legend location on plot.
+mrkr_scl = 2  # Defines variable as integer. Sets marker size on legend.
+frm_alpha = 0.7  # Defines variable as integer. Sets legend box transparency.
+lbl_spcng = 0.7  # Defines variable as integer. Sets legend object spacing.
 
-pause_length = 1
+# Display
+ps_lngth = 1  # Defines variable as integer. Sets pause length for display.
 
 # SET UP DIRECTORY -----------------------------------------------------------------------------------------------------
 
@@ -90,8 +88,7 @@ opt_fldr = 'Output'  # Defines variable as string. Sets name of new directory wh
 
 # Create folders -------------------------------------------------------------------------------------------------------
 
-lvl1_fldrs = [inpt_fldr, opt_fldr]  # Defines list. Inserts folder end paths into list to speed up directory creation
-# via loop.
+lvl1_fldrs = [inpt_fldr, opt_fldr]  # Defines list. Inserts folder end paths into list to speed up directory creation via loop.
 
 def create_folder(level, path):  # Defines function. For generating directory paths.
     if not os.path.exists(path):  # Checks if folder exists. Skips step if exists.
@@ -109,297 +106,449 @@ for a in lvl1_fldrs:  # Begins loop. Loops through each element in list.
 
 # UPLOAD DATA ----------------------------------------------------------------------------------------------------------
 
-def upload_csv(path, label):  # Defines function. For uploading .csv and conversion to DataFrame.
-    csv_data = pd.read_csv(path)  # Uploads .csv file.
-    df = pd.DataFrame(csv_data)  # Converts .csv file to DataFrame.
+def upload_csv(path, label, dsply):  # Defines function. For uploading .csv and conversion to DataFrame.
+    csv_data = pd.read_csv(path)  # Uploads .csv file. Input data.
+    df = pd.DataFrame(csv_data)  # Converts .csv file to DataFrame. For Python manipulation.
     pd.set_option('display.max_columns', None)  # Adjusts DataFrame format. Displays all DataFrame columns.
-    if chck == 1:  # Conditional statement.
+    if dsply == 1:  # Conditional statement. For display.
         print('\033[1m' + 'UPLOADED .CSV DATA FOR ' + label + '\033[0m', '\n...\n', df, '\n')  # Displays objects.
     return df  # Ends execution of function.
 
 inpt_fl = '/Users/jimmywood/github/Whitewater_MN_sedimentation/PyCharm_Venv/Input/Trout_Creek_survey_data.csv'  # Defines string. Sets file path.
-chck = 0  # Defines variable. For function display.
-df_chnnl = upload_csv(inpt_fl, 'TROUT CREEK ')  # Defines DataFrame. Calls function.
+
+df_chnnl = upload_csv(inpt_fl, 'TROUT CREEK ', 0)  # Defines DataFrame. Calls function.
 
 # SET DATA SELECTION LIMITS --------------------------------------------------------------------------------------------
 
 # Spatial --------------------------------------------------------------------------------------------------------------
 
-def forward_range(start, end, step, data_label):  # Defines function. For generating forward range array between two numbers.
+def forward_range(start, end, step, data_label, dsply):  # Defines function. For generating forward range array between two numbers.
     end = end + 1  # Defines variable. Sets end of range to include final input value.
     end_label = end - 1  # Defines variable. Sets label for display.
-    frwd_rng = np.arange(start, end, step)  # Defines format of function.
-    if chck == 1:  # Conditional statement.
+    frwd_rng = np.arange(start, end, step)  # Defines function format.
+    if dsply == 1:  # Conditional statement. For display.
         print(data_label, start, '&', end_label, ':', frwd_rng)  # Displays objects.
     return frwd_rng  # Ends execution of function.
 
-chck = 0  # Defines variable. For function display.
-rgn_nums = forward_range(rng_strt, rng_end, 1, 'Range number limits')  # Defines array. Calls function.
+rgn_nums = forward_range(rng_strt, rng_end, 1, 'Range number limits', 0)  # Defines array. Calls function.
 
 # Temporal -------------------------------------------------------------------------------------------------------------
 
-def reverse_range(start, end, step, data_label):  # Defines function. For generating forward range array between two numbers.
+def reverse_range(start, end, step, data_label, dsply):  # Defines function. For generating forward range array between two numbers.
     end = end - 1  # Defines variable. Sets end of range to include final input value.
     end_label = end + 1  # Defines variable. Sets label for display.
-    rev_rng = np.arange(start, end, step)  # Defines format of function.
-    if chck == 1:  # Conditional statement.
+    rev_rng = np.arange(start, end, step)  # Defines function format.
+    if dsply == 1:  # Conditional statement. For display.
         print(data_label, start, '&', end_label, ':', rev_rng, '\n')  # Displays objects.
     return rev_rng  # Ends execution of function.
 
-chck = 0  # Defines variable. For function display.
-srvy_nums = reverse_range(srvy_strt, srvy_end, -1, 'Survey number limits')  # Defines array. Calls function.
+srvy_nums = reverse_range(srvy_strt, srvy_end, -1, 'Survey number limits', 0)  # Defines array. Calls function.
 
 # SELECT DATA ----------------------------------------------------------------------------------------------------------
 
 # By field range -------------------------------------------------------------------------------------------------------
 
-for a in rgn_nums:  # Begins loop. Loops through range numbers.
+for a in rgn_nums:  # Begins loop for array. Loops through range numbers.
 
-    def slice_DataFrame_rows1(dataframe, column, row_value,
-                             label):  # Defines function. For DataFrame slicing by row value.
-        df_slc_r = dataframe[dataframe[column] == row_value]  # Defines format of function.
-        if chck == 1:  # Conditional statement.
-            print('\033[1m' + label + ' ' + str(row_value) + ' DATA' + '\033[0m',
-                  '\n..\n', df_slc_r, '\n')  # Displays objects.
+    def slice_DataFrame_rows1(dataframe, column, row_value, label, dsply):  # Defines function. For DataFrame slicing by single row value.
+        df_slc_r = dataframe[dataframe[column] == row_value]  # Defines function format.
+        if dsply == 1:  # Conditional statement. For display.
+            print('\033[1m' + label + ' ' + str(row_value) + ' DATA' + '\033[0m', '\n..\n', df_slc_r, '\n')  # Displays objects.
         return df_slc_r  # Ends execution of function.
 
-    chck = 0  # Defines variable. For function display.
-
-    df_rng = slice_DataFrame_rows1(df_chnnl, 'Range_num', a, 'RANGE NUMBER')
+    df_rng = slice_DataFrame_rows1(df_chnnl, 'Range_num', a, 'RANGE NUMBER', 0)  # Defines DataFrame. Calls function.
 
     # By range survey --------------------------------------------------------------------------------------------------
 
     for b in srvy_nums:  # Begins loop. Loos through range numbers.
-        def slice_DataFrame_rows2(dataframe, column1, row_value1,
-                                 label1, row_value2, label2):  # Defines function. For DataFrame slicing by row value.
-            df_slc_r = dataframe[dataframe[column1] == row_value1]  # Defines format of function.
-            if chck == 1:  # Conditional statement.
-                print('\033[1m' + label2 + ' ' + str(row_value2) + ' ' + label1 + ' ' + str(row_value1) + ' DATA' + '\033[0m',
-                      '\n..\n', df_slc_r, '\n')  # Displays objects.
+
+        def slice_DataFrame_rows2(dataframe, column1, row_value1, label1, row_value2, label2, dsply):  # Defines function. For DataFrame slicing by row value.
+            df_slc_r = dataframe[dataframe[column1] == row_value1]  # Defines function format.
+            if dsply == 1:  # Conditional statement. For display.
+                print('\033[1m' + label2 + ' ' + str(row_value2) + ' ' + label1 + ' ' + str(row_value1) + ' DATA' + '\033[0m', '\n..\n', df_slc_r, '\n')  # Displays objects.
             return df_slc_r  # Ends execution of function.
 
-        chck = 0  # Defines variable. For function display.
-        df_srvy1 = slice_DataFrame_rows2(df_rng, 'Srvy_num', b, 'SURVEY NUMBER', a, 'RANGE NUMBER')
-        # df_srvy2 = slice_DataFrame_rows2(df_rng, 'Srvy_num', c, 'SURVEY NUMBER', a, 'RANGE NUMBER')
+        df_srvy1 = slice_DataFrame_rows2(df_rng, 'Srvy_num', b, 'SURVEY NUMBER', a, 'RANGE NUMBER', 0)  # Defines DataFrame. Calls function.
 
-        #meta
-        def slice_DataFrame_cell(dataframe, column, index,
-                                 data_label):  # Defines function. For DataFrame slicing by row value.
-            df_slc_cl = dataframe.loc[index, column]
-            if chck == 1:  # Conditional statement.
+        # Survey metadata --------------------------------------------------------------------------------------------------
+
+        def slice_DataFrame_cell(dataframe, column, index, data_label, dsply):  # Defines function. For DataFrame slicing by row value.
+            df_slc_cl = dataframe.loc[index, column]  # Defines function format.
+            if dsply == 1:  # Conditional statement. For display.
                 print(data_label + ':', df_slc_cl, '\n')  # Displays objects.
             return df_slc_cl  # Ends execution of function.
 
-        chck = 0
-        index = df_srvy1.index
-        srvy_yr1 = slice_DataFrame_cell(df_srvy1, 'Srvy_year', index[0], 'Survey year')  # Defines variable.
-        rng_nm1 = slice_DataFrame_cell(df_srvy1, 'Srvy_range', index[0], 'Range')  # Defines variable.
-        # srvy_yr2 = slice_DataFrame_cell(df_srvy2, 'Srvy_year', 'Survey year')  # Defines variable.
-        # rng_nm2 = slice_DataFrame_cell(df_srvy2, 'Srvy_range', 'Range')  # Defines variable.
+        index = df_srvy1.index  # Defines variable. Retrieves index of DataFrame.
+        srvy_yr1 = slice_DataFrame_cell(df_srvy1, 'Srvy_year', index[0], 'Survey year', 0)  # Defines variable. Calls function.
+        rng_nm1 = slice_DataFrame_cell(df_srvy1, 'Srvy_range', index[0], 'Range', 0)  # Defines variable. Calls function.
 
-        # DISPLAY DATASET ------------------------------------------------------------------------------------------
-
-        # print('==================================================')
-        # print('\033[1m' + 'Field range (number): ' + '\033[0m' + str(rng_nm1) + ' (' + str(rng_strt) + ')')
-        # print('\033[1m' + 'Range survey interval (numbers): ' + '\033[0m' + str(srvy_yr1) + '–' + str(srvy_yr2) + ' (' + str(srvy_strt) + '–' + str(srvy_end) + ')')
-        # chck = 0
-        # srvy_dt1 = slice_DataFrame_cell(df_srvy1, 'Srvy_date', 'Survey date')  # Defines variable.
-        # srvy_dt2 = slice_DataFrame_cell(df_srvy2, 'Srvy_date', 'Survey date')  # Defines variable.
-        # print('\033[1m' + 'Survey dates: ' + '\033[0m' + str(srvy_dt1) + ' & ' + str(srvy_dt2))
-        # print('--------------------------------------------------')
-        #
-        def slice_DataFrame_columns1(dataframe, column, data_label):  # Defines function. For DataFrame slicing by row value.
-            df_slc_c = dataframe[column]  # Defines format of function.
-            if chck == 1:  # Conditional statement.
+        def slice_DataFrame_columns1(dataframe, column, data_label, dsply):  # Defines function. For DataFrame slicing by row value.
+            df_slc_c = dataframe[column]  # Defines function format.
+            if dsply == 1:  # Conditional statement. For display.
                 print('\033[1m' + data_label + ' DATA' + '\033[0m', '\n..\n', df_slc_c, '\n')  # Displays objects.
             return df_slc_c  # Ends execution of function.
 
-        print('==================================================')
-        print('\033[1m' + 'Field range: ' + '\033[0m' + str(rng_nm1) + ' (' + str(a) + ')')
-        df_srvy_yrs = slice_DataFrame_columns1(df_rng, 'Srvy_num', 'Survey numbers')
-        df_srvy_yrs = df_srvy_yrs.drop_duplicates(keep='first')
-        srvy_yrs = df_srvy_yrs.to_numpy()
-        num_srvys = max(srvy_yrs)
-        print('\033[1m' + 'Range survey: ' + '\033[0m' + str(srvy_yr1) + ' (' + str(b) + ' of ' + str(num_srvys) + ')')
-        chck = 0
-        index = df_srvy1.index
-        srvy_dt1 = slice_DataFrame_cell(df_srvy1, 'Srvy_date', index[0], 'Survey date')  # Defines variable.
-        # srvy_dt2 = slice_DataFrame_cell(df_srvy2, 'Srvy_date', 'Survey date')  # Defines variable.
-        print('\033[1m' + 'Survey dates: ' + '\033[0m' + str(srvy_dt1))
-        print('--------------------------------------------------')
+        df_srvy_yrs = slice_DataFrame_columns1(df_rng, 'Srvy_num', 'Survey numbers', 0)  # Defines DataFrame. Calls function.
+        df_srvy_yrs = df_srvy_yrs.drop_duplicates(keep='first')  # Modifies DataFrame. Drops all duplicate values in column.
 
-        # Plot
+        def max_value_column(dataframe, data_label, units, dsply):  # Defines function. For retrieving maximum value from DataFrame column.
+            max = dataframe.max()  # Defines function format.
+            if dsply == 1:  # Conditional statement. For display.
+                print('Maximum column value:', max, data_label, units)  # Displays objects.
+            return max  # Ends execution of function.
 
-        # By survey measurement ------------------------------------------------------------------------------------
+        num_srvys = max_value_column(df_srvy_yrs, '', '', 0)  # Defines variable. Calls function.
 
-        df_offst1 = slice_DataFrame_columns1(df_srvy1, 'Offset_ft', 'OFFSET')
-        df_elvtn1 = slice_DataFrame_columns1(df_srvy1, 'Elv_lcl_ft', 'ELEVATION')
+        index = df_srvy1.index  # Defines variable. Retrieves index of DataFrame.
+        srvy_dt1 = slice_DataFrame_cell(df_srvy1, 'Srvy_date', index[0], 'Survey date', 0)  # Defines variable. Calls function.
 
-        # PLOT CROSS-SECTIONS --------------------------------------------------------------------------------------
+        # Byr survey ------------------------------------------------------------------------------------------
 
-        def plot_lines1(number, figure_size, x, y, label1, color1, marker1, marker_size, line_width, alpha,
-                        fontsize_ticks, x_label, fontsize_axis, label_pad, y_label, title1, pause_length):
+        df_offst1 = slice_DataFrame_columns1(df_srvy1, 'Offset_ft', 'OFFSET', 0)  # Defines DataFrame. Calls function.
+        df_elvtn1 = slice_DataFrame_columns1(df_srvy1, 'Elv_geo_ft', 'ELEVATION', 0)  # Defines DataFrame. Calls function.
 
-            plt.figure(number, figsize=figure_size)
-            ax = plt.gca()
-            ax.plot(x, y, label=label1, c=color1, marker=marker1, markersize=marker_size, linewidth=line_width, alpha=alpha)  # Creates line
-            # plot of arrays from axes instance. Sets label, color, marker type, and transparency.
-            # ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha, labelspacing=label_spacing)  # Creates legend through automatic label detection.
-            plt.xticks(fontsize=fontsize_ticks)
-            plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets font size.
-            plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates y-axis label. Sets font size.
-            plt.yticks(fontsize=fontsize_ticks)
-            plt.title(title1)  # Creates plot title.
-            if pause == 1:
-                plt.pause(pause_length)  # Displays and updates active figure before pausing for interval seconds.
-            elif pause == 0:
-                plt.show()
+        # DISPLAY DATASET ------------------------------------------------------------------------------------------
 
-        pause = 1
+        if Xsctns_1 == 1:
+            # Metadata ------------------------------------------------------------------------------------------
+            print('==================================================')  # Displays objects.
+            print('\033[1m' + 'Field range: ' + '\033[0m' + str(rng_nm1) + ' (' + str(a) + ')')  # Displays objects.
+            print('\033[1m' + 'Range survey: ' + '\033[0m' + str(srvy_yr1) + ' (' + str(b) + ' of ' + str(num_srvys) + ')')  # Displays objects.
+            print('\033[1m' + 'Survey dates: ' + '\033[0m' + str(srvy_dt1))  # Displays objects.
+            print('--------------------------------------------------')  # Displays objects.
 
-        if srvy_yr1 == '2008':
-            color = tol_muted[0]
-            marker = marker_mpltlib[-1]
-        elif srvy_yr1 == '1994':
-            color = tol_muted[3]
-            marker = marker_mpltlib[0]
-        elif srvy_yr1 == '1978':
-            color = tol_muted[2]
-            marker = marker_mpltlib[8]
-        elif srvy_yr1 == '1975':
-            color = tol_muted[4]
-            marker = marker_mpltlib[11]
-        elif srvy_yr1 == '1964':
-            color = tol_muted[5]
-            marker = marker_mpltlib[6]
-        elif srvy_yr1 == '1939':
-            color = tol_muted[6]
-            marker = marker_mpltlib[2]
-        elif srvy_yr1 == '1850s':
-            color = tol_muted[7]
-            marker = marker_mpltlib[-2]
+            # Plot data ------------------------------------------------------------------------------------------
+
+            def plot_lines1(plot_number, figure_size, x1, y1, label1, color1, marker1, marker_size1, line_width, alpha, fontsize_ticks, x_label, fontsize_axis, label_pad, y_label, title1, pause_length, pause):   # Defines function. For single cross-section plotting.
+                plt.figure(plot_number, figsize=figure_size)  # Creates plot window.
+                ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
+                ax.plot(x1, y1, label=label1, c=color1, marker=marker1, markersize=marker_size1, linewidth=line_width, alpha=alpha)  # Creates line plot of arrays from axes instance. Sets format.
+                plt.xticks(fontsize=fontsize_ticks)  # Sets x-axis tick mark format.
+                plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets format.
+                plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates x-axis label. Sets format.  # Creates y-axis label. Sets font size.
+                plt.yticks(fontsize=fontsize_ticks)  # Sets y-axis tick mark format.
+                plt.title(title1)  # Creates plot title.
+
+                if pause == 1:  # Conditional statement. For display.
+                    plt.pause(pause_length)  # Displays plot. For set interval of seconds and closes without clearing.
+                elif pause == 0:  # Conditional statement. For display.
+                    plt.show()  # Displays plot. Indefinite and cleared upon close.
+
+            if srvy_yr1 == '2008':  # Conditional statement. For display.
+                color = tol_muted[0]  # Defines variable. Sets plot color.
+                marker = mrkr_mpltlib[-1]  # Defines variable. Sets plot marker.
+            elif srvy_yr1 == '1994':  # Conditional statement. For display.
+                color = tol_muted[3]  # Defines variable. Sets plot color.
+                marker = mrkr_mpltlib[0]  # Defines variable. Sets plot marker.
+            elif srvy_yr1 == '1978':  # Conditional statement. For display.
+                color = tol_muted[2]  # Defines variable. Sets plot color.
+                marker = mrkr_mpltlib[8]  # Defines variable. Sets plot marker.
+            elif srvy_yr1 == '1975':  # Conditional statement. For display.
+                color = tol_muted[4]  # Defines variable. Sets plot color.
+                marker = mrkr_mpltlib[11]  # Defines variable. Sets plot marker.
+            elif srvy_yr1 == '1964':  # Conditional statement. For display.
+                color = tol_muted[5]  # Defines variable. Sets plot color.
+                marker = mrkr_mpltlib[6]  # Defines variable. Sets plot marker.
+            elif srvy_yr1 == '1939':  # Conditional statement. For display.
+                color = tol_muted[6]  # Defines variable. Sets plot color.
+                marker = mrkr_mpltlib[2]  # Defines variable. Sets plot marker.
+            elif srvy_yr1 == '1850s':  # Conditional statement. For display.
+                color = tol_muted[7]  # Defines variable. Sets plot color.
+                marker = mrkr_mpltlib[-2]  # Defines variable. Sets plot marker.
+
+            if Xsctn_sngl == 1:  # Conditional statement. Plots single cross-section.
+                title1 = 'Range ' + str(rng_nm1) + ' ' + str(srvy_yr1) + ' survey '  # Defines string. Sets title of plot.
+                plot_lines1(1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, color, marker, mrkr_sz, lin_wdth, alpha, fntsz_tcks, 'Survey offset (ft)', fntsz_ax, lbl_pd, 'Surface elevation (ft)', title1, ps_lngth, 1)  # Creates plot. Calls function.
+
+            # Export figure
+            # Name folders
+            # Level 2
+            xsctn_fldr = '/Cross_sectional_analysis'  # Defines variable as string. Sets name of new directory where all cross-section data will be exported.
+            lvl2 = opt_fldr + xsctn_fldr  # Defines variable as string. Concatenates strings to create file path.
+
+            # Level 3
+            plts_fldr = '/Plots'  # Defines variable as string. Sets name of new directory where all cross-section data will be exported.
+            lvl3 = lvl2 + plts_fldr  # Defines variable as string. Concatenates strings to create file path.
+
+            # Level 4
+            xsctn_plts_fldr = '/Cross_sections'  # Defines variable as string. Sets name of new directory where all cross-section data will be exported.
+            lvl4 = lvl3 + xsctn_plts_fldr  # Defines variable as string. Concatenates strings to create file path.
+
+            # Level 5
+            xsctn_plts_fldr1 = '/Single'  # Defines variable as string. Sets name of new directory where all cross-section data will be exported.
+            lvl5 = lvl4 + xsctn_plts_fldr1  # Defines variable as string. Concatenates strings to create file path.
+
+            # Create folders
+            lvls = [lvl2, lvl3, lvl4, lvl5]  # Defines list. For looping through and conventient folder creation.
+
+            for i in lvls:  # Begins loop. Loops through each element in list.  #
+                level = lvls.index(i)  # Defines variable. Sets value based in list element index for display.
+                create_folder(level, i)  # Creates folder. Calls function.
+
+            # Export
+            plt.figure(1)  # Calls figure. Makes it the active plot.
+
+            fig_name = '/' + str(rng_nm1) + '_s' +str(b) + '_' + str(srvy_yr1) + '.pdf' # Defines variable as strong. Names figure for export.
+
+            plt.savefig(lvl5 + fig_name, format='pdf')  # Saves figure to directory. Sets file format.
+
+            plt.close()  # Closes active figure.
+
+            # ======================================================================================================================
+            # PART 3: DATA ANALYSIS -----------------------------------------------------------------------------------------------
+            # ======================================================================================================================
+
+            # Calculated hydro geom -----------------------------------------------------------------------------------------------
+            def min_value_column(dataframe, data_label, units, dsply):  # Defines function. For retrieving minimum value from DataFrame column.
+                min = dataframe.min()  # Defines function format.
+                if dsply == 1:  # Conditional statement. For display.
+                    print('Minimum column value:', min, data_label, units)  # Displays objects.
+                return min  # Ends execution of function.
+
+            if Hydr_geom == 1: # Conditional statement. Calculates hydraulic geometry.
+                df_strm = slice_DataFrame_rows1(df_srvy1, 'Gmrph_dsc', 'Stream channel', 'RANGE ' + str(a), 0)  # Defines DataFrame. Calls function.
+
+                def hydraulic_geometry(dataframe, column1, data_label1, data_label2, units, data_label3, data_label4, column2, data_label5, data_label6, data_label7, data_label8, dsply):
+
+                    df_strm_offst = slice_DataFrame_columns1(dataframe, column1, data_label1, 0)
+
+                    offst1 = min_value_column(df_strm_offst, data_label2, units, 0)
+                    offst2 = max_value_column(df_strm_offst, data_label2, units, 0)
+
+                    if offst1 < offst2:
+                        width = offst2 - offst1
+                    elif offst1 > offst2:
+                        sys.exit('No stream channel detected')
+                    elif offst1 == offst2:
+                        sys.exit('No stream channel detected')
+
+                    if dsply == 1:  # Conditional statement. For display.
+                        print(data_label3 + units + '\n  ' + data_label4 + '%.1f' % width)
+
+                    df_strm_elvtn = slice_DataFrame_columns1(dataframe, column2, data_label5, 0)
+                    elvtn1 = min_value_column(df_strm_elvtn, data_label6, units, 0)
+                    elvtn2 = max_value_column(df_strm_elvtn, data_label6, units, 0)
+
+                    if elvtn1 < elvtn2:
+                        depth = elvtn2 - elvtn1
+                    elif elvtn1 > elvtn2:
+                        sys.exit('No stream channel detected')
+                    elif elvtn1 == elvtn2:
+                        sys.exit('No stream channel detected')
+
+                    if dsply ==1:  # Conditional statement. For display.
+                        print('  ' + data_label7 + '%.2f' % depth)
+
+                    R_h = (width * depth)/(width + 2 * depth)
+
+                    if dsply ==1:  # Conditional statement. For display.
+                        print('  ' + data_label8 + '%.2f' % R_h)
+
+                    return width, depth, R_h
+
+                width, depth, R_h = hydraulic_geometry(df_strm, 'Offset_ft', 'RANGE ' + str(a) + ' SURVEY ' + str(b) + ' STREAM CHANNEL OFFSET',
+                                   'Offset', ' (ft)', 'Channel dimensions', 'Width: ', 'Elv_geo_ft', 'RANGE ' + str(a) +
+                                   ' SURVEY ' + str(b) + ' STREAM CHANNEL ELEVATION', 'Elevation', 'Depth: ',
+                                   'Bankfull hydraulic radius: ', 1)
+
+                try:
+                    hydro_rad_list
+                except NameError:
+                    hydro_rad_list=[]
+                    hydro_rad_list.append(R_h)
+                else:
+                    hydro_rad_list.append(R_h)
+                print(hydro_rad_list)
+
+                try:
+                    srvy_yr_list
+                except NameError:
+                    srvy_yr_list = []
+                    srvy_yr_list.append(srvy_yr1)
+                else:
+                    srvy_yr_list.append(srvy_yr1)
+                index = df_strm.index
+                strm_stat = slice_DataFrame_cell(df_strm, 'Srvy_stat', index[0], 'River survey station', 1)
+                try:
+                    strm_stat_list
+                except NameError:
+                    strm_stat_list = []
+                    strm_stat_list.append(strm_stat)
+                else:
+                    strm_stat_list.append(strm_stat)
+
+                df_hydro_geom = pd.DataFrame()
+
+                df_hydro_geom['Srvy_yr'] = srvy_yr_list
+
+                df_hydro_geom['Strm_stat'] = strm_stat_list
+                df_hydro_geom['Hydro_rad_ft'] = hydro_rad_list
+
+                print(df_hydro_geom)
+                # breakpoint()
+                # plot results
+                if a == rng_end:
+                    if b == srvy_end:
+                        if Hydr_rad == 1:
+                            df_rad2008=slice_DataFrame_rows1(df_hydro_geom, 'Srvy_yr','2008','year',1)
+                            df_rad2008_x=slice_DataFrame_columns1(df_rad2008, 'Strm_stat','station',1 )
+                            df_rad2008_y = slice_DataFrame_columns1(df_rad2008, 'Hydro_rad_ft', 'radius', 1)
+                            df_rad94 = slice_DataFrame_rows1(df_hydro_geom, 'Srvy_yr', '1994', 'year', 1)
+                            df_rad94_x = slice_DataFrame_columns1(df_rad94, 'Strm_stat', 'station', 1)
+                            df_rad94_y = slice_DataFrame_columns1(df_rad94, 'Hydro_rad_ft', 'radius', 1)
+                            df_rad64 = slice_DataFrame_rows1(df_hydro_geom, 'Srvy_yr', '1964', 'year', 1)
+                            df_rad64_x = slice_DataFrame_columns1(df_rad64, 'Strm_stat', 'station', 1)
+                            df_rad64_y = slice_DataFrame_columns1(df_rad64, 'Hydro_rad_ft', 'radius', 1)
+                            df_rad39 = slice_DataFrame_rows1(df_hydro_geom, 'Srvy_yr', '1939', 'year', 1)
+                            df_rad39_x = slice_DataFrame_columns1(df_rad39, 'Strm_stat', 'station', 1)
+                            df_rad39_y = slice_DataFrame_columns1(df_rad39, 'Hydro_rad_ft', 'radius', 1)
+
+                            plt.figure(1, figsize=(4.5,6))  # Creates plot window.
+                            ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
+                            ax.plot(df_rad2008_x, df_rad2008_y, label='2008', c='blue', marker='o', markersize=mrkr_sz,
+                                    linewidth=lin_wdth,
+                                    alpha=alpha)  # Creates line plot of arrays from axes instance. Sets format.
+                            ax.plot(df_rad94_x, df_rad94_y, label='1994', c='orange', marker='s', markersize=mrkr_sz,
+                                    linewidth=lin_wdth,
+                                    alpha=alpha)  # Creates line plot of arrays from axes instance. Sets format.
+                            ax.plot(df_rad64_x, df_rad64_y, label='1964', c='red', marker='D', markersize=mrkr_sz,
+                                    linewidth=lin_wdth,
+                                    alpha=alpha)  # Creates line plot of arrays from axes instance. Sets format.
+                            ax.plot(df_rad39_x, df_rad39_y, label='1939', c='Cyan', marker='^', markersize=mrkr_sz,
+                                    linewidth=lin_wdth,
+                                    alpha=alpha)  # Creates line plot of arrays from axes instance. Sets format.
+                            ax.legend(loc=lctn, markerscale=mrkr_scl, framealpha=frm_alpha,
+                                      labelspacing=lbl_spcng)  # Creates legend. Through automatic label detection.
+                            plt.xticks(fontsize=fntsz_tcks)  # Sets x-axis tick mark format.
+                            plt.xlabel('River station', fontsize=fntsz_ax,
+                                       labelpad=lbl_pd)  # Creates x-axis label. Sets format.
+                            plt.ylabel('Hydraulic radius (ft)',
+                                       fontsize=fntsz_ax)  # Creates x-axis label. Sets format.  # Creates y-axis label. Sets font size.
+                            plt.yticks(fontsize=fntsz_tcks)  # Sets y-axis tick mark format.
+                            plt.title('Hydraulic radius in trout creek')  # Creates plot title.
+
+                            plt.show()
 
 
-        title1 = 'Range ' + str(rng_nm1) + ' survey ' + str(srvy_yr1)
-        plot_lines1(1, figure_size, df_offst1, df_elvtn1, srvy_yr1, color, marker, marker_size, line_width,
-                    alpha, fontsize_ticks, 'Survey offset (ft)', fontsize_axis, label_pad, 'Surface elevation (ft)', title1, pause_length)
+        # Calculate sediment thickness
+        if Xsctns_2 == 1:
 
-        # export
-        # create folder
-        #level2
-        xsctn_fldr = '/Cross_sectional_analysis'
-        lvl2 = opt_fldr + xsctn_fldr
-        plts_fldr = '/Plots'
-        lvl3 = lvl2 + plts_fldr
-        xsctn_plts_fldr = '/Cross_sections'
-        lvl4 = lvl3 + xsctn_plts_fldr
-        xsctn_plts_fldr1 = '/Single'
-        lvl5 = lvl4 + xsctn_plts_fldr1
-        lvls = [lvl2, lvl3, lvl4, lvl5]
+            # Create second dataset
+            c=b-1  # Defines variable. Allows for selection of two datasets for change detection.
 
-        for i in lvls:
-            level = lvls.index(i)
-            create_folder(level, i)
+            #survey
+            df_srvy2 = slice_DataFrame_rows2(df_rng, 'Srvy_num', c, 'SURVEY NUMBER', a, 'RANGE NUMBER', 0)  # Defines DataFrame. Calls function.
 
-        # Export
-        plt.figure(1)  # Calls figure making it the active plot.
+            #metadata
+            index = df_srvy2.index  # Defines variable. Retrieves index of DataFrame.
+            srvy_yr2 = slice_DataFrame_cell(df_srvy2, 'Srvy_year', index[0], 'Survey year', 0)  # Defines variable. Calls function.
+            srvy_dt2 = slice_DataFrame_cell(df_srvy2, 'Srvy_date', index[0], 'Survey date', 0)  # Defines variable. Calls function.
 
-        fig_name = '/' + str(rng_nm1) + '_s' +str(b) + '_' + str(srvy_yr1) + '.pdf'  # Sets name of
-        # exported figure.
+            # Measurements
+            df_offst2 = slice_DataFrame_columns1(df_srvy2, 'Offset_ft', 'OFFSET', 0)  # Defines DataFrame. Calls function.
+            df_elvtn2 = slice_DataFrame_columns1(df_srvy2, 'Elv_geo_ft', 'ELEVATION', 0)  # Defines DataFrame. Calls function.
 
-        plt.savefig(lvl5 + fig_name,
-                    format='pdf')  # Saves figure to directory. Sets file format.
+            # DISPLAY DATASET ------------------------------------------------------------------------------------------
 
-        plt.close()  # Closes active figure.
+            # Metadata ------------------------------------------------------------------------------------------
+            print('==================================================')  # Displays objects.
+            print('\033[1m' + 'Field range: ' + '\033[0m' + str(rng_nm1) + ' (' + str(a) + ')')  # Displays objects.
+            print('\033[1m' + 'Range surveys: ' + '\033[0m' + str(srvy_yr1) + '–' + str(srvy_yr2) + ' (' + str(b) + '–' + str(c) + ' of ' + str(num_srvys) + ')')  # Displays objects.
+            print('\033[1m' + 'Survey dates: ' + '\033[0m' + str(srvy_dt1) + ' & ' + str(srvy_dt2))  # Displays objects.
+            print('--------------------------------------------------')  # Displays objects.
 
-        if Hydr_geom == 1:
-            chck = 0
-            df_strm = slice_DataFrame_rows1(df_srvy1, 'Gmrph_dsc', 'Stream channel', 'RANGE ' + str(a))
+            # Plot data ------------------------------------------------------------------------------------------
 
-            # df_strm_offsts = slice_DataFrame_columns1(df_strm, 'Offset_ft', 'RANGE ' + str(a) + ' STREAM CHANNEL OFFSETS')
-            # df_strm_elvtns = slice_DataFrame_columns1(df_strm, 'Elv_lcl_ft', 'RANGE ' + str(a) + ' STREAM CHANNEL ELEVATIONS')
+            def plot_lines2(plot_number, figure_size, x1, y1, label1, color1, marker1, marker_size1, line_width, alpha, x2, y2, label2, color2, marker2, location, marker_scale, frame_alpha, label_spacing, fontsize_ticks, x_label, fontsize_axis, label_pad, y_label, title2, pause_length, pause):   # Defines function. For single cross-section plotting.
+                plt.figure(plot_number, figsize=figure_size)  # Creates plot window.
+                ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
+                ax.plot(x1, y1, label=label1, c=color1, marker=marker1, markersize=marker_size1, linewidth=line_width, alpha=alpha)  # Creates line plot of arrays from axes instance. Sets format.
+                ax.plot(x2, y2, label=label2, c=color2, marker=marker2, markersize=marker_size1, linewidth=line_width, alpha=alpha)  # Creates line plot of arrays from axes instance. Sets format.
+                ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha, labelspacing=label_spacing)  # Creates legend. Through automatic label detection.
+                plt.xticks(fontsize=fontsize_ticks)  # Sets x-axis tick mark format.
+                plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets format.
+                plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates x-axis label. Sets format.  # Creates y-axis label. Sets font size.
+                plt.yticks(fontsize=fontsize_ticks)  # Sets y-axis tick mark format.
+                plt.title(title2)  # Creates plot title.
 
-            def hydraulic_geometry(dataframe, column1, data_label1, column2, data_label2, chck):
-                chck=chck
-                df_slc_wdth = slice_DataFrame_columns1(dataframe, column1, data_label1)
-                offst1 = df_slc_wdth.min()
-                offst2 = df_slc_wdth.max()
+                if pause == 1:  # Conditional statement. For display.
+                    plt.pause(pause_length)  # Displays plot. For set interval of seconds and closes without clearing.
+                elif pause == 0:  # Conditional statement. For display.
+                    plt.show()  # Displays plot. Indefinite and cleared upon close.
 
-                if offst1 < offst2:
-                    width = offst2 - offst1
-                elif offst1 > offst2:
-                    sys.exit('No stream channel detected')
-                elif offst1 == offst2:
-                    sys.exit('No stream channel detected')
-                chck=1
-                if chck == 1:
-                    print(offst1, offst2, width)
+            def get_color(label):
+                if label == '2008':  # Conditional statement. For display.
+                    color = tol_muted[0]  # Defines variable. Sets plot color.
+                elif label == '1994':  # Conditional statement. For display.
+                    color = tol_muted[3]  # Defines variable. Sets plot color.
+                elif label == '1978':  # Conditional statement. For display.
+                    color = tol_muted[2]  # Defines variable. Sets plot color.
+                elif label == '1975':  # Conditional statement. For display.
+                    color = tol_muted[4]  # Defines variable. Sets plot color.
+                elif label == '1964':  # Conditional statement. For display.
+                    color = tol_muted[5]  # Defines variable. Sets plot color.
+                elif label == '1939':  # Conditional statement. For display.
+                    color = tol_muted[6]  # Defines variable. Sets plot color.
+                elif label == '1850s':  # Conditional statement. For display.
+                    color = tol_muted[7]  # Defines variable. Sets plot color.
+                return color
 
-                chck=chck
-                df_slc_dpth = slice_DataFrame_columns1(dataframe, column2, data_label2)
-                elvtn1 = df_slc_dpth.min()
-                elvtn2 = df_slc_dpth.max()
+            def get_marker(label):
+                if label == '2008':  # Conditional statement. For display.
+                    marker = mrkr_mpltlib[-1]  # Defines variable. Sets plot marker.
+                elif label == '1994':  # Conditional statement. For display.
+                    marker = mrkr_mpltlib[0]  # Defines variable. Sets plot marker.
+                elif label == '1978':  # Conditional statement. For display.
+                    marker = mrkr_mpltlib[8]  # Defines variable. Sets plot marker.
+                elif label == '1975':  # Conditional statement. For display.
+                    label = mrkr_mpltlib[11]  # Defines variable. Sets plot marker.
+                elif label == '1964':  # Conditional statement. For display.
+                    marker = mrkr_mpltlib[6]  # Defines variable. Sets plot marker.
+                elif label == '1939':  # Conditional statement. For display.
+                    marker = mrkr_mpltlib[2]  # Defines variable. Sets plot marker.
+                elif label == '1850s':  # Conditional statement. For display.
+                    marker = mrkr_mpltlib[-2]  # Defines variable. Sets plot marker.
+                return marker
 
-                if elvtn1 < elvtn2:
-                    depth = elvtn2 - elvtn1
-                elif elvtn1 > elvtn2:
-                    sys.exit('No stream channel detected')
-                elif elvtn1 == elvtn2:
-                    sys.exit('No stream channel detected')
+            if Xsctn_dbl == 1:  # Conditional statement. Plots single cross-section.
+                clr1 = get_color(srvy_yr1)
+                mrkr1 = get_marker(srvy_yr1)
+                clr2 = get_color(srvy_yr2)
+                mrkr2 = get_marker(srvy_yr2)
 
-                chck=1
-                if chck ==1:
-                    print(elvtn1, elvtn2, depth)
+                title1 = 'Range ' + str(rng_nm1) + ' ' + str(srvy_yr1) + '–' + str(srvy_yr2) + ' surveys'  # Defines string. Sets title of plot.
+                plot_lines2(2, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz, lin_wdth, alpha, df_offst2, df_elvtn2, srvy_yr2, clr2, mrkr2, lctn, mrkr_scl, frm_alpha, lbl_spcng, fntsz_tcks, 'Survey offset (ft)', fntsz_ax, lbl_pd, 'Surface elevation (ft)', title1, ps_lngth, 1)  # Creates plot. Calls function.
 
+                # Export figure
+                # Name folders
+                # Level 2
+                xsctn_fldr = '/Cross_sectional_analysis'  # Defines variable as string. Sets name of new directory where all cross-section data will be exported.
+                lvl2 = opt_fldr + xsctn_fldr  # Defines variable as string. Concatenates strings to create file path.
 
-            hydraulic_geometry(df_strm, 'Offset_ft', 'RANGE ' + str(a) + ' STREAM CHANNEL OFFSET', 'Elv_lcl_ft',  'RANGE ' + str(a) + ' STREAM CHANNEL ELEVATION', 0)
+                # Level 3
+                plts_fldr = '/Plots'  # Defines variable as string. Sets name of new directory where all cross-section data will be exported.
+                lvl3 = lvl2 + plts_fldr  # Defines variable as string. Concatenates strings to create file path.
 
+                # Level 4
+                xsctn_plts_fldr = '/Cross_sections'  # Defines variable as string. Sets name of new directory where all cross-section data will be exported.
+                lvl4 = lvl3 + xsctn_plts_fldr  # Defines variable as string. Concatenates strings to create file path.
 
-#             chck = 0  # Defines variable. For function display.
-#
-#             df_offst2 = slice_DataFrame_columns1(df_srvy2, 'Offset_ft', 'OFFSET')
-#             df_elvtn2 = slice_DataFrame_columns1(df_srvy2, 'Elv_lcl_ft', 'ELEVATION')
-#
-#             pause = 1
-#             title1 = 'Range ' + str(rng_nm2) + ' survey ' + str(srvy_yr2)
-#             plot_lines1(2, figure_size, df_offst2, df_elvtn2, srvy_yr2, tol_muted[c], marker1, marker_size,
-#                         line_width,
-#                         alpha, fontsize_ticks, 'Survey offset (ft)', fontsize_axis, label_pad, 'Surface elevation (ft)',
-#                         title1, 5)
-#
-#
-#             def plot_lines2(number, figure_size, x1, y1, label1, x2, y2, label2, color1, marker1, color2, marker2,
-#                             marker_size, line_width, alpha,
-#                             fontsize_ticks, x_label, fontsize_axis, label_pad, y_label, title1, location, marker_scale, frame_alpha, label_spacing, pause_length):
-#
-#                 plt.figure(number, figsize=figure_size)
-#                 ax = plt.gca()
-#                 ax.plot(x1, y1, label=label1, c=color1, marker=marker1, markersize=marker_size, linewidth=line_width, alpha=alpha)  # Creates line
-#                 # plot of arrays from axes instance. Sets label, color, marker type, and transparency.
-#                 ax.plot(x2, y2, label=label2, c=color2, marker=marker2, markersize=marker_size, linewidth=line_width,
-#                         alpha=alpha)  # Creates line
-#                 # plot of arrays from axes instance. Sets label, color, marker type, and transparency.
-#                 ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha, labelspacing=label_spacing)  # Creates legend through automatic label detection.
-#                 plt.xticks(fontsize=fontsize_ticks)
-#                 plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets font size.
-#                 plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates y-axis label. Sets font size.
-#                 plt.yticks(fontsize=fontsize_ticks)
-#                 plt.title(title1)  # Creates plot title.
-#                 if pause == 1:
-#                     plt.pause(pause_length)  # Displays and updates active figure before pausing for interval seconds.
-#                 elif pause == 0:
-#                     plt.show()
-#                 plt.close()
-#
-#             pause = 1
-#             title1 = 'Range ' + str(rng_nm1) + ' surveys'
-#             plot_lines2(3, figure_size, df_offst1, df_elvtn1, srvy_yr1, df_offst2, df_elvtn2, srvy_yr2, tol_muted[b],
-#                         marker1, tol_muted[c], marker1, marker_size, line_width, alpha, fontsize_ticks,
-#                         'Survey offset (ft)', fontsize_axis, label_pad, 'Surface elevation (ft)', title1, location,
-#                         marker_scale, frame_alpha, label_spacing, 5)
-#
-#
-#
-# # if Dgtz == 1:
-# #     dgtz_fldr = '/Digitization'  # Defines variable as string. Sets name of new directory where digitization data will be
-#     # located.
+                # Level 5
+                xsctn_plts_fldr1 = '/Double'  # Defines variable as string. Sets name of new directory where all cross-section data will be exported.
+                lvl5 = lvl4 + xsctn_plts_fldr1  # Defines variable as string. Concatenates strings to create file path.
+
+                # Create folders
+                lvls = [lvl2, lvl3, lvl4, lvl5]  # Defines list. For looping through and conventient folder creation.
+
+                for i in lvls:  # Begins loop. Loops through each element in list.  #
+                    level = lvls.index(i)  # Defines variable. Sets value based in list element index for display.
+                    create_folder(level, i)  # Creates folder. Calls function.
+
+                # Export
+                plt.figure(2)  # Calls figure. Makes it the active plot.
+
+                fig_name = '/' + str(rng_nm1) + '_s' + str(b) + '–' + str(c) + '_' + str(srvy_yr1) + '–' + str(srvy_yr2) + '.pdf' # Defines variable as strong. Names figure for export.
+
+                plt.savefig(lvl5 + fig_name, format='pdf')  # Saves figure to directory. Sets file format.
+
+                plt.close()  # Closes active figure.
