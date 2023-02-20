@@ -10,11 +10,12 @@
 
 # IMPORT MODULES -------------------------------------------------------------------------------------------------------
 
-import time, os  # Imports "Time and access conversions" and "Miscellaneous operating system interfaces". Enables use
-# of various time–related functions and operating system dependent functionality.
-import pandas as pd, numpy as np, matplotlib.pyplot as plt  # Imports "Python data analysis library", a module for working
-# with arrays, and "Visualization with Python", with aliases. Enables DataFrame array functionality, using arrays and plotting tools.
-from Cross_section_analyzer import *  # Imports all functions from program.
+import time, os, sys  # Imports "Time and access conversions", "Miscellaneous operating system interfaces", and
+# "System specific parameters and functions". Enables use of various time–related functions and operating system
+# dependent functionality.
+import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc # Imports "Python data analysis library", a comprehensive
+# mathematics library, and a plotting interface, with alias. Enables DataFrame array functionality.
+
 # ======================================================================================================================
 # PART 1: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
 # ======================================================================================================================
@@ -263,21 +264,132 @@ def name_levels(directory_levels, folder_labels, output_folder, data_label1, dsp
     return levels
 
 
-def interpolate_cross_section(x, y, interpolation_type, decimal_place):
+def interpolate_cross_section(type, x, y, start, end, interpolation_type, step, decimal_place):
     f = sc.interpolate.interp1d(x, y, kind=interpolation_type)
 
-    x_list = x.tolist()
-    start = x_list[0]
-    # print(start)
-    end = x_list[-1]
-    # print(end)
-    step = 0.01
-    new_end = end + step
-    x_interpolated = np.arange(start, new_end, step)
+    if type == 'dataframe':
+        x_list = x.tolist()
+        start = x_list[0]
+        # print(start)
+        end = x_list[-1]
+        # print(end)
+    elif type == 'list':
+        x_list = x
+        start = x_list[0]
+        # print(start)
+        end = x_list[-1]
+        # print(end)
+    elif type == 'limits':
+        pass
 
+    new_end = end + step
+
+    x_interpolated = np.arange(start, new_end, step)
     x_interpolated = np.around(x_interpolated, decimals=decimal_place)
     # print(x_interpolated)
+
     y_interpolated = f(x_interpolated)
     x_range_interpolated = x_interpolated[-1] - x_interpolated[0]
     sample_numbers = len(x_interpolated)
     return x_interpolated, y_interpolated, x_range_interpolated, sample_numbers
+
+def select_coincident_x_range(type, x1, x2, units, display):
+    if type == 'dataframe':
+        x1_list = x1.tolist()
+        x2_list = x2.tolist()
+    elif type == 'list':
+        x1_list = x1
+        x2_list = x2
+
+    x_min1 = x1_list[0]
+    x_max1 = x1_list[-1]
+    x_min2 = x2_list[0]
+    x_max2 = x2_list[-1]
+
+    if x_min1 == x_min2:
+        start = x_min1
+        if x_max1 == x_max2 or x_max1 < x_max2:
+            end = x_max1
+        elif x_max1 > x_max2:
+            end = x_max2
+    elif x_min1 < x_min2:
+        start = x_min2
+        if x_max1 == x_max2 or x_max1 < x_max2:
+            end = x_max1
+        elif x_max1 > x_max2:
+            end = x_max2
+    elif x_min1 > x_min2:
+        start = x_min1
+        if x_max1 == x_max2 or x_max1 < x_max2:
+            end = x_max1
+        elif x_max1 > x_max2:
+            end = x_max2
+    coincident_range = end - start
+    if display == 1:
+        print('Coincident range ' + '\n  X min: ' + str(x_min1) + ' & ' + str(x_min2) +
+              '\n  X max: ' + str(x_max1) + ' & ' + str(x_max2) + '\n  Range: ' + str(start) + '–' + str(end) + ' (' + str('%.2f' % coincident_range) + units + ')')
+    return start, end, coincident_range
+
+
+def get_coordinate_pairs(type, value1, value2, x_list, data_label1, y1_list, y2_list, data_label2, display):
+    if type == 'depth':
+        # x
+        x1 = x_list[value1]
+        if display == 1:
+            print(data_label1, x1)
+
+        # y
+        y1_top = y1_list[value1]
+        y1_btm = y2_list[value1]
+        if display == 1:
+            print(data_label2 + str(y1_top) + ' & ' + str(y1_btm))
+        return x1, y1_top, y1_btm
+
+    if type == 'area':
+        x1 = x_list[value1]
+        x2 = x_list[value2]
+        if display == 1:
+            print(data_label1 + str(x1) + '–' + str(x2))
+
+        # y
+        y1_top = y1_list[value1]
+        y1_btm = y2_list[value1]
+        y2_top = y1_list[value2]
+        y2_btm = y2_list[value2]
+        if display == 1:
+            print(data_labe2 + str(y1_top) + ' & ' + str(y1_btm) + str(y2_top) + ' & ' + str(y2_btm))
+        return x1, x2, y1_top, y1_btm, y2_top, y2_btm
+
+
+def sediment_thickness(type, y1_top, y1_btm, y2_top, y2_btm, data_label1, display):
+    if type == 'depth':
+        depth1 = y1_top - y1_btm
+        if depth1 > 0:
+            process1 = 'Deposition'
+        elif depth1 < 0:
+            process1 = 'Erosion'
+        elif depth1 == 0:
+            process1 = 'No net change'
+        return depth1, process1
+    if type == 'area':
+        depth2 = y2_top - y2_btm
+        if depth2 > 0:
+            process2 = 'Deposition'
+        elif depth2 < 0:
+            process2 = 'Erosion'
+        elif depth2 == 0:
+            process2 = 'No net change'
+        return depth1, depth2, process2
+    if display == 1:
+        try:
+            depth2
+        except NameError:
+            print(data_label1, depth1, process1)
+        else:
+            print(data_label1 + str(depth1) + ' & ' + str(depth2), process1, process2)
+
+
+
+
+
+
