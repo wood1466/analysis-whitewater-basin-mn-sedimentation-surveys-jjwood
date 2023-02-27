@@ -15,6 +15,8 @@ import time, os, sys  # Imports "Time and access conversions", "Miscellaneous op
 # dependent functionality.
 import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc # Imports "Python data analysis library", a comprehensive
 # mathematics library, and a plotting interface, with alias. Enables DataFrame array functionality.
+import matplotlib.colors
+from matplotlib.colors import LinearSegmentedColormap
 
 # ======================================================================================================================
 # PART 1: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
@@ -32,7 +34,7 @@ marker_mpltlib = ['.', ',', 'o', 'v', '^', '<', '>',
                           's', 'p', 'P', '*', 'h', 'H', '+', 'x', 'X', 'D', 'd',
                           '|', '_', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ' ']  # Defines list. Complete list of matplotlib plot markers.
 tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDD']  # Defines list. Sets Paul Tol muted colorblind friendly palette via hex color codes.
-
+lin_styls = ['solid', 'dotted', 'dashed', 'dashdot']
 # TEMPORARY FUNCTION HOUSING ===========================================================================================
 
 def create_folder(level, path):  # Defines function. For generating directory paths.
@@ -69,8 +71,14 @@ def slice_DataFrame_rows(search_type, dataframe, column, value, display_label, d
         df_slc_r = dataframe[dataframe[column] == value]  # Defines function format.
     elif search_type == 'less than':
         df_slc_r = dataframe[dataframe[column] < value]  # Defines function format.
+    elif search_type == 'less than/equal':
+        df_slc_r = dataframe[dataframe[column] <= value]  # Defines function format.
     elif search_type == 'more than':
         df_slc_r = dataframe[dataframe[column] > value]  # Defines function format.
+    elif search_type == 'more than/equal':
+        df_slc_r = dataframe[dataframe[column] >= value]  # Defines function format.
+    elif search_type == 'does not equal':
+        df_slc_r = dataframe[dataframe[column] != value]
     if display == 1:  # Conditional statement. For display.
         print('\033[1m' + display_label + ' ' + str(value) + ' DATA' + '\033[0m', '\n...\n', df_slc_r, '\n')  # Displays objects.
     return df_slc_r  # Ends function execution.
@@ -125,11 +133,11 @@ def get_plot_feature_by_year(label, list, alternate):  # Defines function. For p
         feature = list[-1]  # Defines variable. Sets plot feature.
     return feature  # Ends function execution.
 
-def plot_lines(lines, plot_number, figure_size, x, y, label, color, marker, marker_size, line_width, alpha, show_legend, location, marker_scale, frame_alpha, label_spacing, fontsize_ticks, x_label, fontsize_axis, label_pad, y_label, title, pause, pause_length):  # Defines function. For line plotting.
+def plot_lines(lines, plot_number, figure_size, x, y, label, color, marker, marker_size, line_width, line_style, alpha, show_legend, location, marker_scale, frame_alpha, label_spacing, fontsize_ticks, x_label, fontsize_axis, label_pad, y_label, title, pause, pause_length):  # Defines function. For line plotting.
     plt.figure(plot_number, figsize=figure_size)  # Creates plot window. Sets figure size.
     ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
     if lines == 1:  # Conditional statement. Plots single line.
-        ax.plot(x, y, label=label, c=color, marker=marker, markersize=marker_size, linewidth=line_width,
+        ax.plot(x, y, label=label, c=color, marker=marker, markersize=marker_size, linewidth=line_width, linestyle=line_style,
                 alpha=alpha)  # Creates line plot. Sets display format.
         if show_legend == 1:  # Conditional statement. Shows legend if desired for single line plotting.
             ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha, labelspacing=label_spacing)  # Creates legend. Through automatic label detection.
@@ -139,7 +147,7 @@ def plot_lines(lines, plot_number, figure_size, x, y, label, color, marker, mark
         for a in line_list:  # Begins loop through list elements. Loops through line numbers.
             index = line_list.index(a)  # Defines variable. Retrieves index of element in list. For format selection.
             ax.plot(x[index], y[index], label=label[index], c=color[index], marker=marker[index],
-                    markersize=marker_size, linewidth=line_width, alpha=alpha)  # Creates line plot. Sets display format.
+                    markersize=marker_size, linewidth=line_width, linestyle=line_style[index], alpha=alpha)  # Creates line plot. Sets display format.
         ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha,
                   labelspacing=label_spacing)  # Creates legend. Through automatic label detection.
     plt.xticks(fontsize=fontsize_ticks)  # Sets x-axis ticks. Sets format.
@@ -335,7 +343,7 @@ def get_coordinate_pairs(type, value1, value2, x_list, y1_list, y2_list,
         return x1, x2, y1_top, y1_btm, y2_top, y2_btm  # Ends function execution.
 
 def sediment_thickness(type, y1_top, y1_btm, y2_top, y2_btm, display_label1, display):  # Defines function. For calculating sediment thickness between cross-sections.
-    if type == 'depth' or 'area':  # Conditional statement.
+    if type == 'depth':  # Conditional statement.
         dpth1 = y1_top - y1_btm  # Defines variable. Calculates depth at a point.
         if dpth1 > 0:  # Conditional statement. Characterizes depth measurement by surface process.
             prcs1 = 'Deposition'  # Defines variable as string. Identifies depth measurement as depositional.
@@ -347,6 +355,13 @@ def sediment_thickness(type, y1_top, y1_btm, y2_top, y2_btm, display_label1, dis
             print(display_label1 + str('%.4f' % dpth1) + ' (' + prcs1 + ')')  # Displays objects.
         return dpth1, prcs1  # Ends function execution.
     if type == 'area':  # Conditional statement.
+        dpth1 = y1_top - y1_btm  # Defines variable. Calculates depth at a point.
+        if dpth1 > 0:  # Conditional statement. Characterizes depth measurement by surface process.
+            prcs1 = 'Deposition'  # Defines variable as string. Identifies depth measurement as depositional.
+        elif dpth1 < 0:  # Conditional statement.
+            prcs1 = 'Erosion'  # Defines variable as string.
+        elif dpth1 == 0:  # Conditional statement.
+            prcs1 = 'No net change'  # Defines variable as string.
         dpth2 = y2_top - y2_btm  # Defines variable. Calculates depth at a point.
         if dpth2 > 0:  # Conditional statement.
             prcs2 = 'Deposition'  # Defines variable as string.
@@ -354,14 +369,9 @@ def sediment_thickness(type, y1_top, y1_btm, y2_top, y2_btm, display_label1, dis
             prcs2 = 'Erosion'  # Defines variable as string.
         elif dpth2 == 0:  # Conditional statement.
             prcs2 = 'No net change'  # Defines variable as string.
-        return dpth2, prcs2  # Ends function execution.
-    if display == 1:  # Conditional Statement. For display.
-        try:  # Checks program for object. Takes action based off existence.
-            dpth2  # Defines object to be searched for.
-        except NameError:  # Executed if object does not exist.
-            print(display_label1 + str('%.4f' % dpth1) + ' (' + prcs1 + ')')  # Displays objects.
-        else:  # Executed if object does exist.
-            print(display_label1 + '\n  x1' + str('%.4f' % dpth1) + ' (' + prcs1 + ')' + '\n  x2' + str('%.4f' % dpth2) + ' (' + prcs2 + ')')  # Displays objects.
+        if display == 1:  # Conditional Statement. For display.
+            print(display_label1 + '\n  x1: ' + str('%.4f' % dpth1) + ' (' + prcs1 + ')' + '\n  x2: ' + str('%.4f' % dpth2) + ' (' + prcs2 + ')')  # Displays objects.
+        return dpth1, dpth2, prcs1, prcs2  # Ends function execution.
 
 def plot_fill(number, zones, x, y1, y2, label, face_color, alpha, location, marker_scale, frame_alpha, label_spacing, pause, pause_length):
     plt.figure(number)  # Calls figure. Makes it the active plot.
@@ -384,7 +394,43 @@ def plot_fill(number, zones, x, y1, y2, label, face_color, alpha, location, mark
 #*****************************************************************************************************************************
 
 
+def sediment_area_trpz(x_L, x_R, height_R, height_L, display_label, display):
+    delta_x = x_L - x_R
+    trpz_area = ((height_R + height_L) / 2) * delta_x
+    if trpz_area > 0:
+        prcs = 'Deposition'
+    if trpz_area < 0:
+        prcs = 'Erosion'
+    if trpz_area == 0:
+        prcs = 'No net change'
+    if display == 1:
+        print(display_label + '%.4f' % trpz_area + ' (' + prcs + ')')
+    return trpz_area, prcs
 
 
 
+# ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']
+#
+# # convert hex to rgb
+#
+# x = np.arange(0, np.pi, 0.1)
+# y = np.arange(0, 2 * np.pi, 0.1)
+# X, Y = np.meshgrid(x, y)
+# Z = np.cos(X) * np.sin(Y) * 10
+#
+# clr1=matplotlib.colors.to_rgb('#648FFF')
+# clr1=matplotlib.colors.to_rgb('#785EF0')
+# clr2=matplotlib.colors.to_rgb('#FFB000')
+# colors=[clr1,clr2]
+# n_bins = [3, 6, 10, 100]
+# cmap_name = 'my_list'
+# fig, axs = plt.subplots(2, 2, figsize=(6, 9))
+# fig.subplots_adjust(left=0.02, bottom=0.06, right=0.95, top=0.94, wspace=0.05)
+# for n_bin, ax in zip(n_bins, axs.ravel()):
+#
+#     cm = LinearSegmentedColormap.from_list(
+#         cmap_name, colors, N=n_bin)
+#     im = ax.imshow(Z, interpolation='nearest', origin='lower', cmap=cm)
+#     ax.set_title("N bins: %s" % n_bin)
+#     fig.colorbar(im, ax=ax)
 
