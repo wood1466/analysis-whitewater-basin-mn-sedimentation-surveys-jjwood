@@ -407,8 +407,23 @@ def sediment_area_trpz(x_L, x_R, height_R, height_L, display_label, display):
         print(display_label + '%.4f' % trpz_area + ' (' + prcs + ')')
     return trpz_area, prcs
 
+#$$$$$$$$$$$$$$$$$$$$$$$$%%%%%%%%%%%%%%%%%%%%%%%%%nother day
+def check_for_empties(dataframe, display):
+    result = dataframe.empty
+    if display == 1:
+        print('Empty = ', result)
+    return result
 
 
+def mean_plus_stdv(array, display_label1, display):
+    avg = np.mean(array)
+    stdv = np.std(array)
+    strt = avg - stdv
+    end = avg + stdv
+    if display == 1:
+        print(display_label1 + '\n  Mean: ' + str('%.2f' % avg) + '\n  Standard deviation: ' + str(
+            '%.4f' % stdv) + '\n  Range: ' + str('%.2f' % strt) + '–' + str('%.2f' % end))
+    return avg, stdv, strt, end
 # ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']
 #
 # # convert hex to rgb
