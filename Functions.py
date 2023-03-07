@@ -352,7 +352,7 @@ def sediment_thickness(type, y1_top, y1_btm, y2_top, y2_btm, display_label1, dis
         elif dpth1 == 0:  # Conditional statement.
             prcs1 = 'No net change'  # Defines variable as string.
         if display == 1:  # Conditional statement. For display.
-            print(display_label1 + str('%.4f' % dpth1) + ' (' + prcs1 + ')')  # Displays objects.
+            print(display_label1 + str('%.5f' % dpth1) + ' (' + prcs1 + ')')  # Displays objects.
         return dpth1, prcs1  # Ends function execution.
     if type == 'area':  # Conditional statement.
         dpth1 = y1_top - y1_btm  # Defines variable. Calculates depth at a point.
@@ -370,7 +370,7 @@ def sediment_thickness(type, y1_top, y1_btm, y2_top, y2_btm, display_label1, dis
         elif dpth2 == 0:  # Conditional statement.
             prcs2 = 'No net change'  # Defines variable as string.
         if display == 1:  # Conditional Statement. For display.
-            print(display_label1 + '\n  x1: ' + str('%.4f' % dpth1) + ' (' + prcs1 + ')' + '\n  x2: ' + str('%.4f' % dpth2) + ' (' + prcs2 + ')')  # Displays objects.
+            print(display_label1 + '\n  x1: ' + str('%.5f' % dpth1) + ' (' + prcs1 + ')' + '\n  x2: ' + str('%.5f' % dpth2) + ' (' + prcs2 + ')')  # Displays objects.
         return dpth1, dpth2, prcs1, prcs2  # Ends function execution.
 
 def plot_fill(number, zones, x, y1, y2, label, face_color, alpha, location, marker_scale, frame_alpha, label_spacing, pause, pause_length):
@@ -394,8 +394,14 @@ def plot_fill(number, zones, x, y1, y2, label, face_color, alpha, location, mark
 #*****************************************************************************************************************************
 
 
-def sediment_area_trpz(x_L, x_R, height_R, height_L, display_label, display):
-    delta_x = x_L - x_R
+def sediment_area_trpz(x1, x2, height_R, height_L, display_label, display):
+    if x1 > x2:
+        x_R = x1
+        x_L = x2
+    elif x1 < x2:
+        x_L = x1
+        x_R = x2
+    delta_x = x_R - x_L
     trpz_area = ((height_R + height_L) / 2) * delta_x
     if trpz_area > 0:
         prcs = 'Deposition'
@@ -404,7 +410,7 @@ def sediment_area_trpz(x_L, x_R, height_R, height_L, display_label, display):
     if trpz_area == 0:
         prcs = 'No net change'
     if display == 1:
-        print(display_label + '%.4f' % trpz_area + ' (' + prcs + ')')
+        print(display_label + '%.10f' % trpz_area + ' (' + prcs + ')')
     return trpz_area, prcs
 
 #$$$$$$$$$$$$$$$$$$$$$$$$%%%%%%%%%%%%%%%%%%%%%%%%%nother day
@@ -424,6 +430,48 @@ def mean_plus_stdv(array, display_label1, display):
         print(display_label1 + '\n  Mean: ' + str('%.2f' % avg) + '\n  Standard deviation: ' + str(
             '%.4f' % stdv) + '\n  Range: ' + str('%.2f' % strt) + '–' + str('%.2f' % end))
     return avg, stdv, strt, end
+
+#^^^^^^^^^^^^^^^^^^^^^^^^^nother day
+def find_intersection(x1, x2, y1_1, y1_2, y2_1, y2_2, display):
+    slpe1 = (y1_2 - y1_1) / (x2 - x1)
+    b1_a = y1_1 - slpe1 * x1
+    b1_b = y1_2 - slpe1 * x2
+    b1_a = round(b1_a, 5)
+    b1_b = round(b1_b, 5)
+    if bool(b1_a == b1_b) == True:
+        b1 = b1_a
+    elif bool(b1_a == b1_b) == False:
+        sys.exit('Error: Intercepts do not coincide')
+    slpe2 = (y2_2 - y2_1) / (x2 - x1)
+    b2_a = y2_1 - slpe2 * x1
+    b2_b = y2_2 - slpe2 * x2
+    b2_a = round(b2_a, 5)
+    b2_b = round(b2_b, 5)
+    if bool(b2_a == b2_b) == True:
+        b2 = b2_a
+    elif bool(b2_a == b2_b) == False:
+        print('\n', b2_a, b2_b)
+        sys.exit('Error: Intercepts do not coincide')
+    x_test = (b1 - b2) / (slpe2 - slpe1)
+    if x1 <= x_test <= x2:
+        y1_test = slpe1 * x_test + b1
+        y2_test = slpe2 * x_test + b2
+        y1_test = round(y1_test, 5)
+        y2_test = round(y2_test, 5)
+        if bool(y1_test == y2_test) == True:
+            y_test = y1_test
+            intrsctn = 'Exists'
+            if display == 1:
+                print('Intersection found' + '\n  Between: ' + str(x1) + '–' + str(x2) + '\n  At: ' + '(' + str(x_test) + ', ' + str(y_test) + ')')
+        elif bool(y1_test == y2_test) == False:
+            sys.exit('Error: No intersection found at shared point')
+    elif x1 > x_test or x2 < x_test:
+        # print('No intersection between ' + str(x1) + '–' + str(x2))
+        x_test = None
+        y_test = None
+        intrsctn = None
+    return x_test, y_test, intrsctn
+
 # ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']
 #
 # # convert hex to rgb
