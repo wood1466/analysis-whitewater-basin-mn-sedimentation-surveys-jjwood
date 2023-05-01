@@ -17,7 +17,7 @@ import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc # Import
 # mathematics library, and a plotting interface, with alias. Enables DataFrame array functionality.
 import matplotlib.colors
 from matplotlib.colors import LinearSegmentedColormap
-
+import math
 # ======================================================================================================================
 # PART 1: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
 # ======================================================================================================================
@@ -50,41 +50,41 @@ def upload_csv(path, display_label, display):  # Defines function. For uploading
         print('\033[1m' + 'UPLOADED .CSV DATA: ' + display_label + '\033[0m', '\n...\n', df, '\n')  # Displays objects.
     return df  # Ends function execution.
 
-def forward_range(start, end, step, display_label, display):  # Defines function. For generating forward range array between two numbers.
+def forward_range(start, end, step, display_label, display):  # Defines function. For generating forward array between two numbers.
     end = end + 1  # Defines variable. Resets end of range so array includes final input value.
     end_label = end - 1  # Defines variable. For display.
     frwd_rng = np.arange(start, end, step)  # Defines function format.
     if display == 1:  # Conditional statement. For display.
-        print(display_label + '\n  Limits: ' + str(start) + ' & ' + str(end_label) + '\n  List:', frwd_rng)  # Displays objects.
+        print(display_label + '\n  Limits: ' + str(start) + ' & ' + str(end_label) + ' --> List:', frwd_rng)  # Displays objects.
     return frwd_rng  # Ends function execution.
 
-def reverse_range(start, end, step, display_label, display):  # Defines function. For generating reverse range array between two numbers.
+def reverse_range(start, end, step, display_label, display):  # Defines function. For generating reverse array between two numbers.
     end = end - 1  # Defines variable. Resets end of range so array includes final input value.
     end_label = end + 1  # Defines variable. For display.
     rev_rng = np.arange(start, end, step)  # Defines function format.
     if display == 1:  # Conditional statement. For display.
-        print(display_label + '\n  Limits: ' + str(start) + ' & ' + str(end_label) + '\n  List:', rev_rng)  # Displays objects.
+        print(display_label + '\n  Limits: ' + str(start) + ' & ' + str(end_label) + ' --> List:', rev_rng)  # Displays objects.
     return rev_rng  # Ends function execution.
 
 def slice_DataFrame_rows(search_type, dataframe, column, value, display_label, display):  # Defines function. For DataFrame slicing by row value.
-    if search_type == 'equals':
+    if search_type == 'equals':  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] == value]  # Defines function format.
-    elif search_type == 'less than':
+    elif search_type == 'less than':  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] < value]  # Defines function format.
-    elif search_type == 'less than/equal':
+    elif search_type == 'less than/equal':  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] <= value]  # Defines function format.
-    elif search_type == 'more than':
+    elif search_type == 'more than':  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] > value]  # Defines function format.
-    elif search_type == 'more than/equal':
+    elif search_type == 'more than/equal':  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] >= value]  # Defines function format.
-    elif search_type == 'does not equal':
-        df_slc_r = dataframe[dataframe[column] != value]
+    elif search_type == 'does not equal':  # Conditional statement. Sets function format.
+        df_slc_r = dataframe[dataframe[column] != value]  # Defines function format.
+    df_slc_r = df_slc_r.loc[:, ~df_slc_r.columns.str.match('Unnamed')]  # Redefines DataFrame. Searches for empty columns and deletes them.
     if display == 1:  # Conditional statement. For display.
-        print('\033[1m' + display_label + ' ' + str(value) + ' DATA' + '\033[0m', '\n...\n', df_slc_r, '\n')  # Displays objects.
+        print('\033[1m' + display_label + ' ' + search_type.upper() + ' ' + str(value) + '\033[0m', '\n...\n', df_slc_r, '\n')  # Displays objects.
     return df_slc_r  # Ends function execution.
 
-def slice_DataFrame_cell(dataframe, position, column, display_label,
-                         display):  # Defines function. For DataFrame slicing by row value and index.
+def slice_DataFrame_cell(dataframe, position, column, display_label, display):  # Defines function. For DataFrame slicing by row value and index.
     index = dataframe.index  # Defines object. Retrieves DataFrame index.
     df_slc_cl = dataframe.loc[index[position], column]  # Defines function format.
     if display == 1:  # Conditional statement. For display.
@@ -93,11 +93,11 @@ def slice_DataFrame_cell(dataframe, position, column, display_label,
 
 def slice_DataFrame_columns(dataframe, column, check_duplicates, display_label, display):  # Defines function. For DataFrame slicing by column.
     df_slc_c = dataframe[column]  # Defines function format.
-    if check_duplicates == 1:
+    if check_duplicates == 1:  # Conditional statement.
         df_slc_c = df_slc_c.drop_duplicates(keep='first')  # Redefines DataFrame. Drops all duplicate values in
         # column.
     if display == 1:  # Conditional statement. For display.
-        print('\033[1m' + display_label + ' DATA' + '\033[0m', '\n...\n', df_slc_c, '\n')  # Displays objects.
+        print('\033[1m' + display_label + '\033[0m', '\n...\n', df_slc_c, '\n')  # Displays objects.
     return df_slc_c  # Ends function execution.
 
 def max_value_DataFrame(dataframe, display_label, display):  # Defines function. For retrieving maximum value of DataFrame column.
@@ -114,8 +114,9 @@ def min_value_DataFrame(dataframe, display_label, display):  # Defines function.
 
 def get_plot_feature_by_year(label, list, alternate):  # Defines function. For plot feature selection from input list.
     if label == '2008':  # Conditional statement.
-        feature = list[0]  # Defines variable. Sets plot feature.
-        if alternate == 1:  # Conditional statement.
+        if alternate == 0:
+            feature = list[0]  # Defines variable. Sets plot feature.
+        elif alternate == 1:  # Conditional statement.
             feature = list[-3]  # Defines variable. Sets plot feature.
     elif label == '1994':  # Conditional statement.
         feature = list[3]  # Defines variable. Sets plot feature.
@@ -129,11 +130,11 @@ def get_plot_feature_by_year(label, list, alternate):  # Defines function. For p
         feature = list[6]  # Defines variable. Sets plot feature.
     elif label == '1850s':  # Conditional statement.
         feature = list[7]  # Defines variable. Sets plot feature.
-    elif label == 'Shaded area':  # Conditional statement.
+    else:  # Conditional statement.
         feature = list[-1]  # Defines variable. Sets plot feature.
     return feature  # Ends function execution.
 
-def plot_lines(lines, plot_number, figure_size, x, y, label, color, marker, marker_size, line_width, line_style, alpha, show_legend, location, marker_scale, frame_alpha, label_spacing, fontsize_ticks, x_label, fontsize_axis, label_pad, y_label, title, pause, pause_length):  # Defines function. For line plotting.
+def plot_lines(lines, plot_number, figure_size, x, y, label, color, marker, marker_size, line_width, line_style, alpha, show_legend, location, marker_scale, frame_alpha, label_spacing,invert_x, fontsize_ticks, x_label, fontsize_axis, label_pad, y_label, title, pause, pause_length):  # Defines function. For line plotting.
     plt.figure(plot_number, figsize=figure_size)  # Creates plot window. Sets figure size.
     ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
     if lines == 1:  # Conditional statement. Plots single line.
@@ -151,14 +152,19 @@ def plot_lines(lines, plot_number, figure_size, x, y, label, color, marker, mark
         ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha,
                   labelspacing=label_spacing)  # Creates legend. Through automatic label detection.
     plt.xticks(fontsize=fontsize_ticks)  # Sets x-axis ticks. Sets format.
+
     plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets format.
     plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates y-axis label. Sets format.
     plt.yticks(fontsize=fontsize_ticks)  # Sets y-axis ticks. Sets format.
+    if invert_x == 1:
+        ax.invert_xaxis()
     plt.title(title)  # Creates plot title.
     if pause == 1:  # Conditional statement. For display format.
         plt.pause(pause_length)  # Displays plot. For set interval of seconds and closes without clearing.
     elif pause == 0:  # Conditional statement. For display format.
         plt.show()  # Displays plot. Indefinite and cleared upon close.
+    elif pause == 2:
+        pass
 
 def name_levels(directory_levels, folder_labels, output_folder, display_label,
                 display):  # Defines function. For defining list of directory levels for looped creation.
@@ -270,6 +276,12 @@ def interpolate_cross_section(type, x, y, start, end, interpolation_type, step,
     new_end = end + step  # Defines variable. Resets end of range so array includes final input value.
     x_interpolated = np.arange(start, new_end, step)  # Defines array. Creates x array to interpolate y
     # values.
+
+    if x_interpolated[-1] > end:
+        x_interpolated = x_interpolated[0:-1]
+    if x_interpolated[-1] == end:
+        pass
+
     x_interpolated = np.around(x_interpolated, decimals=decimal_place)  # Redefines array. Rounds
     # values.
     y_interpolated = f(x_interpolated)  # Sets function format.
@@ -342,18 +354,28 @@ def get_coordinate_pairs(type, value1, value2, x_list, y1_list, y2_list,
                 '%.2f' % y2_btm) + ')')  # Displays objects.
         return x1, x2, y1_top, y1_btm, y2_top, y2_btm  # Ends function execution.
 
-def sediment_thickness(type, y1_top, y1_btm, y2_top, y2_btm, display_label1, display):  # Defines function. For calculating sediment thickness between cross-sections.
+def sediment_thickness(type, y1_top, y1_btm, survey_year1, survey_year2, y2_top, y2_btm, display_label1, display):  # Defines function. For calculating sediment thickness between cross-sections.
     if type == 'depth':  # Conditional statement.
         dpth1 = y1_top - y1_btm  # Defines variable. Calculates depth at a point.
         if dpth1 > 0:  # Conditional statement. Characterizes depth measurement by surface process.
             prcs1 = 'Deposition'  # Defines variable as string. Identifies depth measurement as depositional.
+            prcs1_rt = 'Aggradation'
         elif dpth1 < 0:  # Conditional statement.
             prcs1 = 'Erosion'  # Defines variable as string.
-        elif dpth1 == 0:  # Conditional statement.
+            prcs1_rt = 'Degradation'
+        else:  # Conditional statement.
             prcs1 = 'No net change'  # Defines variable as string.
+            prcs1_rt = 'No net change'
+        srvy_yr1_int = int(survey_year1)
+        if survey_year2 == '1850s':
+            srvy_yr2_int = 1854
+        elif survey_year2 != '1850s':
+            srvy_yr2_int = int(survey_year2)
+        srvy_intrvl = srvy_yr1_int - srvy_yr2_int
+        dpth1_rt = dpth1 / srvy_intrvl
         if display == 1:  # Conditional statement. For display.
-            print(display_label1 + str('%.5f' % dpth1) + ' (' + prcs1 + ')')  # Displays objects.
-        return dpth1, prcs1  # Ends function execution.
+            print(display_label1 + str(srvy_intrvl) + ' years' + '\n ' + prcs1 + ': ' + str('%.5f' % dpth1) + '\n ' + prcs1_rt + ': ' + str('%.5f' % dpth1_rt))  # Displays objects.
+        return dpth1, prcs1, dpth1_rt, prcs1_rt, srvy_intrvl  # Ends function execution.
     if type == 'area':  # Conditional statement.
         dpth1 = y1_top - y1_btm  # Defines variable. Calculates depth at a point.
         if dpth1 > 0:  # Conditional statement. Characterizes depth measurement by surface process.
@@ -471,7 +493,127 @@ def find_intersection(x1, x2, y1_1, y1_2, y2_1, y2_2, display):
         y_test = None
         intrsctn = None
     return x_test, y_test, intrsctn
+#^^^^^^^^^^^^^^^^^^^^^***********nother day
+def sediment_volume(type, area1, area2, area_prime, area_quad, separation, width1, width2, display_label, display):
+    if type == 'Average end area':
+        # average end area
+        V = (area1 + area2) / 2 * separation
+    elif type == 'Prismoidal':
+        # prismoidal
+        V = (area_prime / 3) * ((area1 + area2) / (width1 + width2)) + (area_quad / 3) * ((area1 / width1) + (area2 / width2))
+    if V < 0:
+        prcs = 'Erosion'
+    elif V > 0:
+        prcs = 'Deposition'
+    elif V == 0:
+        prcs = 'No net change'
+    if display == 1:
+        print(display_label + str('%.2f' % V) + ' (' + prcs + ')')
+    return V, prcs
+#%%%%%%%%%%%%%%
+def coordinate_bearing(x1, x2, y1, y2, c1,c2, bearing_reference_direction, bearing_angle_direction, bearing_deg, bearing_functional, display_label, display):
+    offset_meas=c2-c1
+    offset_meas=offset_meas*1/3.281
+    # bearing_functional=[*bearing_functional]
 
+    if bearing_reference_direction =='N':
+        if bearing_angle_direction =='E':
+            if bearing_functional == 'NE':
+                qdrnt_meas = 1
+                deg_max = 90
+                new_bearing_deg = deg_max-bearing_deg
+            if bearing_functional == 'SW':
+                qdrnt_meas = 3
+                deg_max = 270
+                new_bearing_deg = deg_max - bearing_deg
+        if bearing_angle_direction=='W':
+            if bearing_functional == 'NW':
+                qdrnt_meas=2
+                deg_min=90
+                new_bearing_deg=deg_min+bearing_deg
+            if bearing_functional == 'SE':
+                qdrnt_meas = 4
+                deg_min = 270
+                new_bearing_deg = deg_min + bearing_deg
+    if bearing_reference_direction=='S':
+        if bearing_angle_direction=='W':
+            if bearing_functional == 'SW':
+                qdrnt_meas=3
+                deg_max=270
+                new_bearing_deg=deg_max-bearing_deg
+            if bearing_functional == 'NE':
+                qdrnt_meas = 1
+                deg_max = 90
+                new_bearing_deg = deg_max-bearing_deg
+        if bearing_angle_direction=='E':
+            if bearing_functional == 'SE':
+                qdrnt_meas = 4
+                deg_min = 270
+                new_bearing_deg = deg_min + bearing_deg
+            if bearing_functional == 'NW':
+                qdrnt_meas = 2
+                deg_min = 90
+                new_bearing_deg = deg_min + bearing_deg
+
+    meas_bearing_rad=new_bearing_deg*(np.pi/180)
+    delta_x = x2 - x1
+    delta_y = y2 - y1
+    offset_clc = math.sqrt(delta_x ** 2 + delta_y ** 2)
+    bearing_rad = abs(math.atan(delta_y / delta_x))
+    clc_bearing_deg=bearing_rad*(180/np.pi)
+
+    if delta_x > 1:
+        if delta_y > 1:
+            qdrnt_clc = 1
+            rad_max = np.pi/2
+            clc_bearing_rad = rad_max-bearing_rad
+        if delta_y<1:
+            qdrnt_clc=4
+            rad_min = (3*np.pi)/2
+            clc_bearing_rad =rad_min+bearing_rad
+    if delta_x<1:
+        if delta_y>1:
+            qdrnt_clc=2
+            rad_min=np.pi/2
+            clc_bearing_rad=rad_min+bearing_rad
+        if delta_y<1:
+            qdrnt_clc=3
+            rad_max=(3*np.pi)/2
+            clc_bearing_rad=rad_max-bearing_rad
+    cor_bearing_deg=clc_bearing_rad*(180/np.pi)
+    bearing_diff=clc_bearing_rad-meas_bearing_rad
+    bearing_diff_deg=bearing_diff*(180/np.pi)
+    offset_diff=offset_clc-offset_meas
+
+    # if qdrnt_clc != qdrnt_meas:
+    #     sys.exit('Quadrants misaligned')
+    sin = math.sin(meas_bearing_rad)  # Calculates sine of heading.
+    cos = math.cos(meas_bearing_rad)  # Calculates cosine of heading.
+    if display == 1:
+        degree_sign=chr(176)
+        if abs(bearing_diff) > 1*(np.pi/180):
+            print('Directional data' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' + str(qdrnt_clc) +
+            '\n Bearings' + '\n  Field range: ' + bearing_reference_direction+str(bearing_deg) + degree_sign+bearing_angle_direction+ ' ('+str('%.1f'%new_bearing_deg)+degree_sign+')'+'\n  Azimuthal equivalent: ' + str('%.2f'%meas_bearing_rad) +' ('+str('%.1f'%new_bearing_deg)+degree_sign+')'+
+                  '\n  Calculated: '+str('%.2f'%bearing_rad)+' ('+str('%.1f'%clc_bearing_deg)+degree_sign+')'+'\n  Corrected to azimuth: ' +str('%.2f'%clc_bearing_rad) +' ('+str('%.1f'%cor_bearing_deg)+degree_sign+')' +'\n  Difference: ' + '\033[0;31m'+str('%.2f'%bearing_diff) + ' ('+str('%.1f'%bearing_diff_deg)+degree_sign+')'+'\033[0m'
+                  +'\n Trig. components' + '\n  Sine: ' + str('%.4f'%sin)+'\n  Cosine: '+str('%.4f'%cos))
+        else:
+            print('Directional data' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' + str(
+                qdrnt_clc) +
+                  '\n Bearings' + '\n  Field range: ' + bearing_reference_direction + str(
+                bearing_deg) + degree_sign + bearing_angle_direction + ' (' + str(
+                '%.1f' % new_bearing_deg) + degree_sign + ')' + '\n  Azimuthal equivalent: ' + str(
+                '%.2f' % meas_bearing_rad) + ' (' + str('%.1f' % new_bearing_deg) + degree_sign + ')' +
+                  '\n  Calculated: ' + str('%.2f' % bearing_rad) + ' (' + str(
+                '%.1f' % clc_bearing_deg) + degree_sign + ')' + '\n  Corrected to azimuth: ' + str(
+                '%.2f' % clc_bearing_rad) + ' (' + str(
+                '%.1f' % cor_bearing_deg) + degree_sign + ')' + '\n  Difference: ' + '\033[0;36m'+str(
+                '%.2f' % bearing_diff) + ' (' + str('%.1f' % bearing_diff_deg) + degree_sign + ')'+'\033[0m'+'\n Trig. components' + '\n  Sine: ' + str('%.4f'%sin)+'\n  Cosine: '+str('%.4f'%cos))
+        if abs(offset_diff) >= 1:
+            print(' Coordinate offset'+ '\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' +str('%.2f'%delta_y)+'\n  Measured: '+str('%.1f'%offset_meas)+'\n  Calculated: '+str('%.1f'%offset_clc)+'\n  Difference: '+'\033[0;31m'+str('%.1f'%offset_diff) + '\033[0m')
+        else:
+            print(' Coordinate offset'+'\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' +str('%.2f'%delta_y)+'\n  Measured: '+str('%.1f'%offset_meas)+'\n  Calculated: '+str('%.1f'%offset_clc)+'\n  Difference: '+'\033[0;36m'+str('%.1f'%offset_diff) + '\033[0m')
+
+    return meas_bearing_rad,sin,cos
 # ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']
 #
 # # convert hex to rgb
