@@ -13,104 +13,100 @@ print('\n\033[1m' + 'START SEDIMENTATION ANALYSES!!!' + '\033[0m', '\n...\n')  #
 
 # IMPORT MODULES -------------------------------------------------------------------------------------------------------
 
-import time, os, sys  # Imports "Time and access conversions", "Miscellaneous operating system interfaces", and
-# "System specific parameters and functions". Enables use of time–related functions and operating system dependent
-# functionality.
-import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc  # Imports "Python data analysis library", a
-# numerical mathematics library, a plotting interface, and a scientific mathematics library, with alias. Enables use
-# of DataFrames, mathematical functions, and data plotting.
-from Functions import *  # Imports all functions from outside program. From secondary program.
-import math  # Imports module enabling the use of Python's standard mathematical tools.
-# CHOOSE OPERATIONS ----------------------------------------------------------------------------------------------------
+import time, os, sys, math
+# Imports "Time and access conversions". Enables time related functions.
+# Imports "Miscellaneous operating system interfaces" & "System specific parameters and functions". Enables operating
+# system dependent functionality.
+# Imports "Mathematical functions".
+import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopandas as gpd
+# Imports "Python data analysis library" with alias. Enables use of DataFrames.
+# Imports numerical mathematics library and a scientific mathematics library, with alias.
+# Imports a plotting interface with alias.
+# Imports a geographic data libray with alias. Enables spatial operations.
+from Functions import *  # Imports all functions from outside program.
 
-# Single cross-section -------------------------------------------------------------------------------------------------
+# SELECT OPERATIONS ----------------------------------------------------------------------------------------------------
 
-# Set up
-Sngl = 1  # Defines variable as integer. Sets binary toggle. Analyzes single cross-section.
+# Single cross-section analysis ----------------------------------------------------------------------------------------
 
-# Plot
-# Single cross-section
-Plt_sngl = 0  # Defines variable as integer. Sets binary toggle.
-# All cross-sections
-Plt_all = 0 # Defines variable as integer. Sets binary toggle.
+Sngl = 1  # Defines variable as integer. Sets binary toggle.
 
-# Calculate
-Crdnts = 1  # Defines variable as integer. Sets binary toggle.
-cnvrt_deg_t_rad = math.pi / 180  # Defines variable as float. Degrees to radians
-cnvrt_ft_t_m = 3.281  # Defines variable as float. International feet to meters.
+# Plot single cross-section
+Plt_sngl = 1  # Defines variable as integer. Sets binary toggle.
+# Plot all cross-sections
+Plt_all = 1 # Defines variable as integer. Sets binary toggle.
 
-# Paired cross-sections --------------------------------------------------------------------------------------------
+# Calculate coordinate geometry
+Crdnts = 0  # Defines variable as integer. Sets binary toggle.
 
-# Set up
-Dbl = 0  # Defines variable as integer. Sets binary toggle. Analyzes cross-sections by pair.
+# Dual cross-sections analysis -----------------------------------------------------------------------------------------
 
-# Calculate
-# Sediment thickness
-Dpth = 1  # Defines variable as integer. Sets binary toggle.
-# Aggradation rate change
-Dpth_rt_chng = 0
-# Plot
-# Paired cross-sections
+Dbl = 0  # Defines variable as integer. Sets binary toggle.
+
+# Plot dual cross-sections
 Plt_dbl = 0  # Defines variable as integer. Sets binary toggle.
-# Paired interpolated datasets
-Plt_dbl_intrp = 0  # Defines variable as integer. Sets binary toggle.
-# Paired reinterpolated datasets over coincident x-range
-Plt_dbl_reintrp1 = 0  # Defines variable as integer. Sets binary toggle.
-# Sediment thickness
+# Plot dual interpolated cross-sections
+Plt_intrp = 0  # Defines variable as integer. Sets binary toggle.
+# Plot dual re-interpolated cross-sections
+Plt_reintrp = 0  # Defines variable as integer. Sets binary toggle.
+
+# Calculate sediment thickness
+Dpth = 1  # Defines variable as integer. Sets binary toggle.
+
+# Plot sediment thickness
 Plt_dpth = 1  # Defines variable as integer. Sets binary toggle.
-# Aggradation/degradation rate
+# Plot sedimentation rate
 Plt_dpth_rt = 1  # Defines variable as integer. Sets binary toggle.
-Plt_dpth_rt_chng=1
-# Conversion factors
-cnvrt_ft_t_m = 3.281  # Defines variable as float. International feet to meters.
+# Plot sedimentation rate change
+Plt_rt_chng=1  # Defines variable as integer. Sets binary toggle.
 
-# SET PARAMETERS -------------------------------------------------------------------------------------------------------
+# SELECT INPUT PARAMETERS ----------------------------------------------------------------------------------------------
 
-# Data selection -------------------------------------------------------------------------------------------------------
+# Limits of analysis ---------------------------------------------------------------------------------------------------
 
-# Set range limits
-rvr_nly=0
-rng_nly=0
-rng_strt =1   # Defines variable as integer. Sets start range for analysis loop.
-rng_end = 13  # Defines variable as integer. Sets end range for analysis loop.
-xtra = 0
+rvr_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one river channel only.
+rng_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one survey range only.
+xtra_srvys = 0  # Defines variable as integer. Sets binary toggle. Analyzes extra survey data for range 11B (13).
+rng_strt = 1  # Defines variable as integer. Sets start survey range number for analysis loop.
+rng_end = 94  # Defines variable as integer. Sets end survey range number for analysis loop.
 
-# Data visualization ---------------------------------------------------------------------------------------------------
+# Conversion factors ---------------------------------------------------------------------------------------------------
+
+deg_to_rad = math.pi / 180  # Defines variable as float. Converts between degrees and radians.
+ft_to_m = 3.281  # Defines variable as float. Converts between international feet meters.
+
+# Plot format ----------------------------------------------------------------------------------------------------------
 
 # Set general plot format
-wdth = 4.5  # Defines variable as float. Sets plot width.
-hght = wdth * 1.618  # Defines variable. Sets plot height. Uses golden ratio.
-fig_sz = (hght, wdth)  # Defines object. Sets plot size.
-fntsz_tcks = 8  # Defines variable as integer. Sets font size for axes tick marks.
-fntsz_ax = 10  # Defines variable as integer. Sets font size for axes labels.
+wdth = 4.5  # Defines variable as float. Sets plot window width.
+hght = wdth * 1.618  # Defines variable. Sets plot window height. Uses golden ratio.
+fig_sz = (hght, wdth)  # Defines object. Sets plot window size.
+fntsz = [10, 8]  # Defines list. Sets font size for axes labels and tick marks.
 lbl_pd = 10  # Defines variable as integer. Sets plot-axes label spacing.
 
 # Set data display format
 tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDDD']
-# Defines list. Sets Paul Tol muted colorblind friendly palette with hex color codes.
+# Defines list. Sets Paul Tol, muted, colorblind friendly palette with hex color codes.
 lin_wdth = 2  # Defines variable as integer. Sets plot line width.
-lin_styl = ['solid', 'dashed', 'dotted', 'dashdot']  # Defines variable as string. Sets line style.
-mrkrs = [' ', 'v', 'P', 'o', 'X', 's', '^', 'D', '<', '>', '8', 'p', 'h', 'H', 'd']  # Defines list. Sets matplotlib
-# plot markers.
+lin_styl = ['solid', 'dashed', 'dotted', 'dashdot']  # Defines list. Sets line style.
+mrkrs = [' ', 'v', 'P', 'o', 'X', 's', '^', 'D', '<', '>', '8', 'p', 'h', 'H', 'd']  # Defines list. Sets plot markers.
+# Uses matplotlib markers.
 mrkr_sz = 4  # Defines variable as integer. Sets plot marker size.
-alpha = 0.5  # Defines variable as float. Sets plotted object transparency.
-alpha_fl = 0.3  # Defines variable as float. Sets plotted object transparency.
+alpha = [0.5, 0.3]  # Defines list. Sets object transparency for plotted data and fill.
 
 # Set legend display format
-lctn = 'best'  # Defines variable as string. Sets legend location on plot. Automatically chosen.
-mrkr_scl = 2  # Defines variable as integer. Sets marker size.
-frm_alpha = 0.7  # Defines variable as float. Sets box transparency.
-lbl_spcng = 0.7  # Defines variable as float. Sets object spacing.
+lctn = 'best'  # Defines variable as string. Sets legend location on plot. Automatically chooses.
+mrkr_scl = 2  # Defines variable as integer. Sets marker size on legend.
+frm_alpha = 0.7  # Defines variable as float. Sets legend box transparency.
+lbl_spcng = 0.7  # Defines variable as float. Sets legend object spacing.
 
 # SET UP DIRECTORY -----------------------------------------------------------------------------------------------------
 
-# Levels ---------------------------------------------------------------------------------------------------------------
-
+# Name folders
 inpt_fldr = 'Input'  # Defines variable as string. Sets name of new directory where all data sources will be located.
 opt_fldr = 'Output'  # Defines variable as string. Sets name of new directory where all data products will be exported.
 
-# Folders --------------------------------------------------------------------------------------------------------------
-
+# Create folders
 lvl1_fldrs = [inpt_fldr, opt_fldr]  # Defines list. To enable looped folder creation.
 
 for i in lvl1_fldrs:  # Begins loop through elements of list. Loops through paths.
@@ -153,6 +149,7 @@ for i in rng_nums:  # Begins loop through array elements. Loops through range nu
 
     chnl_name = slice_DataFrame_cell(df_rng, 0, 'Chnl_name', 'Stream channel', 0)  # Defines variable. Calls function.
     # Slices DataFrame to yield stream channel name of present dataset.
+    chnl_abrv = slice_DataFrame_cell(df_rng, 0, 'Chnl_abrv', 'Stream channel', 0)
     rng_name1 = slice_DataFrame_cell(df_rng, 0, 'Srvy_range', 'Range', 0)  # Defines variable. Calls function. Slices
     # DataFrame to yield range name of present dataset.
     strm_stat1 = slice_DataFrame_cell(df_rng, 0, 'Srvy_stat', 'Stream station', 0)  # Defines variable. Calls function.
@@ -253,7 +250,7 @@ for i in rng_nums:  # Begins loop through array elements. Loops through range nu
 
                 plot_lines(1, 1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz, lin_wdth,
                            lin_styl[0], alpha, 0, lctn, mrkr_scl, frm_alpha, lbl_spcng, 0, fntsz_tcks,
-                           'Survey offset (ft)',fntsz_ax, lbl_pd, 'Surface elevation (ft)', title, 1, 1)
+                           'Survey offset (ft)',fntsz_ax, lbl_pd, 'Surface elevation (ft)', title, 2, 1)
                 # Creates plot. Calls function.
 
                 # EXPORT FIGURE ------------------------------------------------------------------------------------
@@ -264,8 +261,8 @@ for i in rng_nums:  # Begins loop through array elements. Loops through range nu
                 fig_name = '/' + str(rng_name1) + '_s' + str(j) + '_' + str(srvy_yr1) + '.pdf'  # Defines
                 # variable as strIng. Sets name of figure for export.
 
-                export_file_to_directory(0, 'figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name, 1,
-                                         'pdf', None, None, 'Cross-sectional plot', 0)  # Creates directory and
+                export_file_to_directory(1, 'figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name, 1,
+                                         'pdf', None, None, 'Cross-sectional plot',None,None,None, 0)  # Creates directory and
                 # exports figure. Calls function.
 
             if Plt_all == 1:
@@ -287,7 +284,7 @@ for i in rng_nums:  # Begins loop through array elements. Loops through range nu
                     # variable as strIng. Sets name of figure for export.
 
                     export_file_to_directory(1, 'figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name, 2,
-                                             'pdf', None, None, 'Cross-sectional plot', 0)  # Creates directory and
+                                             'pdf', None, None, 'Cross-sectional plot',None,None,None, 0)  # Creates directory and
                     # exports figure. Calls function.
 
             if Crdnts == 1:
@@ -298,7 +295,7 @@ for i in rng_nums:  # Begins loop through array elements. Loops through range nu
                 BM1_off = slice_DataFrame_cell(df_srvy1, 0, 'BM1_off_tp', 'Benchmark 1 top offset (ft): ', 0)
                 BM2_off = slice_DataFrame_cell(df_srvy1, 0, 'BM2_off_tp', 'Benchmark 2 top offset (ft): ', 0)
                 rng_brng,sin,cos = coordinate_bearing(BM1_e_std, BM2_e_std, BM1_n_std, BM2_n_std, BM1_off,BM2_off, brng_r_dir, brng_a_dir,brng_angl,brng_fnctl, 'Directional data',1)
-
+                # breakpoint()
                 df_offst1_shft = df_offst1 - BM1_off
                 # print(df_offst1_shft)
                 df_offst1_shft_m=df_offst1_shft/cnvrt_ft_t_m
@@ -308,9 +305,15 @@ for i in rng_nums:  # Begins loop through array elements. Loops through range nu
                 offsets_North = sin * df_offst1_shft_m
                 # print(offsets_North)
                 smpl_eastings = BM1_e_std + offsets_East
+                smpl_eastings = smpl_eastings.rename('Easting_m')
                 # print(smpl_eastings)
                 smpl_northings = BM1_n_std + offsets_North
+                smpl_northings=smpl_northings.rename('Northing_m')
                 # print(smpl_northings)
+                # breakpoint()
+                df_srvy1=pd.concat([df_srvy1,smpl_eastings,smpl_northings],axis=1)
+                # print(df_srvy1)
+                # breakpoint()
                 plt.figure(1, figsize=(7, 7))
                 ax1 = plt.gca()
                 ax1.scatter(smpl_eastings, smpl_northings, s=5, label='Predicted', c='Orange', marker='o', alpha=0.5)
@@ -319,8 +322,15 @@ for i in rng_nums:  # Begins loop through array elements. Loops through range nu
                 ax1.set_aspect('equal', 'box')
                 plt.xlabel('Easting (m)', fontsize=8)
                 plt.ylabel('Northing (m)', fontsize=8)
-                plt.pause(1)
-
+                # plt.pause(1)
+                # plt.show()
+                gdf_srvy = gpd.GeoDataFrame(df_srvy1, geometry=gpd.points_from_xy(df_srvy1.Easting_m, df_srvy1.Northing_m),crs='EPSG:26915')
+                fldr_lbls = ['/Cross_sectional_analysis', '/Geographic_data', '/Cross_sections', '/Points','/' + chnl_name]
+                layer = 'R_' + str(rng_name1) + '_'+ str(srvy_yr1)
+                geopackage = '/'+chnl_abrv+'_survey_points.gpkg'
+                # gdf_srvy.to_file(opt_fldr + dig_fldrout + gis_fldr + gpkg_fl, layer=feature, driver='GPKG', index=False)
+                export_file_to_directory(1, 'geo table', 5, fldr_lbls,opt_fldr,'Directiories named: ',layer,None,None,None,False,'GIS layer',gdf_srvy,geopackage,'GPKG',0)
+        # Creates and exports geopackage at specified path.
         # SELECT DATA ----------------------------------------------------------------------------------------------
 
         if Dbl == 1:  # Conditional statement. Executes analysis of cross-sections as subsequent pairs.
