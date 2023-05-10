@@ -1,26 +1,42 @@
 # ======================================================================================================================
 # WHITEWATER RIVER VALLEY MINNESOTA, SEDIMENTATION SURVEY DATA ANALYSIS * ----------------------------------------------
-# SECONDARY PROGRAM 1 OF 2 * -------------------------------------------------------------------------------------------
+# SECONDARY PROGRAM 1 OF 1 * -------------------------------------------------------------------------------------------
 # ======================================================================================================================
 
-# SIGNAL START ---------------------------------------------------------------------------------------------------------
-
-# print('\n\033[1m' + 'START CROSS-SECTIONAL ANALYSES!!!' + '\033[0m', '\n...\n')  # Displays string. Makes font bold and
-# adds new line(s).
+# ======================================================================================================================
+# PART 1: INITIALIZATION -----------------------------------------------------------------------------------------------
+# ======================================================================================================================
 
 # IMPORT MODULES -------------------------------------------------------------------------------------------------------
 
-import time, os, sys  # Imports "Time and access conversions", "Miscellaneous operating system interfaces", and
-# "System specific parameters and functions". Enables use of various time–related functions and operating system
-# dependent functionality.
-import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc # Imports "Python data analysis library", a comprehensive
-# mathematics library, and a plotting interface, with alias. Enables DataFrame array functionality.
-import matplotlib.colors
-from matplotlib.colors import LinearSegmentedColormap
-import math
+import time, os, sys, math
+# Imports "Time and access conversions". Enables time related functions.
+# Imports "Miscellaneous operating system interfaces" & "System specific parameters and functions". Enables operating
+# system dependent functionality.
+# Imports "Mathematical functions".
+import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopandas as gpd
+# Imports "Python data analysis library" with alias. Enables use of DataFrames.
+# Imports numerical mathematics library and a scientific mathematics library, with alias.
+# Imports a plotting interface with alias.
+# Imports a geographic data libray with alias. Enables spatial operations.
+
 # ======================================================================================================================
-# PART 1: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
+# PART 2: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
 # ======================================================================================================================
+
+# INITIALIZATION < SET UP DIRECTORY < Create folders
+
+def create_folder(level, path):  # Defines function. For generating directory paths.
+    if not os.path.exists(path):  # Checks if folder exists. Skips step if exists.
+        os.mkdir(path)  # Creates folder if it does not exist.
+        print('New directory level', level, '\033[0;32m' + path + '\033[0m', 'created')  # Displays objects.
+
+
+
+
+
+
+
 location = ['upper left', 'upper right', 'lower left', 'lower right', 'upper center', 'lower center', 'center left', 'center right', 'center', 'best']  # Defines list. Complete list of matplotlib legend placements.
 ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
 ibm_clr_hx = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
@@ -37,10 +53,7 @@ tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#C
 lin_styls = ['solid', 'dotted', 'dashed', 'dashdot']
 # TEMPORARY FUNCTION HOUSING ===========================================================================================
 
-def create_folder(level, path):  # Defines function. For generating directory paths.
-    if not os.path.exists(path):  # Checks if folder exists. Skips step if exists.
-        os.mkdir(path)  # Creates folder if it does not exist.
-        print('New directory level', level, '\033[0;32m' + path + '\033[0m', 'created')  # Displays objects.
+
 
 def upload_csv(path, display_label, display):  # Defines function. For uploading .csv and converting to a DataFrame.
     csv_data = pd.read_csv(path)  # Uploads .csv file. Input data.
@@ -181,16 +194,37 @@ def name_levels(directory_levels, folder_labels, output_folder, display_label,
             print(display_label, levels)  # Display objects.
     return levels  # Ends function execution.
 
-def export_file(type, number, file_name, end_path, figure_extension, dataframe, truth_statement, display_label,
+
+def export_file_to_directory(export, type, directory_levels, folder_labels, output_folder,
+                             display_label1, file_name, number, figure_extension, dataframe,
+                             truth_statement, display_label2,geodataframe,geopackage,driver,
+                             display):  # Defines function. For exporting files.
+    if export == 1:  # Conditional statement. Exports file.
+        lvls = name_levels(directory_levels, folder_labels, output_folder, display_label1,
+                           display)  # Defines list. Calls function. For looped folder creation.
+        for a in lvls:  # Begins loop through array elements. Loops through levels.
+            lvl = lvls.index(a) + 2  # Defines variable as integer. For correct display.
+            create_folder(lvl, a)  # Creates folders. Calls functio
+        export_file(type, number, file_name, lvls[-1], figure_extension, dataframe, truth_statement, display_label2,
+                    geodataframe, geopackage, driver, display)
+
+
+def export_file(type, number, file_name, end_path, figure_extension, dataframe, truth_statement,
+                display_label, geodataframe, geopackage, driver,
                 display):  # Defines function. For file export.
     if type == 'figure':  # Conditional statement. Executes lines below if file is a figure.
         plt.figure(number)  # Calls figure. Makes it the active plot.
-        plt.savefig(end_path + file_name, format=figure_extension)  # Saves figure to directory. Sets file format.
+        plt.savefig(end_path + file_name,
+                    format=figure_extension)  # Saves figure to directory. Sets file format.
         plt.close()  # Closes active figure.
     elif type == 'table':  # Conditional statement. Executes lines below if file is a table.
-        dataframe.to_csv(end_path + file_name, index=truth_statement)  # Saves file to directory. Sets file format.
+        dataframe.to_csv(end_path + file_name,
+                         index=truth_statement)  # Saves file to directory. Sets file format.
+    elif type == 'geo table':
+        geodataframe.to_file(end_path + geopackage, layer=file_name, driver=driver, index=truth_statement)
     if display == 1:  # Conditional statementFor display.
         print(display_label, 'exported')  # Display objects.
+
 
 def hydraulic_geometry(dataframe, column1, display_label1, display_label2, display_label3, units,
                        display_label4, column2, display_label5, display_label6, display_label7,
@@ -250,15 +284,7 @@ def create_DataFrame(array1, array2, display_label, display):  # Defines functio
         print('\033[1m' + display_label + ' DATA' + '\033[0m', '\n...\n', df_new, '\n')  # Displays objects.
     return df_new  # Ends function execution.
 
-def export_file_to_directory(export, type, directory_levels, folder_labels, output_folder, display_label1, file_name, number, figure_extension, dataframe,
-                             truth_statement, display_label2, display):  # Defines function. For exporting files.
-    if export == 1:  # Conditional statement. Exports file.
-        lvls = name_levels(directory_levels, folder_labels, output_folder, display_label1, display)  # Defines list. Calls function. For looped folder creation.
-        for a in lvls:  # Begins loop through array elements. Loops through levels.
-            lvl = lvls.index(a) + 2  # Defines variable as integer. For correct display.
-            create_folder(lvl, a)  # Creates folders. Calls function.
-        export_file(type, number, file_name, lvls[-1], figure_extension, dataframe, truth_statement, display_label2,
-                    display)  # Exports file. Calls function.
+
 
 def interpolate_cross_section(type, x, y, start, end, interpolation_type, step,
                               decimal_place, display):  # Defines function. For interpolating cross-sections for comparison.
@@ -515,7 +541,6 @@ def coordinate_bearing(x1, x2, y1, y2, c1,c2, bearing_reference_direction, beari
     offset_meas=c2-c1
     offset_meas=offset_meas*1/3.281
     # bearing_functional=[*bearing_functional]
-
     if bearing_reference_direction =='N':
         if bearing_angle_direction =='E':
             if bearing_functional == 'NE':
@@ -554,32 +579,32 @@ def coordinate_bearing(x1, x2, y1, y2, c1,c2, bearing_reference_direction, beari
                 qdrnt_meas = 2
                 deg_min = 90
                 new_bearing_deg = deg_min + bearing_deg
-
     meas_bearing_rad=new_bearing_deg*(np.pi/180)
+
     delta_x = x2 - x1
     delta_y = y2 - y1
     offset_clc = math.sqrt(delta_x ** 2 + delta_y ** 2)
-    bearing_rad = abs(math.atan(delta_y / delta_x))
+    bearing_rad = math.atan(delta_y / delta_x)
     clc_bearing_deg=bearing_rad*(180/np.pi)
-
     if delta_x > 1:
         if delta_y > 1:
             qdrnt_clc = 1
-            rad_max = np.pi/2
-            clc_bearing_rad = rad_max-bearing_rad
+            # rad_max = np.pi/2
+            clc_bearing_rad = bearing_rad
         if delta_y<1:
             qdrnt_clc=4
-            rad_min = (3*np.pi)/2
-            clc_bearing_rad =rad_min+bearing_rad
+            # rad_min = (3*np.pi)/2
+            rad_max=2*np.pi
+            clc_bearing_rad = rad_max+bearing_rad
     if delta_x<1:
         if delta_y>1:
             qdrnt_clc=2
-            rad_min=np.pi/2
-            clc_bearing_rad=rad_min+bearing_rad
+            rad_max=np.pi
+            clc_bearing_rad=rad_max+bearing_rad
         if delta_y<1:
             qdrnt_clc=3
-            rad_max=(3*np.pi)/2
-            clc_bearing_rad=rad_max-bearing_rad
+            rad_min=np.pi
+            clc_bearing_rad=rad_min+bearing_rad
     cor_bearing_deg=clc_bearing_rad*(180/np.pi)
     bearing_diff=clc_bearing_rad-meas_bearing_rad
     bearing_diff_deg=bearing_diff*(180/np.pi)
@@ -587,11 +612,11 @@ def coordinate_bearing(x1, x2, y1, y2, c1,c2, bearing_reference_direction, beari
 
     # if qdrnt_clc != qdrnt_meas:
     #     sys.exit('Quadrants misaligned')
-    sin = math.sin(meas_bearing_rad)  # Calculates sine of heading.
-    cos = math.cos(meas_bearing_rad)  # Calculates cosine of heading.
+    sin = math.sin(clc_bearing_rad)  # Calculates sine of heading.
+    cos = math.cos(clc_bearing_rad)  # Calculates cosine of heading.
     if display == 1:
         degree_sign=chr(176)
-        if abs(bearing_diff) > 1*(np.pi/180):
+        if abs(bearing_diff) > 5*(np.pi/180):
             print('Directional data' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' + str(qdrnt_clc) +
             '\n Bearings' + '\n  Field range: ' + bearing_reference_direction+str(bearing_deg) + degree_sign+bearing_angle_direction+ ' ('+str('%.1f'%new_bearing_deg)+degree_sign+')'+'\n  Azimuthal equivalent: ' + str('%.2f'%meas_bearing_rad) +' ('+str('%.1f'%new_bearing_deg)+degree_sign+')'+
                   '\n  Calculated: '+str('%.2f'%bearing_rad)+' ('+str('%.1f'%clc_bearing_deg)+degree_sign+')'+'\n  Corrected to azimuth: ' +str('%.2f'%clc_bearing_rad) +' ('+str('%.1f'%cor_bearing_deg)+degree_sign+')' +'\n  Difference: ' + '\033[0;31m'+str('%.2f'%bearing_diff) + ' ('+str('%.1f'%bearing_diff_deg)+degree_sign+')'+'\033[0m'
@@ -612,8 +637,8 @@ def coordinate_bearing(x1, x2, y1, y2, c1,c2, bearing_reference_direction, beari
             print(' Coordinate offset'+ '\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' +str('%.2f'%delta_y)+'\n  Measured: '+str('%.1f'%offset_meas)+'\n  Calculated: '+str('%.1f'%offset_clc)+'\n  Difference: '+'\033[0;31m'+str('%.1f'%offset_diff) + '\033[0m')
         else:
             print(' Coordinate offset'+'\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' +str('%.2f'%delta_y)+'\n  Measured: '+str('%.1f'%offset_meas)+'\n  Calculated: '+str('%.1f'%offset_clc)+'\n  Difference: '+'\033[0;36m'+str('%.1f'%offset_diff) + '\033[0m')
-
     return meas_bearing_rad,sin,cos
+
 # ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']
 #
 # # convert hex to rgb
