@@ -24,16 +24,80 @@ import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopand
 # PART 2: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
 # ======================================================================================================================
 
-# INITIALIZATION < SET UP DIRECTORY < Create folders
-
 def create_folder(level, path):  # Defines function. For generating directory paths.
     if not os.path.exists(path):  # Checks if folder exists. Skips step if exists.
         os.mkdir(path)  # Creates folder if it does not exist.
         print('New directory level', level, '\033[0;32m' + path + '\033[0m', 'created')  # Displays objects.
 
+def csv_to_DataFrame(path, display_label, display):  # Defines function. For uploading .csv file and converting to a
+    # DataFrame.
+    csv_data = pd.read_csv(path)  # Uploads .csv file.
+    df = pd.DataFrame(csv_data)  # Defines DataFrame. Converts from .csv. For Python manipulation.
+    pd.set_option('display.max_columns', None)  # Adjusts DataFrame format. Displays all DataFrame columns.
+    if display == 1:  # Conditional statement. For display.
+        print('\033[1m' + 'UPLOADED .CSV DATA: ' + display_label + '\033[0m', '\n...\n', df, '\n')  # Displays objects.
+    return df  # Ends function execution.
 
+def forward_range(start, end, step, display_label, display):  # Defines function. For generating forward array
+    # between two numbers.
+    end = end + 1  # Defines variable. Resets end of range so array includes final input value.
+    end_label = end - 1  # Defines variable. For display.
+    frwd_rng = np.arange(start, end, step)  # Defines function format.
+    if display == 1:  # Conditional statement. For display.
+        print(display_label + '\n  Limits: ' + str(start) + ' & ' + str(end_label) + ' --> List:', frwd_rng)
+        # Displays objects.
+    return frwd_rng  # Ends function execution.
 
+def slice_DataFrame_rows(search_type, dataframe, column, value, display_label, display):  # Defines function. For
+    # DataFrame slicing by row value.
+    if search_type == 'equals':  # Conditional statement. Sets function format.
+        df_slc_r = dataframe[dataframe[column] == value]  # Defines function format.
+    elif search_type == 'less than':  # Conditional statement. Sets function format.
+        df_slc_r = dataframe[dataframe[column] < value]  # Defines function format.
+    elif search_type == 'less than/equal':  # Conditional statement. Sets function format.
+        df_slc_r = dataframe[dataframe[column] <= value]  # Defines function format.
+    elif search_type == 'more than':  # Conditional statement. Sets function format.
+        df_slc_r = dataframe[dataframe[column] > value]  # Defines function format.
+    elif search_type == 'more than/equal':  # Conditional statement. Sets function format.
+        df_slc_r = dataframe[dataframe[column] >= value]  # Defines function format.
+    elif search_type == 'does not equal':  # Conditional statement. Sets function format.
+        df_slc_r = dataframe[dataframe[column] != value]  # Defines function format.
+    df_slc_r = df_slc_r.loc[:, ~df_slc_r.columns.str.match('Unnamed')]  # Redefines DataFrame. Searches for empty
+    # columns and deletes them.
+    if display == 1:  # Conditional statement. For display.
+        print('\033[1m' + display_label + ' ' + search_type.upper() + ' ' + str(value) + '\033[0m', '\n...\n',
+              df_slc_r, '\n')  # Displays objects.
+    return df_slc_r  # Ends function execution.
 
+def slice_DataFrame_cell(data_type, convert, conversion_factor, dataframe, position, column, display_label, display):
+    # Defines function. For DataFrame slicing by row value and index.
+    index = dataframe.index  # Defines object. Retrieves DataFrame index.
+    slc_cl = dataframe.loc[index[position], column]  # Defines function format.
+    typ = type(slc_cl)  # Defines variable. Checks data type.
+    if typ == data_type:  # Conditional statement. Ensures desired data type retrieved by function.
+        pass  # Pass command. Moves on to next line.
+    else:  # Conditional statement.
+        if data_type == 'Integer':  # Conditional statement. Enforces desired data type retrieved by function.
+            slc_cl = int(slc_cl)  # Redefines variable. Converts to integer.
+        elif data_type == 'Float':  # Conditional statement. Enforces desired data type retrieved by function.
+            slc_cl = float(slc_cl)  # Redefines variable. Converts to float.
+        else:  # Conditional statement.
+            slc_cl = str(slc_cl)  # Redefines variable. Converts to string.
+    if convert == 1:  # Conditional statement. Also retreives converted value for number.
+        slc_cl_cnvrt = slc_cl * conversion_factor  # Defines variable. Converts units.
+        if display == 1:  # Conditional statement. For display.
+            print(display_label + ': ' + str(slc_cl) + ' (' + str('%.2f' % slc_cl_cnvrt) + ')' + ' (' + data_type + ')'
+                  + '\n')  # Displays objects.
+        return slc_cl, slc_cl_cnvrt  # Ends function execution.
+    else:  # Conditional statement.
+        pass  # Pass command. Moves on to next line.
+        if display == 1:  # Conditional statement. For display.
+            print(display_label + ': ' + str(slc_cl) + ' (' + data_type + ')' + '\n')  # Displays objects.
+        return slc_cl # Ends function execution.
+    
+# ======================================================================================================================
+# END ------------------------------------------------------------------------------------------------------------------
+# ======================================================================================================================
 
 
 
@@ -55,21 +119,7 @@ lin_styls = ['solid', 'dotted', 'dashed', 'dashdot']
 
 
 
-def upload_csv(path, display_label, display):  # Defines function. For uploading .csv and converting to a DataFrame.
-    csv_data = pd.read_csv(path)  # Uploads .csv file. Input data.
-    df = pd.DataFrame(csv_data)  # Defines DataFrame. Converts from .csv. For Python manipulation.
-    pd.set_option('display.max_columns', None)  # Adjusts DataFrame format. Displays all DataFrame columns.
-    if display == 1:  # Conditional statement. For display.
-        print('\033[1m' + 'UPLOADED .CSV DATA: ' + display_label + '\033[0m', '\n...\n', df, '\n')  # Displays objects.
-    return df  # Ends function execution.
 
-def forward_range(start, end, step, display_label, display):  # Defines function. For generating forward array between two numbers.
-    end = end + 1  # Defines variable. Resets end of range so array includes final input value.
-    end_label = end - 1  # Defines variable. For display.
-    frwd_rng = np.arange(start, end, step)  # Defines function format.
-    if display == 1:  # Conditional statement. For display.
-        print(display_label + '\n  Limits: ' + str(start) + ' & ' + str(end_label) + ' --> List:', frwd_rng)  # Displays objects.
-    return frwd_rng  # Ends function execution.
 
 def reverse_range(start, end, step, display_label, display):  # Defines function. For generating reverse array between two numbers.
     end = end - 1  # Defines variable. Resets end of range so array includes final input value.
@@ -79,30 +129,7 @@ def reverse_range(start, end, step, display_label, display):  # Defines function
         print(display_label + '\n  Limits: ' + str(start) + ' & ' + str(end_label) + ' --> List:', rev_rng)  # Displays objects.
     return rev_rng  # Ends function execution.
 
-def slice_DataFrame_rows(search_type, dataframe, column, value, display_label, display):  # Defines function. For DataFrame slicing by row value.
-    if search_type == 'equals':  # Conditional statement. Sets function format.
-        df_slc_r = dataframe[dataframe[column] == value]  # Defines function format.
-    elif search_type == 'less than':  # Conditional statement. Sets function format.
-        df_slc_r = dataframe[dataframe[column] < value]  # Defines function format.
-    elif search_type == 'less than/equal':  # Conditional statement. Sets function format.
-        df_slc_r = dataframe[dataframe[column] <= value]  # Defines function format.
-    elif search_type == 'more than':  # Conditional statement. Sets function format.
-        df_slc_r = dataframe[dataframe[column] > value]  # Defines function format.
-    elif search_type == 'more than/equal':  # Conditional statement. Sets function format.
-        df_slc_r = dataframe[dataframe[column] >= value]  # Defines function format.
-    elif search_type == 'does not equal':  # Conditional statement. Sets function format.
-        df_slc_r = dataframe[dataframe[column] != value]  # Defines function format.
-    df_slc_r = df_slc_r.loc[:, ~df_slc_r.columns.str.match('Unnamed')]  # Redefines DataFrame. Searches for empty columns and deletes them.
-    if display == 1:  # Conditional statement. For display.
-        print('\033[1m' + display_label + ' ' + search_type.upper() + ' ' + str(value) + '\033[0m', '\n...\n', df_slc_r, '\n')  # Displays objects.
-    return df_slc_r  # Ends function execution.
 
-def slice_DataFrame_cell(dataframe, position, column, display_label, display):  # Defines function. For DataFrame slicing by row value and index.
-    index = dataframe.index  # Defines object. Retrieves DataFrame index.
-    df_slc_cl = dataframe.loc[index[position], column]  # Defines function format.
-    if display == 1:  # Conditional statement. For display.
-        print(display_label + ':', df_slc_cl, '\n')  # Displays objects.
-    return df_slc_cl  # Ends function execution.
 
 def slice_DataFrame_columns(dataframe, column, check_duplicates, display_label, display):  # Defines function. For DataFrame slicing by column.
     df_slc_c = dataframe[column]  # Defines function format.
