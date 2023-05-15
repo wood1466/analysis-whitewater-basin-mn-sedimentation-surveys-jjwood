@@ -118,44 +118,38 @@ for i in lvl1_fldrs:  # Begins loop through elements of list. Loops through path
 # PART 2: CROSS-SECTIONAL ANALYSIS - SINGLE ----------------------------------------------------------------------------
 # ======================================================================================================================
 
-# PART 2A: DATA SELECTION ----------------------------------------------------------------------------------------------
+# SELECT DATA ----------------------------------------------------------------------------------------------------------
 
-# UPLOAD DATA ----------------------------------------------------------------------------------------------------------
+# Input file -----------------------------------------------------------------------------------------------------------
 
 inpt_fl = inpt_fldr + '/Test_data.csv'  # Defines string. Sets file path to input file.
 
-df_srvy_dt = upload_csv(inpt_fl, 'TEST DATA ', 0)  # Defines DataFrame. Calls function. Uploads survey data.
+df_srvy_dt = csv_to_DataFrame(inpt_fl, 'TEST DATA', 0)  # Defines DataFrame. Calls function. Uploads survey data.
 
-# ESTABLISH DATA SELECTION FRAMEWORK -----------------------------------------------------------------------------------
-
-# Spatial --------------------------------------------------------------------------------------------------------------
-if rng_nly==1:
-    rng_nums=[rng_strt]
-    rng_end = rng_strt
-elif rng_nly==0:
+# Establish spatial selection framework
+if rng_nly == 1:  # Conditional statement. Executes lines if condition satisfied.
+    rng_nums = [rng_strt]  # Defines list. One element to enable analyses of single survey range.
+    rng_end = rng_strt  # Redefines variable as integer. For display.
+elif rng_nly == 0:  # Conditional statement. Executes lines if condition satisfied.
     rng_nums = forward_range(rng_strt, rng_end, 1, 'Range numbers', 0)  # Defines array. Calls function. Sets loop
-# order by range.
+    # order by transect.
 
-# Temporal -------------------------------------------------------------------------------------------------------------
+# Select transect dataset
+for i in rng_nums:  # Establishes loop through array elements. Loops through transect numbers.
+    df_rng = slice_DataFrame_rows('equals', df_srvy_dt, 'Range_num', i, 'TRANSECT NUMBER', 1)  # Defines DataFrame.
+    # Calls function. Slices DataFrame to yield singular range data.
 
-# SELECT DATA ----------------------------------------------------------------------------------------------------------
-
-# Range dataset --------------------------------------------------------------------------------------------------------
-
-for i in rng_nums:  # Begins loop through array elements. Loops through range numbers.
-    df_rng = slice_DataFrame_rows('equals', df_srvy_dt, 'Range_num', i, 'RANGE NUMBER', 0)  # Defines DataFrame. Calls
-    # function. Slices DataFrame to yield singular range data.
     # Retrieve metadata
+    chnl_name = slice_DataFrame_cell('String', 0, None, df_rng, 0, 'Chnl_name', 'Stream channel', 0)  # Defines
+    # variable. Calls function. Slices DataFrame to yield stream channel name of present dataset.
+    chnl_abrv = slice_DataFrame_cell('String', 0, None, df_rng, 0, 'Chnl_abrv', 'Stream channel', 0)  # Defines
+    # variable. Calls function. Slices DataFrame to yield stream channel abbreviation of present dataset.
+    rng_name1 = slice_DataFrame_cell('String', 0, None, df_rng, 0, 'Srvy_range', 'Range', 0)  # Defines variable. Calls
+    # function. Slices DataFrame to yield transect name of present dataset.
+    strm_stat1, strm_stat1_m = slice_DataFrame_cell('Integer', 1, 1/ft_to_m,  df_rng, 0, 'Srvy_stat', 'Stream station',
+                                                    0)  # Defines variable. Calls function. Slices DataFrame to yield
+    # survey station of transect on reach.
 
-    chnl_name = slice_DataFrame_cell(df_rng, 0, 'Chnl_name', 'Stream channel', 0)  # Defines variable. Calls function.
-    # Slices DataFrame to yield stream channel name of present dataset.
-    chnl_abrv = slice_DataFrame_cell(df_rng, 0, 'Chnl_abrv', 'Stream channel', 0)
-    rng_name1 = slice_DataFrame_cell(df_rng, 0, 'Srvy_range', 'Range', 0)  # Defines variable. Calls function. Slices
-    # DataFrame to yield range name of present dataset.
-    strm_stat1 = slice_DataFrame_cell(df_rng, 0, 'Srvy_stat', 'Stream station', 0)  # Defines variable. Calls function.
-    # Slices DataFrame to yield survey station of reach.
-    strm_stat1_m = strm_stat1 / cnvrt_ft_t_m
-    strm_stat1 = int(strm_stat1)  # Redefines variable. Converts float to integer.
     df_srvy_nums1 = slice_DataFrame_columns(df_rng, 'Srvy_num', 1, 'SURVEY NUMBERS', 0)  # Defines DataFrame. Calls
     # function. Slices DataFrame to yield survey numbers of present dataset.
     srvy_nums = df_srvy_nums1.tolist()
