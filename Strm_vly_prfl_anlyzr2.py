@@ -32,12 +32,12 @@ from Functions import *  # Imports all functions from outside program.
 Sngl = 1  # Defines variable as integer. Sets binary toggle.
 
 # Plot single cross-section
-Plt_sngl = 1  # Defines variable as integer. Sets binary toggle.
+Plt_sngl = 0  # Defines variable as integer. Sets binary toggle.
 # Plot all cross-sections
-Plt_all = 1 # Defines variable as integer. Sets binary toggle.
+Plt_all = 0 # Defines variable as integer. Sets binary toggle.
 
 # Calculate coordinate geometry
-Crdnts = 0  # Defines variable as integer. Sets binary toggle.
+Crdnts = 1  # Defines variable as integer. Sets binary toggle.
 
 # Dual cross-sections analysis -----------------------------------------------------------------------------------------
 
@@ -65,7 +65,7 @@ Plt_rt_chng=1  # Defines variable as integer. Sets binary toggle.
 # Limits of analysis ---------------------------------------------------------------------------------------------------
 
 rvr_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one river channel only.
-rng_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one survey range only.
+rng_nly = 1  # Defines variable as integer. Sets binary toggle. Analyzes data for one survey range only.
 xtra_srvys = 0  # Defines variable as integer. Sets binary toggle. Analyzes extra survey data for range 11B (13).
 rng_strt = 1  # Defines variable as integer. Sets start survey range number for analysis loop.
 rng_end = 94  # Defines variable as integer. Sets end survey range number for analysis loop.
@@ -136,115 +136,114 @@ elif rng_nly == 0:  # Conditional statement. Executes lines if condition satisfi
 
 # Select transect dataset
 for i in rng_nums:  # Establishes loop through array elements. Loops through transect numbers.
-    df_rng = slice_DataFrame_rows('equals', df_srvy_dt, 'Range_num', i, 'TRANSECT NUMBER', 1)  # Defines DataFrame.
+    df_rng = slice_DataFrame_rows('equals', df_srvy_dt, 'Range_num', i, 'TRANSECT NUMBER', 0)  # Defines DataFrame.
     # Calls function. Slices DataFrame to yield singular range data.
 
     # Retrieve metadata
     chnl_name = slice_DataFrame_cell('String', 0, None, df_rng, 0, 'Chnl_name', 'Stream channel', 0)  # Defines
     # variable. Calls function. Slices DataFrame to yield stream channel name of present dataset.
+
     chnl_abrv = slice_DataFrame_cell('String', 0, None, df_rng, 0, 'Chnl_abrv', 'Stream channel', 0)  # Defines
     # variable. Calls function. Slices DataFrame to yield stream channel abbreviation of present dataset.
+
     rng_name1 = slice_DataFrame_cell('String', 0, None, df_rng, 0, 'Srvy_range', 'Range', 0)  # Defines variable. Calls
     # function. Slices DataFrame to yield transect name of present dataset.
+
     strm_stat1, strm_stat1_m = slice_DataFrame_cell('Integer', 1, 1/ft_to_m,  df_rng, 0, 'Srvy_stat', 'Stream station',
                                                     0)  # Defines variable. Calls function. Slices DataFrame to yield
     # survey station of transect on reach.
 
-    df_srvy_nums1 = slice_DataFrame_columns(df_rng, 'Srvy_num', 1, 'SURVEY NUMBERS', 0)  # Defines DataFrame. Calls
-    # function. Slices DataFrame to yield survey numbers of present dataset.
-    srvy_nums = df_srvy_nums1.tolist()
-    srvy_nums = [int(x) for x in srvy_nums]
-    if xtra == 1:
-        pass
-    elif xtra == 0:
-        if i == 13:
-            srvy_nums.remove(5)
-            srvy_nums.remove(4)
+    srvy_nums1 = slice_DataFrame_columns('List', 'Integer', df_rng, 'Srvy_num', 1, 'SURVEY NUMBERS', 0)  # Defines list.
+    # Calls function. Slices DataFrame to yield survey numbers of present dataset.
 
-    srvy_num_max = max_value_DataFrame(df_srvy_nums1, 'Survey', 0)  # Defines variable. Calls function. Slices
-    # DataFrame to yield total number of range surveys of present dataset.
-    srvy_num_max = int(srvy_num_max)
+    if xtra_srvys == 1:  # Conditional statement. Modifies survey years under analysis. For transect 11B (13) with
+        # extra survey years compared to all other ranges.
+        pass  # Pass command. Moves on to next line.
+    elif xtra_srvys == 0:  # Conditional statement. Modifies survey years under analysis.
+        if i == 13:  # Conditional statement.
+            srvy_nums1.remove(5)  # Redefines list. Removes survey inconsistent survey year.
+            srvy_nums1.remove(4)  # Redefines list. Removes survey inconsistent survey year.
 
-    # Survey dataset ---------------------------------------------------------------------------------------------------
+    srvy_nums_max = max(srvy_nums1)  # Defines variable. Selects maximum survey number.
 
-    for j in srvy_nums:  # Begins loop through array elements. Loops through survey numbers.
+    # Select survey dataset
+    for j in srvy_nums1:  # Establishes loop through array elements. Loops through survey numbers.
         df_srvy1 = slice_DataFrame_rows('equals', df_rng, 'Srvy_num', j, 'SURVEY NUMBER', 0)  # Defines DataFrame.
         # Calls function. Slices DataFrame to yield singular survey data.
 
         # Retrieve metadata
-        srvy_yr1 = slice_DataFrame_cell(df_srvy1, 0, 'Srvy_year', 'Survey year', 0)  # Defines variable. Calls
-        # function. Slices DataFrame to yield survey year of present dataset.
+        srvy_yr1 = slice_DataFrame_cell('Integer', 0, None, df_srvy1, 0, 'Srvy_year', 'Survey year', 0)  # Defines
+        # variable. Calls function. Slices DataFrame to yield survey year of present dataset.
+        srvy_dt1 = slice_DataFrame_cell('String', 0, None, df_srvy1, 0, 'Srvy_date', 'Survey date', 0)  # Defines
+        # variable. Calls function. Slices DataFrame to yield survey date of present dataset.
 
-        srvy_dt1 = slice_DataFrame_cell(df_srvy1, 0, 'Srvy_date', 'Survey date', 0)  # Defines variable. Calls
-        # function. Slices DataFrame to yield survey date of present dataset.
+        # Select survey measurements
+        df_offst1 = slice_DataFrame_columns('DataFrame', 'Float', df_srvy1, 'Offset_ft', 0, 'OFFSET', 0)  # Defines
+        # DataFrame. Calls function. Slices DataFrame to yield survey offsets of present dataset.
+        df_elvtn1 = slice_DataFrame_columns('DataFrame', 'Float', df_srvy1, 'Elv_geo_ft', 0, 'ELEVATION', 0)  # Defines
+        # DataFrame. Calls function. Slices DataFrame to yield survey elevations of present dataset.
 
-        # Survey measurements --------------------------------------------------------------------------------------
-
-        df_offst1 = slice_DataFrame_columns(df_srvy1, 'Offset_ft', 0, 'OFFSET', 0)  # Defines DataFrame. Calls
-        # function. Slices DataFrame to yield survey offsets of present dataset.
-
-        df_offst1 = df_offst1.astype(float)
-        df_elvtn1 = slice_DataFrame_columns(df_srvy1, 'Elv_geo_ft', 0, 'ELEVATION', 0)  # Defines DataFrame. Calls
-        # function. Slices DataFrame to yield survey elevations of present dataset.
-        df_elvtn1 = df_elvtn1.astype(float)
         # Retrieve metadata
-        offst_min1 = min_value_DataFrame(df_offst1, 'Offset', 0)  # Defines variable. Calls function. Slices
+        offst_min1 = min_value_DataFrame('Float', df_offst1, 'Offset', 0)  # Defines variable. Calls function. Slices
         # DataFrame to yield first offset of present dataset.
-        offst_max1 = max_value_DataFrame(df_offst1, 'Offset', 0)  # Defines variable. Calls function. Slices
+        offst_max1 = max_value_DataFrame('Float', df_offst1, 'Offset', 0)  # Defines variable. Calls function. Slices
         # DataFrame to yield last offset of present dataset.
-        elvtn_min1 = min_value_DataFrame(df_elvtn1, 'Elevation', 0)  # Defines variable. Calls function. Slices
-        # DataFrame to yield lowest elevation of present dataset.
-        elvtn_min1 = float(elvtn_min1)
-        elvtn_max1 = max_value_DataFrame(df_elvtn1, 'Elevation', 0)  # Defines variable. Calls function. Slices
-        elvtn_max1 = float(elvtn_max1)
-        # DataFrame to yield highest elevation of present dataset.
-        num_smpls1 = df_srvy1.shape[0]
-        brng_r_dir = slice_DataFrame_cell(df_srvy1, 0, 'Brng_R_dir', 'Bearing reference direction: ', 0)
-        brng_angl = slice_DataFrame_cell(df_srvy1, 0, 'Brng_A', 'Bearing angle: ', 0)
-        brng_angl = float(brng_angl)
-        brng_a_dir = slice_DataFrame_cell(df_srvy1, 0, 'Brng_A_dir', 'Bearing angle direction: ', 0)
-        brng_fnctl = slice_DataFrame_cell(df_srvy1, 0, 'Brng_fnctl', 'Functional bearing: ', 0)
-
-        # Calculate metadata
+        elvtn_min1 = min_value_DataFrame('Float', df_elvtn1, 'Elevation', 0)  # Defines variable. Calls function.
+        # Slices DataFrame to yield lowest elevation of present dataset.
+        elvtn_max1 = max_value_DataFrame('Float', df_elvtn1, 'Elevation', 0)  # Defines variable. Calls function.
+        # Slices DataFrame to yield highest elevation of present dataset.
+        num_smpls1 = df_srvy1.shape[0]  # Defines variable. Returns dimensionality of DataFrame.
+        brng_r_dir = slice_DataFrame_cell('String', 0, None, df_srvy1, 0, 'Brng_R_dir',
+                                          'Bearing reference direction: ', 0)   # Defines variable. Calls function.
+        # Slices DataFrame to yield bearing reference direction of present dataset.
+        brng_angl = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'Brng_A', 'Bearing angle: ', 0)   # Defines
+        # variable. Calls function. Slices DataFrame to yield bearing angle of present dataset.
+        brng_a_dir = slice_DataFrame_cell('String', 0, None, df_srvy1, 0, 'Brng_A_dir', 'Bearing angle direction: ', 0)
+        # Defines variable. Calls function. Slices DataFrame to yield bearing angle direction of present dataset.
+        brng_fnctl = slice_DataFrame_cell('String', 0, None, df_srvy1, 0, 'Brng_fnctl', 'Functional bearing: ', 0)
+        # Defines variable. Calls function. Slices DataFrame to yield functional bearing directions of present dataset.
         rng_lngth1 = offst_max1 - offst_min1  # Defines variable. Calculates survey length.
-        rng_lngth1_m = rng_lngth1 / cnvrt_ft_t_m
+        rng_lngth1_m = rng_lngth1 / ft_to_m  # Defines variable. Converts to meters.
         srvy_rlf1 = elvtn_max1 - elvtn_min1  # Defines variable. Calculates survey relief.
-        srvy_rlf1_m = srvy_rlf1 / cnvrt_ft_t_m
+        srvy_rlf1_m = srvy_rlf1 / ft_to_m  # Defines variable. Converts to meters.
 
-        # DISPLAY DATA ---------------------------------------------------------------------------------------------
+        # DISPLAY DATA -------------------------------------------------------------------------------------------------
 
         if Sngl == 1:  # Conditional statement. Executes analysis of single cross-section.
-            # Metadata ---------------------------------------------------------------------------------------------
+            # Metadata -------------------------------------------------------------------------------------------------
 
             print('==================================================')  # Displays objects.
-            print('\033[1m' + 'Stream channel: ' + '\033[0m' + str(chnl_name))  # Displays
-            # objects.
-            print('\033[1m' + 'Field range: ' + '\033[0m' + str(rng_name1) + ' (' + str(i) + ')')  # Displays
-            # objects.
-            print('\033[1m' + 'Range bearing: ' + '\033[0m' + str(brng_r_dir)+ str(brng_angl)+str(brng_a_dir) + ' ('+str(brng_fnctl)+')')  # Displays objects. Makes font# bold.
-            print('\033[1m' + 'Stream station: ' + '\033[0m' + str(strm_stat1) + ' ft' + ' (' + str('%.0f' % strm_stat1_m) + ' m)')  # Displays objects.
+            print('\033[1m' + 'Stream channel: ' + '\033[0m' + str(chnl_name))  # Displays objects.
+            print('\033[1m' + 'Field range: ' + '\033[0m' + str(rng_name1) + ' (' + str(i) + ')')  # Displays objects.
+            print('\033[1m' + 'Range bearing: ' + '\033[0m' + str(brng_r_dir) + str(brng_angl) + str(brng_a_dir) +
+                  ' (' +str(brng_fnctl) +')')  # Displays objects.
+            print('\033[1m' + 'Stream station: ' + '\033[0m' + str(strm_stat1) + ' ft' +
+                  ' (' + str('%.0f' % strm_stat1_m) + ' m)')  # Displays objects.
             print('\033[1m' + 'Range survey: ' + '\033[0m' + str(srvy_yr1) + ' (' + str(j) + ' of ' +
-                  str(srvy_num_max) + ')')  # Displays objects.
-            # print('\033[1m' + 'Survey date(s): ' + '\033[0m' + str(srvy_dt1))  # Displays objects.
-            print('\033[1m' + 'Survey length: ' + '\033[0m' + str('%.2f'%rng_lngth1) + ' ft' + ' (' + str('%.0f' % rng_lngth1_m) + ' m)')  # Displays objects.
-            print('\033[1m' + 'Range relief: ' + '\033[0m' + str('%.1f' % srvy_rlf1) + ' ft' + ' (' + str('%.0f' % srvy_rlf1_m) + ' m)')  # Displays objects.
+                  str(srvy_nums_max) + ')')  # Displays objects.
+            print('\033[1m' + 'Survey date(s): ' + '\033[0m' + str(srvy_dt1))  # Displays objects.
+            print('\033[1m' + 'Survey length: ' + '\033[0m' + str('%.2f' % rng_lngth1) + ' ft' +
+                  ' (' + str('%.0f' % rng_lngth1_m) + ' m)')  # Displays objects.
+            print('\033[1m' + 'Range relief: ' + '\033[0m' + str('%.1f' % srvy_rlf1) + ' ft' +
+                  ' (' + str('%.0f' % srvy_rlf1_m) + ' m)')  # Displays objects.
             print('\033[1m' + 'Number of samples: ' + '\033[0m' + str(num_smpls1))  # Displays objects.
             print('--------------------------------------------------')  # Displays objects.
 
             # Cross-section plot -----------------------------------------------------------------------------------
 
             if Plt_sngl == 1:  # Conditional statement. Plots single cross-section.
-                clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 0)  # Defines variable. Calls function. Sets
+                srvy_yr1_str=str(srvy_yr1)
+                clr1 = get_plot_feature_by_year(srvy_yr1_str, tol_mtd, 0)  # Defines variable. Calls function. Sets
                 # plot color.
-                mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 0)  # Defines variable. Calls function. Sets plot
+                mrkr1 = get_plot_feature_by_year(srvy_yr1_str, mrkrs, 1)  # Defines variable. Calls function. Sets plot
                 # marker type.
 
                 title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')' + ' ' + str(srvy_yr1) + ' survey '  # Defines string. Sets plot
                 # title.
 
                 plot_lines(1, 1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz, lin_wdth,
-                           lin_styl[0], alpha, 0, lctn, mrkr_scl, frm_alpha, lbl_spcng, 0, fntsz_tcks,
-                           'Survey offset (ft)',fntsz_ax, lbl_pd, 'Surface elevation (ft)', title, 2, 1)
+                           lin_styl[0], alpha[0], 0, lctn, mrkr_scl, frm_alpha, lbl_spcng, 0, fntsz[1],
+                           'Survey offset (ft)',fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 2, 1)
                 # Creates plot. Calls function.
 
                 # EXPORT FIGURE ------------------------------------------------------------------------------------
@@ -260,14 +259,15 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                 # exports figure. Calls function.
 
             if Plt_all == 1:
-                clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 0)  # Defines variable. Calls function. Sets
+                srvy_yr1_str = str(srvy_yr1)
+                clr1 = get_plot_feature_by_year(srvy_yr1_str, tol_mtd, 0)  # Defines variable. Calls function. Sets
                 # plot color.
-                mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 0)  # Defines variable. Calls function. Sets plot
+                mrkr1 = get_plot_feature_by_year(srvy_yr1_str, mrkrs, 1)  # Defines variable. Calls function. Sets plot
                 # marker type.
                 title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')'
                 plot_lines(1, 2, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz, lin_wdth,
-                           lin_styl[0], alpha, 1, lctn, mrkr_scl, frm_alpha, lbl_spcng,0, fntsz_tcks,
-                           'Survey offset (ft)', fntsz_ax, lbl_pd, 'Surface elevation (ft)', title, 1, 1)
+                           lin_styl[0], alpha[0], 1, lctn, mrkr_scl, frm_alpha, lbl_spcng,0, fntsz[-1],
+                           'Survey offset (ft)', fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 1, 1)
 
                 # EXPORT FIGURE ------------------------------------------------------------------------------------
                 if j == srvy_nums[-1]:
@@ -282,48 +282,56 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     # exports figure. Calls function.
 
             if Crdnts == 1:
-                BM1_e_std = slice_DataFrame_cell(df_srvy1, 0, 'BM1_east_m', 'Benchmark 1 Easting (m): ', 0)
-                BM1_n_std = slice_DataFrame_cell(df_srvy1, 0, 'BM1_nrth_m', 'Benchmark 1 Northing (m): ', 0)
-                BM2_e_std = slice_DataFrame_cell(df_srvy1, 0, 'BM2_east_m', 'Benchmark 2 Easting (m): ', 0)
-                BM2_n_std = slice_DataFrame_cell(df_srvy1, 0, 'BM2_nrth_m', 'Benchmark 2 Northing (m): ', 0)
-                BM1_off = slice_DataFrame_cell(df_srvy1, 0, 'BM1_off_tp', 'Benchmark 1 top offset (ft): ', 0)
-                BM2_off = slice_DataFrame_cell(df_srvy1, 0, 'BM2_off_tp', 'Benchmark 2 top offset (ft): ', 0)
-                rng_brng,sin,cos = coordinate_bearing(BM1_e_std, BM2_e_std, BM1_n_std, BM2_n_std, BM1_off,BM2_off, brng_r_dir, brng_a_dir,brng_angl,brng_fnctl, 'Directional data',1)
-                # breakpoint()
-                df_offst1_shft = df_offst1 - BM1_off
-                # print(df_offst1_shft)
-                df_offst1_shft_m=df_offst1_shft/cnvrt_ft_t_m
-                # print(df_offst1_shft_m)
-                offsets_East = cos * df_offst1_shft_m
-                # print(offsets_East)
-                offsets_North = sin * df_offst1_shft_m
-                # print(offsets_North)
-                smpl_eastings = BM1_e_std + offsets_East
-                smpl_eastings = smpl_eastings.rename('Easting_m')
-                # print(smpl_eastings)
-                smpl_northings = BM1_n_std + offsets_North
-                smpl_northings=smpl_northings.rename('Northing_m')
-                # print(smpl_northings)
-                # breakpoint()
-                df_srvy1=pd.concat([df_srvy1,smpl_eastings,smpl_northings],axis=1)
-                # print(df_srvy1)
-                # breakpoint()
-                plt.figure(1, figsize=(7, 7))
-                ax1 = plt.gca()
-                ax1.scatter(smpl_eastings, smpl_northings, s=5, label='Predicted', c='Orange', marker='o', alpha=0.5)
-                ax1.scatter(BM1_e_std, BM1_n_std, s=5, label='Measured', c='Blue', marker='o', alpha=1)
-                ax1.scatter(BM2_e_std, BM2_n_std, s=5, c='Blue', marker='o', alpha=1)
-                ax1.set_aspect('equal', 'box')
-                plt.xlabel('Easting (m)', fontsize=8)
-                plt.ylabel('Northing (m)', fontsize=8)
-                # plt.pause(1)
-                # plt.show()
-                gdf_srvy = gpd.GeoDataFrame(df_srvy1, geometry=gpd.points_from_xy(df_srvy1.Easting_m, df_srvy1.Northing_m),crs='EPSG:26915')
-                fldr_lbls = ['/Cross_sectional_analysis', '/Geographic_data', '/Cross_sections', '/Points','/' + chnl_name]
-                layer = 'R_' + str(rng_name1) + '_'+ str(srvy_yr1)
-                geopackage = '/'+chnl_abrv+'_survey_points.gpkg'
-                # gdf_srvy.to_file(opt_fldr + dig_fldrout + gis_fldr + gpkg_fl, layer=feature, driver='GPKG', index=False)
-                export_file_to_directory(1, 'geo table', 5, fldr_lbls,opt_fldr,'Directiories named: ',layer,None,None,None,False,'GIS layer',gdf_srvy,geopackage,'GPKG',0)
+                if srvy_yr1 != 2008:
+                    BM1_e_std = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_east_m', 'Benchmark 1 Easting (m): ', 0)
+                    BM1_n_std = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_nrth_m', 'Benchmark 1 Northing (m): ', 0)
+                    BM2_e_std = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM2_east_m', 'Benchmark 2 Easting (m): ', 0)
+                    BM2_n_std = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM2_nrth_m', 'Benchmark 2 Northing (m): ', 0)
+                    BM1_off = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_off_tp', 'Benchmark 1 top offset (ft): ', 1)
+                    BM2_off = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM2_off_tp', 'Benchmark 2 top offset (ft): ', 0)
+                    BM1_crd_off = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_crd_off', 'Benchmark 1 GPS top offset (ft): ', 1)
+                    rng_brng,sin,cos = coordinate_bearing(BM1_e_std, BM2_e_std, BM1_n_std, BM2_n_std, BM1_off,BM2_off, brng_r_dir, brng_a_dir,brng_angl,brng_fnctl, 'Directional data',1)
+                    #NEED ERROR ANALYSIS FUNCTION BECAUSE OFFSET CALC AND OFFSET MEAS INCOMPARABLE FOR ALL BUT 90S DATA SHOULD CHOOSE COORD OF LAST POINT FOR DISTANCE MEAS
+                    # breakpoint()
+                    if BM1_off == BM1_crd_off:
+                        df_offst1_shft = df_offst1 - BM1_off
+                        # print(df_offst1_shft)
+                    else:
+                        df_offst1_shft = df_offst1 - BM1_crd_off
+                        # print(df_offst1_shft)
+                    df_offst1_shft_m=df_offst1_shft/ft_to_m
+                    # print(df_offst1_shft_m)
+                    offsets_East = cos * df_offst1_shft_m
+                    # print(offsets_East)
+                    offsets_North = sin * df_offst1_shft_m
+                    # print(offsets_North)
+                    smpl_eastings = BM1_e_std + offsets_East
+                    smpl_eastings = smpl_eastings.rename('Easting_m')
+                    # print(smpl_eastings)
+                    smpl_northings = BM1_n_std + offsets_North
+                    smpl_northings=smpl_northings.rename('Northing_m')
+                    # print(smpl_northings)
+                    # breakpoint()
+                    df_srvy1=pd.concat([df_srvy1,smpl_eastings,smpl_northings],axis=1)
+                    # print(df_srvy1)
+                    # breakpoint()
+                    plt.figure(1, figsize=(7, 7))
+                    ax1 = plt.gca()
+                    ax1.scatter(smpl_eastings, smpl_northings, s=5, label='Predicted', c='Orange', marker='o', alpha=0.5)
+                    ax1.scatter(BM1_e_std, BM1_n_std, s=5, label='Measured', c='Blue', marker='o', alpha=1)
+                    ax1.scatter(BM2_e_std, BM2_n_std, s=5, c='Blue', marker='o', alpha=1)
+                    ax1.set_aspect('equal', 'box')
+                    plt.xlabel('Easting (m)', fontsize=8)
+                    plt.ylabel('Northing (m)', fontsize=8)
+                    plt.pause(1)
+                    # plt.show()
+                    gdf_srvy = gpd.GeoDataFrame(df_srvy1, geometry=gpd.points_from_xy(df_srvy1.Easting_m, df_srvy1.Northing_m),crs='EPSG:26915')
+                    fldr_lbls = ['/Cross_sectional_analysis', '/Geographic_data', '/Cross_sections', '/Points','/' + chnl_name ]
+                    layer = 'R_' + str(rng_name1) + '_'+ str(srvy_yr1)
+                    geopackage = '/'+rng_name1+'_survey_points.gpkg'
+                    # gdf_srvy.to_file(opt_fldr + dig_fldrout + gis_fldr + gpkg_fl, layer=feature, driver='GPKG', index=False)
+                    export_file_to_directory(1, 'geo table', 5, fldr_lbls,opt_fldr,'Directiories named: ',layer,None,None,None,False,'GIS layer',gdf_srvy,geopackage,'GPKG',0)
+
         # Creates and exports geopackage at specified path.
         # SELECT DATA ----------------------------------------------------------------------------------------------
 
