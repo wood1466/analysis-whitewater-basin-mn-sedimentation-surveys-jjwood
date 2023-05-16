@@ -74,15 +74,21 @@ def slice_DataFrame_cell(data_type, convert, conversion_factor, dataframe, posit
     index = dataframe.index  # Defines object. Retrieves DataFrame index.
     slc_cl = dataframe.loc[index[position], column]  # Defines function format.
     typ = type(slc_cl)  # Defines variable. Checks data type.
-    if typ == data_type:  # Conditional statement. Ensures desired data type retrieved by function.
-        pass  # Pass command. Moves on to next line.
-    else:  # Conditional statement.
-        if data_type == 'Integer':  # Conditional statement. Enforces desired data type retrieved by function.
-            slc_cl = int(slc_cl)  # Redefines variable. Converts to integer.
-        elif data_type == 'Float':  # Conditional statement. Enforces desired data type retrieved by function.
-            slc_cl = float(slc_cl)  # Redefines variable. Converts to float.
+    if slc_cl == '1850s':  # Conditional statement. Ensures desired data type retrieved by function.
+        if typ == data_type:  # Conditional statement.
+            pass
         else:  # Conditional statement.
             slc_cl = str(slc_cl)  # Redefines variable. Converts to string.
+    else:
+        if typ == data_type:  # Conditional statement. Ensures desired data type retrieved by function.
+            pass  # Pass command. Moves on to next line.
+        else:  # Conditional statement.
+            if data_type == 'Integer':  # Conditional statement. Enforces desired data type retrieved by function.
+                slc_cl = int(slc_cl)  # Redefines variable. Converts to integer.
+            elif data_type == 'Float':  # Conditional statement. Enforces desired data type retrieved by function.
+                slc_cl = float(slc_cl)  # Redefines variable. Converts to float.
+            else:  # Conditional statement. Enforces desired data type retrieved by function.
+                slc_cl = str(slc_cl)  # Redefines variable. Converts to string.
     if convert == 1:  # Conditional statement. Also retreives converted value for number.
         slc_cl_cnvrt = slc_cl * conversion_factor  # Defines variable. Converts units.
         if display == 1:  # Conditional statement. For display.
@@ -94,7 +100,67 @@ def slice_DataFrame_cell(data_type, convert, conversion_factor, dataframe, posit
         if display == 1:  # Conditional statement. For display.
             print(display_label + ': ' + str(slc_cl) + ' (' + data_type + ')' + '\n')  # Displays objects.
         return slc_cl # Ends function execution.
-    
+
+def slice_DataFrame_columns(output, data_type, dataframe, column, check_duplicates, display_label, display):  # Defines function. For
+    # DataFrame slicing by column.
+    df_slc_c = dataframe[column]  # Defines function format.
+    if check_duplicates == 1:  # Conditional statement.
+        df_slc_c = df_slc_c.drop_duplicates(keep='first')  # Redefines DataFrame. Drops all duplicate values in
+        # column.
+    typ = df_slc_c.dtypes  # Defines variable. Retreives data type of column DataFrame.
+    if typ == data_type:  # Conditional statement. Ensures desired data type retrieved by function.
+        pass  # Pass command. Moves on to next line.
+    else:  # Conditional statement.
+        if data_type == 'Integer':  # Conditional statement. Enforces desired data type retrieved by function.
+            df_slc_c = df_slc_c.astype(int)  # Redefines DataFrame. Converts to integer.
+        elif data_type == 'Float':  # Conditional statement. Enforces desired data type retrieved by function.
+            df_slc_c = df_slc_c.astype(float)  # Redefines DataFrame. Converts to float.
+        else:  # Conditional statement. Enforces desired data type retrieved by function.
+            df_slc_c = df_slc_c.astype(str)  # Redefines DataFrame. Converts to string.
+    if output == 'DataFrame':  # Conditional statement. For output selection.
+        if display == 1:  # Conditional statement. For display.
+            print('\033[1m' + display_label + '\033[0m', '\n...\n', df_slc_c, '\n')  # Displays objects.
+        return df_slc_c  # Ends function execution.
+    else:  # Conditional statement. For display.
+        slc_c_lst = df_slc_c.tolist()  # Defines list. Converts DataFrame to list.
+        if display == 1:  # Conditional statement. For display.
+            print('\033[1m' + display_label + '\033[0m', '\n...\n', slc_c_lst, '\n')  # Displays objects.
+        return slc_c_lst  # Ends function execution.
+
+def min_value_DataFrame(data_type, dataframe, display_label, display):  # Defines function. For retrieving minimum value from
+    # DataFrame column.
+    mn = dataframe.min()  # Defines function format.
+    typ = type(mn)  # Defines variable. Retreives data type.
+    if typ == data_type:  # Conditional statement. Ensures desired data type retrieved by function.
+        pass  # Pass command. Moves on to next line.
+    else:  # Conditional statement.
+        if data_type == 'Integer':  # Conditional statement. Enforces desired data type retrieved by function.
+            mn = int(mn)  # Redefines DataFrame. Converts to integer.
+        elif data_type == 'Float':  # Conditional statement. Enforces desired data type retrieved by function.
+            mn = float(mn)  # Redefines DataFrame. Converts to float.
+        else:  # Conditional statement. Enforces desired data type retrieved by function.
+            mn = str(mn)  # Redefines DataFrame. Converts to string.
+    if display == 1:  # Conditional statement. For display.
+        print('Minimum column value: ' + display_label + ' ' + str(mn))  # Displays objects.
+    return mn  # Ends function execution.
+
+def max_value_DataFrame(data_type, dataframe, display_label, display):  # Defines function. For retrieving maximum
+    # value of DataFrame column.
+    mx = dataframe.max()  # Defines function format.
+    typ = type(mx)  # Defines variable. Retreives data type.
+    if typ == data_type:  # Conditional statement. Ensures desired data type retrieved by function.
+        pass  # Pass command. Moves on to next line.
+    else:  # Conditional statement.
+        if data_type == 'Integer':  # Conditional statement. Enforces desired data type retrieved by function.
+            mx = int(mx)  # Redefines DataFrame. Converts to integer.
+        elif data_type == 'Float':  # Conditional statement. Enforces desired data type retrieved by function.
+            mx = float(mx)  # Redefines DataFrame. Converts to float.
+        else:  # Conditional statement. Enforces desired data type retrieved by function.
+            mx = str(mx)  # Redefines DataFrame. Converts to string.
+    if display == 1:  # Conditional statement. For display.
+        print('Maximum column value: ' + display_label + ' ' + str(mx))  # Displays objects.
+    return mx  # Ends function execution.
+
 # ======================================================================================================================
 # END ------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
@@ -131,26 +197,11 @@ def reverse_range(start, end, step, display_label, display):  # Defines function
 
 
 
-def slice_DataFrame_columns(dataframe, column, check_duplicates, display_label, display):  # Defines function. For DataFrame slicing by column.
-    df_slc_c = dataframe[column]  # Defines function format.
-    if check_duplicates == 1:  # Conditional statement.
-        df_slc_c = df_slc_c.drop_duplicates(keep='first')  # Redefines DataFrame. Drops all duplicate values in
-        # column.
-    if display == 1:  # Conditional statement. For display.
-        print('\033[1m' + display_label + '\033[0m', '\n...\n', df_slc_c, '\n')  # Displays objects.
-    return df_slc_c  # Ends function execution.
 
-def max_value_DataFrame(dataframe, display_label, display):  # Defines function. For retrieving maximum value of DataFrame column.
-    mx = dataframe.max()  # Defines function format.
-    if display == 1:  # Conditional statement. For display.
-        print('Maximum column value: ' + display_label + ' ' + str(mx))  # Displays objects.
-    return mx  # Ends function execution.
 
-def min_value_DataFrame(dataframe, display_label, display):  # Defines function. For retrieving minimum value from DataFrame column.
-    mn = dataframe.min()  # Defines function format.
-    if display == 1:  # Conditional statement. For display.
-        print('Minimum column value: ' + display_label + ' ' + str(mn))  # Displays objects.
-    return mn  # Ends function execution.
+
+
+
 
 def get_plot_feature_by_year(label, list, alternate):  # Defines function. For plot feature selection from input list.
     if label == '2008':  # Conditional statement.
@@ -574,35 +625,42 @@ def coordinate_bearing(x1, x2, y1, y2, c1,c2, bearing_reference_direction, beari
                 qdrnt_meas = 1
                 deg_max = 90
                 new_bearing_deg = deg_max-bearing_deg
-            if bearing_functional == 'SW':
+            else:
+                # elif bearing_functional == 'SW':
                 qdrnt_meas = 3
                 deg_max = 270
                 new_bearing_deg = deg_max - bearing_deg
-        if bearing_angle_direction=='W':
+        else:
+            # elif bearing_angle_direction=='W':
             if bearing_functional == 'NW':
                 qdrnt_meas=2
                 deg_min=90
                 new_bearing_deg=deg_min+bearing_deg
-            if bearing_functional == 'SE':
+            else:
+                # elif bearing_functional == 'SE':
                 qdrnt_meas = 4
                 deg_min = 270
                 new_bearing_deg = deg_min + bearing_deg
-    if bearing_reference_direction=='S':
+    else:
+        # if bearing_reference_direction=='S':
         if bearing_angle_direction=='W':
             if bearing_functional == 'SW':
                 qdrnt_meas=3
                 deg_max=270
                 new_bearing_deg=deg_max-bearing_deg
-            if bearing_functional == 'NE':
+            else:
+                # elif bearing_functional == 'NE':
                 qdrnt_meas = 1
                 deg_max = 90
                 new_bearing_deg = deg_max-bearing_deg
-        if bearing_angle_direction=='E':
+        else:
+            # elif bearing_angle_direction=='E':
             if bearing_functional == 'SE':
                 qdrnt_meas = 4
                 deg_min = 270
                 new_bearing_deg = deg_min + bearing_deg
-            if bearing_functional == 'NW':
+            else:
+            # elif bearing_functional == 'NW':
                 qdrnt_meas = 2
                 deg_min = 90
                 new_bearing_deg = deg_min + bearing_deg
