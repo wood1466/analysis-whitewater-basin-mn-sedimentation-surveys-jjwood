@@ -34,10 +34,10 @@ Sngl = 1  # Defines variable as integer. Sets binary toggle.
 # Plot single cross-section
 Plt_sngl = 0  # Defines variable as integer. Sets binary toggle.
 # Plot all cross-sections
-Plt_all = 0 # Defines variable as integer. Sets binary toggle.
+Plt_all = 1 # Defines variable as integer. Sets binary toggle.
 
 # Calculate coordinate geometry
-Crdnts = 1  # Defines variable as integer. Sets binary toggle.
+Crdnts = 0  # Defines variable as integer. Sets binary toggle.
 
 # Dual cross-sections analysis -----------------------------------------------------------------------------------------
 
@@ -65,10 +65,10 @@ Plt_rt_chng=1  # Defines variable as integer. Sets binary toggle.
 # Limits of analysis ---------------------------------------------------------------------------------------------------
 
 rvr_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one river channel only.
-rng_nly = 1  # Defines variable as integer. Sets binary toggle. Analyzes data for one survey range only.
+rng_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one survey range only.
 xtra_srvys = 0  # Defines variable as integer. Sets binary toggle. Analyzes extra survey data for range 11B (13).
 rng_strt = 1  # Defines variable as integer. Sets start survey range number for analysis loop.
-rng_end = 94  # Defines variable as integer. Sets end survey range number for analysis loop.
+rng_end = 15  # Defines variable as integer. Sets end survey range number for analysis loop.
 
 # Conversion factors ---------------------------------------------------------------------------------------------------
 
@@ -89,7 +89,7 @@ tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#C
 # Defines list. Sets Paul Tol, muted, colorblind friendly palette with hex color codes.
 lin_wdth = 2  # Defines variable as integer. Sets plot line width.
 lin_styl = ['solid', 'dashed', 'dotted', 'dashdot']  # Defines list. Sets line style.
-mrkrs = [' ', 'v', 'P', 'o', 'X', 's', '^', 'D', '<', '>', '8', 'p', 'h', 'H', 'd']  # Defines list. Sets plot markers.
+mrkrs = ['h', 'v', 'P', 'o', 'X', 's', '^', 'D', '<', '>', '8', 'p', 'H', 'd', ' ']  # Defines list. Sets plot markers.
 # Uses matplotlib markers.
 mrkr_sz = 4  # Defines variable as integer. Sets plot marker size.
 alpha = [0.5, 0.3]  # Defines list. Sets object transparency for plotted data and fill.
@@ -118,6 +118,7 @@ for i in lvl1_fldrs:  # Begins loop through elements of list. Loops through path
 # PART 2: CROSS-SECTIONAL ANALYSIS - SINGLE ----------------------------------------------------------------------------
 # ======================================================================================================================
 
+# ======================================================================================================================
 # SELECT DATA ----------------------------------------------------------------------------------------------------------
 
 # Input file -----------------------------------------------------------------------------------------------------------
@@ -176,7 +177,8 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
         # variable. Calls function. Slices DataFrame to yield survey year of present dataset.
         srvy_dt1 = slice_DataFrame_cell('String', 0, None, df_srvy1, 0, 'Srvy_date', 'Survey date', 0)  # Defines
         # variable. Calls function. Slices DataFrame to yield survey date of present dataset.
-
+        srvy_typ1 = slice_DataFrame_cell('String', 0, None, df_srvy1, 0, 'Srvy_type', 'Survey type', 0)  # Defines
+        # variable. Calls function. Slices DataFrame to yield survey type of present dataset.
         # Select survey measurements
         df_offst1 = slice_DataFrame_columns('DataFrame', 'Float', df_srvy1, 'Offset_ft', 0, 'OFFSET', 0)  # Defines
         # DataFrame. Calls function. Slices DataFrame to yield survey offsets of present dataset.
@@ -214,83 +216,119 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
             print('==================================================')  # Displays objects.
             print('\033[1m' + 'Stream channel: ' + '\033[0m' + str(chnl_name))  # Displays objects.
-            print('\033[1m' + 'Field range: ' + '\033[0m' + str(rng_name1) + ' (' + str(i) + ')')  # Displays objects.
-            print('\033[1m' + 'Range bearing: ' + '\033[0m' + str(brng_r_dir) + str(brng_angl) + str(brng_a_dir) +
+            print('\033[1m' + 'Field transect: ' + '\033[0m' + str(rng_name1) + ' (' + str(i) + ')')  # Displays
+            # objects.
+            print('\033[1m' + 'Transect bearing: ' + '\033[0m' + str(brng_r_dir) + str(brng_angl) + str(brng_a_dir) +
                   ' (' +str(brng_fnctl) +')')  # Displays objects.
             print('\033[1m' + 'Stream station: ' + '\033[0m' + str(strm_stat1) + ' ft' +
                   ' (' + str('%.0f' % strm_stat1_m) + ' m)')  # Displays objects.
-            print('\033[1m' + 'Range survey: ' + '\033[0m' + str(srvy_yr1) + ' (' + str(j) + ' of ' +
+            print('\033[1m' + 'Transect survey: ' + '\033[0m' + str(srvy_yr1) + ' (' + str(j) + ' of ' +
                   str(srvy_nums_max) + ')')  # Displays objects.
+            print('\033[1m' + 'Survey type: ' + '\033[0m]' + str(srvy_typ1))  # Displays objects.
             print('\033[1m' + 'Survey date(s): ' + '\033[0m' + str(srvy_dt1))  # Displays objects.
             print('\033[1m' + 'Survey length: ' + '\033[0m' + str('%.2f' % rng_lngth1) + ' ft' +
                   ' (' + str('%.0f' % rng_lngth1_m) + ' m)')  # Displays objects.
-            print('\033[1m' + 'Range relief: ' + '\033[0m' + str('%.1f' % srvy_rlf1) + ' ft' +
+            print('\033[1m' + 'Survey relief: ' + '\033[0m' + str('%.1f' % srvy_rlf1) + ' ft' +
                   ' (' + str('%.0f' % srvy_rlf1_m) + ' m)')  # Displays objects.
             print('\033[1m' + 'Number of samples: ' + '\033[0m' + str(num_smpls1))  # Displays objects.
             print('--------------------------------------------------')  # Displays objects.
 
-            # Cross-section plot -----------------------------------------------------------------------------------
+            # Cross-section --------------------------------------------------------------------------------------------
 
             if Plt_sngl == 1:  # Conditional statement. Plots single cross-section.
-                srvy_yr1_str=str(srvy_yr1)
-                clr1 = get_plot_feature_by_year(srvy_yr1_str, tol_mtd, 0)  # Defines variable. Calls function. Sets
-                # plot color.
-                mrkr1 = get_plot_feature_by_year(srvy_yr1_str, mrkrs, 1)  # Defines variable. Calls function. Sets plot
-                # marker type.
+                clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color ', 1)  # Defines variable. Calls function.
+                # Sets plot color.
+                mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker ', 1)  # Defines variable. Calls function.
+                # Sets plot marker type.
 
-                title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')' + ' ' + str(srvy_yr1) + ' survey '  # Defines string. Sets plot
-                # title.
+                title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')' + ' ' + str(srvy_yr1) + ' survey '  # Defines
+                # string. Sets plot title.
 
                 plot_lines(1, 1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz, lin_wdth,
                            lin_styl[0], alpha[0], 0, lctn, mrkr_scl, frm_alpha, lbl_spcng, 0, fntsz[1],
-                           'Survey offset (ft)',fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 2, 1)
-                # Creates plot. Calls function.
+                           'Survey offset (ft)',fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 1, 1)  # Creates
+                # plot. Calls function.
 
-                # EXPORT FIGURE ------------------------------------------------------------------------------------
-
+                # Export data
                 fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/Single', '/' + chnl_name]
                 # Defines list. Sets folder labels for directory to be made.
 
-                fig_name = '/' + str(rng_name1) + '_s' + str(j) + '_' + str(srvy_yr1) + '.pdf'  # Defines
-                # variable as strIng. Sets name of figure for export.
+                fig_name = '/' + str(rng_name1) + '_s' + str(j) + '_' + str(srvy_yr1) + '.pdf'  # Defines variable as
+                # strIng. Sets name of figure for export.
 
-                export_file_to_directory(1, 'figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name, 1,
-                                         'pdf', None, None, 'Cross-sectional plot',None,None,None, 0)  # Creates directory and
-                # exports figure. Calls function.
+                export_file_to_directory(1, 'Figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name, 1,
+                                         'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)  # Creates
+                # directory and exports figure. Calls function.
 
-            if Plt_all == 1:
-                srvy_yr1_str = str(srvy_yr1)
-                clr1 = get_plot_feature_by_year(srvy_yr1_str, tol_mtd, 0)  # Defines variable. Calls function. Sets
-                # plot color.
-                mrkr1 = get_plot_feature_by_year(srvy_yr1_str, mrkrs, 1)  # Defines variable. Calls function. Sets plot
-                # marker type.
-                title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')'
+            # All cross-sections ---------------------------------------------------------------------------------------
+
+            if Plt_all == 1:  # Conditional statement. Plots all cross-sections on transect.
+                clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color ', 0)  # Defines variable. Calls function.
+                # Sets plot color.
+                mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker ', 0)  # Defines variable. Calls function.
+                # Sets plot marker type.
+
+                title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')'  # Defines string. Sets plot title.
+
                 plot_lines(1, 2, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz, lin_wdth,
                            lin_styl[0], alpha[0], 1, lctn, mrkr_scl, frm_alpha, lbl_spcng,0, fntsz[-1],
-                           'Survey offset (ft)', fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 1, 1)
+                           'Survey offset (ft)', fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 1, 1)  # Creates
+                # plot. Calls function.
 
-                # EXPORT FIGURE ------------------------------------------------------------------------------------
-                if j == srvy_nums[-1]:
+                # Export data
+                if j == srvy_nums1[-1]:  # Conditional statement. Exports only when final cross-section has been
+                    # plotted.
                     fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/All', '/' + chnl_name]
                     # Defines list. Sets folder labels for directory to be made.
 
-                    fig_name = '/' + str(rng_name1) + '.pdf'  # Defines
-                    # variable as strIng. Sets name of figure for export.
+                    fig_name = '/' + str(rng_name1) + '.pdf'  # Defines variable as strIng. Sets name of figure for
+                    # export.
 
-                    export_file_to_directory(1, 'figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name, 2,
-                                             'pdf', None, None, 'Cross-sectional plot',None,None,None, 0)  # Creates directory and
-                    # exports figure. Calls function.
+                    export_file_to_directory(1, 'Figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name, 2,
+                                             'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)  # Creates
+                    # directory and exports figure. Calls function.
 
-            if Crdnts == 1:
-                if srvy_yr1 != 2008:
-                    BM1_e_std = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_east_m', 'Benchmark 1 Easting (m): ', 0)
-                    BM1_n_std = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_nrth_m', 'Benchmark 1 Northing (m): ', 0)
-                    BM2_e_std = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM2_east_m', 'Benchmark 2 Easting (m): ', 0)
-                    BM2_n_std = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM2_nrth_m', 'Benchmark 2 Northing (m): ', 0)
-                    BM1_off = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_off_tp', 'Benchmark 1 top offset (ft): ', 1)
-                    BM2_off = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM2_off_tp', 'Benchmark 2 top offset (ft): ', 0)
-                    BM1_crd_off = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_crd_off', 'Benchmark 1 GPS top offset (ft): ', 1)
-                    rng_brng,sin,cos = coordinate_bearing(BM1_e_std, BM2_e_std, BM1_n_std, BM2_n_std, BM1_off,BM2_off, brng_r_dir, brng_a_dir,brng_angl,brng_fnctl, 'Directional data',1)
+            # ==========================================================================================================
+            # CALCULATE MEASUREMENT COORDINATES ------------------------------------------------------------------------
+
+            if Crdnts == 1:  # Conditional statement. Digitizes survey measurements.
+                if srvy_typ1 != 'Lidar':  # Conditional statement. Performs calculations for field data only.
+                    # SELECT BENCHMARK DATA ----------------------------------------------------------------------------
+
+                    # Coordinates --------------------------------------------------------------------------------------
+
+                    BM1_e = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_east_m',
+                                                 'Benchmark 1 Easting (m): ', 0)  # Defines variable. Calls function.
+                    # Slices DataFrame to yield easting coordinate of first benchmark of present dataset.
+                    BM1_n = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_nrth_m',
+                                                 'Benchmark 1 Northing (m): ', 0)  # Defines variable. Calls function.
+                    # Slices DataFrame to yield northing coordinate of first benchmark of present dataset.
+                    BM2_e = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM2_east_m',
+                                                 'Benchmark 2 Easting (m): ', 0)  # Defines variable. Calls function.
+                    # Slices DataFrame to yield easting coordinate of second benchmark of present dataset.
+                    BM2_n = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM2_nrth_m',
+                                                 'Benchmark 2 Northing (m): ', 0)  # Defines variable. Calls function.
+                    # Slices DataFrame to yield northing coordinate of second benchmark of present dataset.
+
+                    # Position -----------------------------------------------------------------------------------------
+
+                    BM1_off = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_off_tp',
+                                                   'Benchmark 1 top offset (ft): ', 0)  # Defines variable. Calls
+                    # function. Slices DataFrame to yield offset of first benchmark of present dataset.
+                    BM2_off = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM2_off_tp',
+                                                   'Benchmark 2 top offset (ft): ', 0)  # Defines variable. Calls
+                    # function. Slices DataFrame to yield offset of second benchmark of present dataset.
+                    BM1_crd_off = slice_DataFrame_cell('Float', 0, None, df_srvy1, 0, 'BM1_crd_off',
+                                                       'Benchmark 1 GPS top offset (ft): ', 0)  # Defines variable.
+                    # Calls function. Slices DataFrame to yield GPS offset of first benchmark of present dataset.
+
+                    # CALCULATE TRANSECT ORIENTATION -------------------------------------------------------------------
+
+                    rng_brng, sin, cos = coordinate_bearing(BM1_e, BM2_e, BM1_n, BM2_n, BM1_off, BM2_off, brng_r_dir,
+                                                          brng_a_dir,brng_angl,brng_fnctl, 'Directional data', 1)
+                    # Defines variables. Calls function. Calculates trigonometric components of transect from GPS
+                    # points.
+
                     #NEED ERROR ANALYSIS FUNCTION BECAUSE OFFSET CALC AND OFFSET MEAS INCOMPARABLE FOR ALL BUT 90S DATA SHOULD CHOOSE COORD OF LAST POINT FOR DISTANCE MEAS
                     # breakpoint()
                     if BM1_off == BM1_crd_off:
@@ -328,7 +366,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     gdf_srvy = gpd.GeoDataFrame(df_srvy1, geometry=gpd.points_from_xy(df_srvy1.Easting_m, df_srvy1.Northing_m),crs='EPSG:26915')
                     fldr_lbls = ['/Cross_sectional_analysis', '/Geographic_data', '/Cross_sections', '/Points','/' + chnl_name ]
                     layer = 'R_' + str(rng_name1) + '_'+ str(srvy_yr1)
-                    geopackage = '/'+rng_name1+'_survey_points.gpkg'
+                    geopackage = '/'+chnl_abrv+'_survey_points.gpkg'
                     # gdf_srvy.to_file(opt_fldr + dig_fldrout + gis_fldr + gpkg_fl, layer=feature, driver='GPKG', index=False)
                     export_file_to_directory(1, 'geo table', 5, fldr_lbls,opt_fldr,'Directiories named: ',layer,None,None,None,False,'GIS layer',gdf_srvy,geopackage,'GPKG',0)
 
