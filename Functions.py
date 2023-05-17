@@ -161,6 +161,193 @@ def max_value_DataFrame(data_type, dataframe, display_label, display):  # Define
         print('Maximum column value: ' + display_label + ' ' + str(mx))  # Displays objects.
     return mx  # Ends function execution.
 
+def get_plot_feature_by_year(label, list, display_label, display):  # Defines function. For plot feature selection from
+    # input list.
+    label = str(label)  # Redefines variable. Converts data type to string.
+    if label == '2008':  # Conditional statement.
+        feature = list[0]  # Defines variable. Sets plot feature.
+    elif label == '1994':  # Conditional statement.
+        feature = list[3]  # Defines variable. Sets plot feature.
+    elif label == '1978':  # Conditional statement.
+        feature = list[2]  # Defines variable. Sets plot feature.
+    elif label == '1975':  # Conditional statement.
+        feature = list[4]  # Defines variable. Sets plot feature.
+    elif label == '1964':  # Conditional statement.
+        feature = list[5]  # Defines variable. Sets plot feature.
+    elif label == '1939':  # Conditional statement.
+        feature = list[6]  # Defines variable. Sets plot feature.
+    else:  # Conditional statement.
+        feature = list[7]  # Defines variable. Sets plot feature.
+    if display == 1:  # Conditonal statement. For display.
+        print('Plot feature selected: ' + display_label + str(feature))  # Displays objects.
+    return feature  # Ends function execution.
+
+def plot_lines(lines, plot_number, figure_size, x, y, label, color, marker, marker_size, line_width, line_style, alpha,
+               show_legend, location, marker_scale, frame_alpha, label_spacing, invert_x, fontsize_ticks, x_label,
+               fontsize_axis, label_pad, y_label, title, pause, pause_length):  # Defines function. For line plotting.
+    plt.figure(plot_number, figsize=figure_size)  # Creates plot window. Sets figure size.
+    ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
+    if lines == 1:  # Conditional statement. Plots single line.
+        ax.plot(x, y, label=label, c=color, marker=marker, markersize=marker_size, linewidth=line_width,
+                linestyle=line_style, alpha=alpha)  # Creates line plot. Sets display format.
+        if show_legend == 1:  # Conditional statement. Shows legend if desired for single line plotting.
+            ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha, labelspacing=label_spacing)
+            # Creates legend. Through automatic label detection.
+    if lines != 1:  # Conditional statement. Plots multiple lines.
+        lines = lines + 1  # Defines variable. For establishing looped plotting framework.
+        line_list = range(1, lines, 1)  # Defines list. Creates range of integers for looped plotting.
+        for a in line_list:  # Begins loop through list elements. Loops through line numbers.
+            index = line_list.index(a)  # Defines variable. Retrieves index of element in list. For format selection.
+            ax.plot(x[index], y[index], label=label[index], c=color[index], marker=marker[index],
+                    markersize=marker_size, linewidth=line_width, linestyle=line_style[index], alpha=alpha)  # Creates
+            # line plot. Sets display format.
+        ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha, labelspacing=label_spacing)
+        # Creates legend. Through automatic label detection.
+    plt.xticks(fontsize=fontsize_ticks)  # Sets x-axis ticks. Sets format.
+    plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets format.
+    plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates y-axis label. Sets format.
+    plt.yticks(fontsize=fontsize_ticks)  # Sets y-axis ticks. Sets format.
+    if invert_x == 1:  # Conditional statement. Inverts x-axis order.
+        ax.invert_xaxis()  # Inverts x-axis.
+    plt.title(title)  # Creates plot title.
+    if pause == 1:  # Conditional statement. For display format.
+        plt.pause(pause_length)  # Displays plot. For set interval of seconds and closes without clearing.
+    elif pause == 0:  # Conditional statement. For display format.
+        plt.show()  # Displays plot. Indefinite and cleared upon close.
+    else:  # Conditional statement. For display format
+        pass  # Pass command. Moves on to next line.
+
+def export_file_to_directory(export, type, directory_levels, folder_labels, output_folder, display_label1, file_name,
+                             number, figure_extension, dataframe, truth_statement, display_label2, geodataframe,
+                             geopackage, driver, display):  # Defines function. For exporting files.
+    if export == 1:  # Conditional statement. Exports file.
+        lvls = name_levels(directory_levels, folder_labels, output_folder, display_label1, display)  # Defines list.
+        # Calls function. For looped folder creation.
+        for a in lvls:  # Begins loop through array elements. Loops through levels.
+            lvl = lvls.index(a) + 2  # Defines variable as integer. For correct display.
+            create_folder(lvl, a)  # Creates folders. Calls function.
+        export_file(type, number, file_name, lvls[-1], figure_extension, dataframe, truth_statement, display_label2,
+                    geodataframe, geopackage, driver, display)  # Calls function. Performs file export.
+
+def export_file(type, number, file_name, end_path, figure_extension, dataframe, truth_statement, display_label,
+                geodataframe, geopackage, driver, display):  # Defines function. For file export.
+    if type == 'Figure':  # Conditional statement. For figure export.
+        plt.figure(number)  # Calls figure. Makes it the active plot.
+        plt.savefig(end_path + file_name, format=figure_extension)  # Saves figure to directory. Sets file format.
+        plt.close()  # Closes active figure.
+    elif type == 'Table':  # Conditional statement. For data table export.
+        dataframe.to_csv(end_path + file_name, index=truth_statement)  # Saves file to directory. Sets file format.
+    elif type == 'Geospatial':  # Conditional statement. For geospatial data export.
+        geodataframe.to_file(end_path + geopackage, layer=file_name, driver=driver, index=truth_statement)  # Saves
+        # file to directory.
+    if display == 1:  # Conditional statement. For display.
+        print(display_label, ' exported')  # Display objects.
+
+def coordinate_bearing(x1, x2, y1, y2, c1, c2, bearing_reference_direction, bearing_angle_direction, bearing_deg,
+                       bearing_functional, display_label, display):  # Defines function. For transect orientation
+    # calculation.
+    # Field data
+    offset_meas = c2 - c1  # Defines variable. Calculates transect offset between benchmark positions.
+    offset_meas = offset_meas * 1/3.281  # Redefines variable. Converts to meters.
+    if bearing_reference_direction =='N':  # Conditional statement. Converts transect bearing to azimuth.
+        if bearing_angle_direction =='E':  # Conditional statement.
+            if bearing_functional == 'NE':  # Conditional statement.
+                qdrnt_meas = 1  # Defines variable. Establishes azimuthal quadrant of transect bearing.
+                deg_max = 90  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
+                azmth_deg = deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
+            else:  # Conditional statement. Converts transect bearing to azimuth.
+                qdrnt_meas = 3  # Defines variable. Establishes azimuthal quadrant of transect bearing.
+                deg_max = 270  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
+                azmth_deg = deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
+        else:  # Conditional statement. Converts transect bearing to azimuth.
+            if bearing_functional == 'NW':  # Conditional statement.
+                qdrnt_meas = 2  # Defines variable. Establishes azimuthal quadrant of transect bearing.
+                deg_min = 90  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
+                azmth_deg = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
+            else:  # Conditional statement. Converts transect bearing to azimuth.
+                # elif bearing_functional == 'SE':
+                qdrnt_meas = 4  # Defines variable. Establishes azimuthal quadrant of transect bearing.
+                deg_min = 270  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
+                azmth_deg = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
+    else:  # Conditional statement. Converts transect bearing to azimuth.
+        if bearing_angle_direction == 'W':  # Conditional statement.
+            if bearing_functional == 'SW':  # Conditional statement.
+                qdrnt_meas = 3  # Defines variable. Establishes azimuthal quadrant of transect bearing.
+                deg_max = 270  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
+                azmth_deg= deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
+            else:  # Conditional statement. Converts transect bearing to azimuth.
+                qdrnt_meas = 1  # Defines variable. Establishes azimuthal quadrant of transect bearing.
+                deg_max = 90  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
+                azmth_deg = deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
+        else:  # Conditional statement. Converts transect bearing to azimuth.
+            if bearing_functional == 'SE':  # Conditional statement.
+                qdrnt_meas = 4  # Defines variable. Establishes azimuthal quadrant of transect bearing.
+                deg_min = 270  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
+                azmth_deg = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
+            else:  # Conditional statement. Converts transect bearing to azimuth.
+                qdrnt_meas = 2  # Defines variable. Establishes azimuthal quadrant of transect bearing.
+                deg_min = 90  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
+                azmth_deg = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
+    azmth_rad = azmth_deg * (np.pi/180)  # Defines variable. Converts degrees to radians.
+    # GPS data.
+    delta_x = x2 - x1  # Defines variable. Calculates change in x between coordinates.
+    delta_y = y2 - y1  # Defines variable. Calculates change in y between coordinates.
+    offset_clc = math.sqrt(delta_x ** 2 + delta_y ** 2)  # Defines variable. Calculates transect offset between
+    # benchmark coordinates.
+    azmth_rad_clc = math.atan(delta_y / delta_x)  # Defines variable. Calculates azmiuth along line between
+    # coordinates.
+    azmth_deg_clc= azmth_rad_clc * (180 / np.pi)  # Defines variable. Converts radians to degrees.
+    if delta_x > 1:
+        if delta_y > 1:
+            qdrnt_clc = 1
+            clc_bearing_rad = azmth_rad_clc
+        if delta_y < 1:
+            qdrnt_clc = 4
+            rad_max = 2 * np.pi
+            clc_bearing_rad = rad_max + azmth_rad_clc
+    if delta_x < 1:
+        if delta_y > 1:
+            qdrnt_clc = 2
+            rad_max = np.pi
+            clc_bearing_rad = rad_max + azmth_rad_clc
+        if delta_y < 1:
+            qdrnt_clc = 3
+            rad_min = np.pi
+            clc_bearing_rad = rad_min + azmth_rad_clc
+    cor_bearing_deg = clc_bearing_rad * (180 / np.pi)
+    bearing_diff = clc_bearing_rad - meas_bearing_rad
+    bearing_diff_deg = bearing_diff * (180 / np.pi)
+    offset_diff = offset_clc - offset_meas
+
+    # if qdrnt_clc != qdrnt_meas:
+    #     sys.exit('Quadrants misaligned')
+    sin = math.sin(clc_bearing_rad)  # Calculates sine of heading.
+    cos = math.cos(clc_bearing_rad)  # Calculates cosine of heading.
+    if display == 1:
+        degree_sign=chr(176)
+        if abs(bearing_diff) > 5*(np.pi/180):
+            print('Directional data' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' + str(qdrnt_clc) +
+            '\n Bearings' + '\n  Field range: ' + bearing_reference_direction + str(bearing_deg) + degree_sign + bearing_angle_direction + ' (' + str('%.1f'%new_bearing_deg) + degree_sign +')' +'\n  Azimuthal equivalent: ' + str('%.2f'%meas_bearing_rad) +' (' + str('%.1f'%new_bearing_deg) + degree_sign +')' +
+                  '\n  Calculated: ' + str('%.2f' % azmth_rad_clc) + ' (' + str('%.1f' % azmth_deg_clc) + degree_sign + ')' + '\n  Corrected to azimuth: ' + str('%.2f' % clc_bearing_rad) + ' (' + str('%.1f' % cor_bearing_deg) + degree_sign + ')' + '\n  Difference: ' + '\033[0;31m' + str('%.2f' % bearing_diff) + ' (' + str('%.1f' % bearing_diff_deg) + degree_sign + ')' + '\033[0m'
+                  + '\n Trig. components' + '\n  Sine: ' + str('%.4f'%sin) + '\n  Cosine: ' + str('%.4f'%cos))
+        else:
+            print('Directional data' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' + str(
+                qdrnt_clc) +
+                  '\n Bearings' + '\n  Field range: ' + bearing_reference_direction + str(
+                bearing_deg) + degree_sign + bearing_angle_direction + ' (' + str(
+                '%.1f' % new_bearing_deg) + degree_sign + ')' + '\n  Azimuthal equivalent: ' + str(
+                '%.2f' % meas_bearing_rad) + ' (' + str('%.1f' % new_bearing_deg) + degree_sign + ')' +
+                  '\n  Calculated: ' + str('%.2f' % azmth_rad_clc) + ' (' + str(
+                '%.1f' % azmth_deg_clc) + degree_sign + ')' + '\n  Corrected to azimuth: ' + str(
+                '%.2f' % clc_bearing_rad) + ' (' + str(
+                '%.1f' % cor_bearing_deg) + degree_sign + ')' + '\n  Difference: ' + '\033[0;36m' + str(
+                '%.2f' % bearing_diff) + ' (' + str('%.1f' % bearing_diff_deg) + degree_sign + ')' + '\033[0m' + '\n Trig. components' + '\n  Sine: ' + str('%.4f'%sin) + '\n  Cosine: ' + str('%.4f'%cos))
+        if abs(offset_diff) >= 1:
+            print(' Coordinate offset'+ '\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' +str('%.2f'%delta_y)+'\n  Measured: '+str('%.1f'%offset_meas)+'\n  Calculated: '+str('%.1f'%offset_clc)+'\n  Difference: '+'\033[0;31m'+str('%.1f'%offset_diff) + '\033[0m')
+        else:
+            print(' Coordinate offset'+'\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' +str('%.2f'%delta_y)+'\n  Measured: '+str('%.1f'%offset_meas)+'\n  Calculated: '+str('%.1f'%offset_clc)+'\n  Difference: '+'\033[0;36m'+str('%.1f'%offset_diff) + '\033[0m')
+    return meas_bearing_rad,sin,cos
+
 # ======================================================================================================================
 # END ------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
@@ -203,59 +390,8 @@ def reverse_range(start, end, step, display_label, display):  # Defines function
 
 
 
-def get_plot_feature_by_year(label, list, alternate):  # Defines function. For plot feature selection from input list.
-    if label == '2008':  # Conditional statement.
-        if alternate == 0:
-            feature = list[0]  # Defines variable. Sets plot feature.
-        elif alternate == 1:  # Conditional statement.
-            feature = list[-3]  # Defines variable. Sets plot feature.
-    elif label == '1994':  # Conditional statement.
-        feature = list[3]  # Defines variable. Sets plot feature.
-    elif label == '1978':  # Conditional statement.
-        feature = list[2]  # Defines variable. Sets plot feature.
-    elif label == '1975':  # Conditional statement.
-        feature = list[4]  # Defines variable. Sets plot feature.
-    elif label == '1964':  # Conditional statement.
-        feature = list[5]  # Defines variable. Sets plot feature.
-    elif label == '1939':  # Conditional statement.
-        feature = list[6]  # Defines variable. Sets plot feature.
-    elif label == '1850s':  # Conditional statement.
-        feature = list[7]  # Defines variable. Sets plot feature.
-    else:  # Conditional statement.
-        feature = list[-1]  # Defines variable. Sets plot feature.
-    return feature  # Ends function execution.
 
-def plot_lines(lines, plot_number, figure_size, x, y, label, color, marker, marker_size, line_width, line_style, alpha, show_legend, location, marker_scale, frame_alpha, label_spacing,invert_x, fontsize_ticks, x_label, fontsize_axis, label_pad, y_label, title, pause, pause_length):  # Defines function. For line plotting.
-    plt.figure(plot_number, figsize=figure_size)  # Creates plot window. Sets figure size.
-    ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
-    if lines == 1:  # Conditional statement. Plots single line.
-        ax.plot(x, y, label=label, c=color, marker=marker, markersize=marker_size, linewidth=line_width, linestyle=line_style,
-                alpha=alpha)  # Creates line plot. Sets display format.
-        if show_legend == 1:  # Conditional statement. Shows legend if desired for single line plotting.
-            ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha, labelspacing=label_spacing)  # Creates legend. Through automatic label detection.
-    if lines != 1:  # Conditional statement. Plots multiple lines.
-        lines = lines + 1  # Defines variable. For establishing looped plotting framework.
-        line_list = range(1, lines, 1)  # Defines list. Creates range of integers for looped plotting.
-        for a in line_list:  # Begins loop through list elements. Loops through line numbers.
-            index = line_list.index(a)  # Defines variable. Retrieves index of element in list. For format selection.
-            ax.plot(x[index], y[index], label=label[index], c=color[index], marker=marker[index],
-                    markersize=marker_size, linewidth=line_width, linestyle=line_style[index], alpha=alpha)  # Creates line plot. Sets display format.
-        ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha,
-                  labelspacing=label_spacing)  # Creates legend. Through automatic label detection.
-    plt.xticks(fontsize=fontsize_ticks)  # Sets x-axis ticks. Sets format.
 
-    plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets format.
-    plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates y-axis label. Sets format.
-    plt.yticks(fontsize=fontsize_ticks)  # Sets y-axis ticks. Sets format.
-    if invert_x == 1:
-        ax.invert_xaxis()
-    plt.title(title)  # Creates plot title.
-    if pause == 1:  # Conditional statement. For display format.
-        plt.pause(pause_length)  # Displays plot. For set interval of seconds and closes without clearing.
-    elif pause == 0:  # Conditional statement. For display format.
-        plt.show()  # Displays plot. Indefinite and cleared upon close.
-    elif pause == 2:
-        pass
 
 def name_levels(directory_levels, folder_labels, output_folder, display_label,
                 display):  # Defines function. For defining list of directory levels for looped creation.
@@ -273,35 +409,9 @@ def name_levels(directory_levels, folder_labels, output_folder, display_label,
     return levels  # Ends function execution.
 
 
-def export_file_to_directory(export, type, directory_levels, folder_labels, output_folder,
-                             display_label1, file_name, number, figure_extension, dataframe,
-                             truth_statement, display_label2,geodataframe,geopackage,driver,
-                             display):  # Defines function. For exporting files.
-    if export == 1:  # Conditional statement. Exports file.
-        lvls = name_levels(directory_levels, folder_labels, output_folder, display_label1,
-                           display)  # Defines list. Calls function. For looped folder creation.
-        for a in lvls:  # Begins loop through array elements. Loops through levels.
-            lvl = lvls.index(a) + 2  # Defines variable as integer. For correct display.
-            create_folder(lvl, a)  # Creates folders. Calls functio
-        export_file(type, number, file_name, lvls[-1], figure_extension, dataframe, truth_statement, display_label2,
-                    geodataframe, geopackage, driver, display)
 
 
-def export_file(type, number, file_name, end_path, figure_extension, dataframe, truth_statement,
-                display_label, geodataframe, geopackage, driver,
-                display):  # Defines function. For file export.
-    if type == 'figure':  # Conditional statement. Executes lines below if file is a figure.
-        plt.figure(number)  # Calls figure. Makes it the active plot.
-        plt.savefig(end_path + file_name,
-                    format=figure_extension)  # Saves figure to directory. Sets file format.
-        plt.close()  # Closes active figure.
-    elif type == 'table':  # Conditional statement. Executes lines below if file is a table.
-        dataframe.to_csv(end_path + file_name,
-                         index=truth_statement)  # Saves file to directory. Sets file format.
-    elif type == 'geo table':
-        geodataframe.to_file(end_path + geopackage, layer=file_name, driver=driver, index=truth_statement)
-    if display == 1:  # Conditional statementFor display.
-        print(display_label, 'exported')  # Display objects.
+
 
 
 def hydraulic_geometry(dataframe, column1, display_label1, display_label2, display_label3, units,
@@ -615,114 +725,6 @@ def sediment_volume(type, area1, area2, area_prime, area_quad, separation, width
         print(display_label + str('%.2f' % V) + ' (' + prcs + ')')
     return V, prcs
 #%%%%%%%%%%%%%%
-def coordinate_bearing(x1, x2, y1, y2, c1,c2, bearing_reference_direction, bearing_angle_direction, bearing_deg, bearing_functional, display_label, display):
-    offset_meas=c2-c1
-    offset_meas=offset_meas*1/3.281
-    # bearing_functional=[*bearing_functional]
-    if bearing_reference_direction =='N':
-        if bearing_angle_direction =='E':
-            if bearing_functional == 'NE':
-                qdrnt_meas = 1
-                deg_max = 90
-                new_bearing_deg = deg_max-bearing_deg
-            else:
-                # elif bearing_functional == 'SW':
-                qdrnt_meas = 3
-                deg_max = 270
-                new_bearing_deg = deg_max - bearing_deg
-        else:
-            # elif bearing_angle_direction=='W':
-            if bearing_functional == 'NW':
-                qdrnt_meas=2
-                deg_min=90
-                new_bearing_deg=deg_min+bearing_deg
-            else:
-                # elif bearing_functional == 'SE':
-                qdrnt_meas = 4
-                deg_min = 270
-                new_bearing_deg = deg_min + bearing_deg
-    else:
-        # if bearing_reference_direction=='S':
-        if bearing_angle_direction=='W':
-            if bearing_functional == 'SW':
-                qdrnt_meas=3
-                deg_max=270
-                new_bearing_deg=deg_max-bearing_deg
-            else:
-                # elif bearing_functional == 'NE':
-                qdrnt_meas = 1
-                deg_max = 90
-                new_bearing_deg = deg_max-bearing_deg
-        else:
-            # elif bearing_angle_direction=='E':
-            if bearing_functional == 'SE':
-                qdrnt_meas = 4
-                deg_min = 270
-                new_bearing_deg = deg_min + bearing_deg
-            else:
-            # elif bearing_functional == 'NW':
-                qdrnt_meas = 2
-                deg_min = 90
-                new_bearing_deg = deg_min + bearing_deg
-    meas_bearing_rad=new_bearing_deg*(np.pi/180)
-
-    delta_x = x2 - x1
-    delta_y = y2 - y1
-    offset_clc = math.sqrt(delta_x ** 2 + delta_y ** 2)
-    bearing_rad = math.atan(delta_y / delta_x)
-    clc_bearing_deg=bearing_rad*(180/np.pi)
-    if delta_x > 1:
-        if delta_y > 1:
-            qdrnt_clc = 1
-            # rad_max = np.pi/2
-            clc_bearing_rad = bearing_rad
-        if delta_y<1:
-            qdrnt_clc=4
-            # rad_min = (3*np.pi)/2
-            rad_max=2*np.pi
-            clc_bearing_rad = rad_max+bearing_rad
-    if delta_x<1:
-        if delta_y>1:
-            qdrnt_clc=2
-            rad_max=np.pi
-            clc_bearing_rad=rad_max+bearing_rad
-        if delta_y<1:
-            qdrnt_clc=3
-            rad_min=np.pi
-            clc_bearing_rad=rad_min+bearing_rad
-    cor_bearing_deg=clc_bearing_rad*(180/np.pi)
-    bearing_diff=clc_bearing_rad-meas_bearing_rad
-    bearing_diff_deg=bearing_diff*(180/np.pi)
-    offset_diff=offset_clc-offset_meas
-
-    # if qdrnt_clc != qdrnt_meas:
-    #     sys.exit('Quadrants misaligned')
-    sin = math.sin(clc_bearing_rad)  # Calculates sine of heading.
-    cos = math.cos(clc_bearing_rad)  # Calculates cosine of heading.
-    if display == 1:
-        degree_sign=chr(176)
-        if abs(bearing_diff) > 5*(np.pi/180):
-            print('Directional data' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' + str(qdrnt_clc) +
-            '\n Bearings' + '\n  Field range: ' + bearing_reference_direction+str(bearing_deg) + degree_sign+bearing_angle_direction+ ' ('+str('%.1f'%new_bearing_deg)+degree_sign+')'+'\n  Azimuthal equivalent: ' + str('%.2f'%meas_bearing_rad) +' ('+str('%.1f'%new_bearing_deg)+degree_sign+')'+
-                  '\n  Calculated: '+str('%.2f'%bearing_rad)+' ('+str('%.1f'%clc_bearing_deg)+degree_sign+')'+'\n  Corrected to azimuth: ' +str('%.2f'%clc_bearing_rad) +' ('+str('%.1f'%cor_bearing_deg)+degree_sign+')' +'\n  Difference: ' + '\033[0;31m'+str('%.2f'%bearing_diff) + ' ('+str('%.1f'%bearing_diff_deg)+degree_sign+')'+'\033[0m'
-                  +'\n Trig. components' + '\n  Sine: ' + str('%.4f'%sin)+'\n  Cosine: '+str('%.4f'%cos))
-        else:
-            print('Directional data' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' + str(
-                qdrnt_clc) +
-                  '\n Bearings' + '\n  Field range: ' + bearing_reference_direction + str(
-                bearing_deg) + degree_sign + bearing_angle_direction + ' (' + str(
-                '%.1f' % new_bearing_deg) + degree_sign + ')' + '\n  Azimuthal equivalent: ' + str(
-                '%.2f' % meas_bearing_rad) + ' (' + str('%.1f' % new_bearing_deg) + degree_sign + ')' +
-                  '\n  Calculated: ' + str('%.2f' % bearing_rad) + ' (' + str(
-                '%.1f' % clc_bearing_deg) + degree_sign + ')' + '\n  Corrected to azimuth: ' + str(
-                '%.2f' % clc_bearing_rad) + ' (' + str(
-                '%.1f' % cor_bearing_deg) + degree_sign + ')' + '\n  Difference: ' + '\033[0;36m'+str(
-                '%.2f' % bearing_diff) + ' (' + str('%.1f' % bearing_diff_deg) + degree_sign + ')'+'\033[0m'+'\n Trig. components' + '\n  Sine: ' + str('%.4f'%sin)+'\n  Cosine: '+str('%.4f'%cos))
-        if abs(offset_diff) >= 1:
-            print(' Coordinate offset'+ '\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' +str('%.2f'%delta_y)+'\n  Measured: '+str('%.1f'%offset_meas)+'\n  Calculated: '+str('%.1f'%offset_clc)+'\n  Difference: '+'\033[0;31m'+str('%.1f'%offset_diff) + '\033[0m')
-        else:
-            print(' Coordinate offset'+'\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' +str('%.2f'%delta_y)+'\n  Measured: '+str('%.1f'%offset_meas)+'\n  Calculated: '+str('%.1f'%offset_clc)+'\n  Difference: '+'\033[0;36m'+str('%.1f'%offset_diff) + '\033[0m')
-    return meas_bearing_rad,sin,cos
 
 # ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']
 #
