@@ -72,7 +72,10 @@ def slice_DataFrame_rows(search_type, dataframe, column, value, display_label, d
 def slice_DataFrame_cell(data_type, convert, conversion_factor, dataframe, position, column, display_label, display):
     # Defines function. For DataFrame slicing by row value and index.
     index = dataframe.index  # Defines object. Retrieves DataFrame index.
-    slc_cl = dataframe.loc[index[position], column]  # Defines function format.
+    if column != None:  # Conditional statement. Allows slicing style on column DataFrames.
+        slc_cl = dataframe.loc[index[position], column]  # Defines function format.
+    else:  # Conditional statement.
+        slc_cl = dataframe.loc[index[position]]  # Defines function format.
     typ = type(slc_cl)  # Defines variable. Checks data type.
     if slc_cl == '1850s':  # Conditional statement. Ensures desired data type retrieved by function.
         if typ == data_type:  # Conditional statement.
@@ -243,116 +246,136 @@ def export_file(type, number, file_name, end_path, figure_extension, dataframe, 
     if display == 1:  # Conditional statement. For display.
         print(display_label, ' exported')  # Display objects.
 
-def coordinate_bearing(x1, x2, y1, y2, c1, c2, bearing_reference_direction, bearing_angle_direction, bearing_deg,
+def transect_orientation(x1, x2, y1, y2, bearing_reference_direction, bearing_angle_direction, bearing_deg,
                        bearing_functional, display_label, display):  # Defines function. For transect orientation
-    # calculation.
-    # Field data
-    offset_meas = c2 - c1  # Defines variable. Calculates transect offset between benchmark positions.
-    offset_meas = offset_meas * 1/3.281  # Redefines variable. Converts to meters.
+    # check and component calculation.
+    # From field data.
     if bearing_reference_direction =='N':  # Conditional statement. Converts transect bearing to azimuth.
         if bearing_angle_direction =='E':  # Conditional statement.
             if bearing_functional == 'NE':  # Conditional statement.
                 qdrnt_meas = 1  # Defines variable. Establishes azimuthal quadrant of transect bearing.
                 deg_max = 90  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
-                azmth_deg = deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
+                azmth_deg_meas = deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
             else:  # Conditional statement. Converts transect bearing to azimuth.
                 qdrnt_meas = 3  # Defines variable. Establishes azimuthal quadrant of transect bearing.
                 deg_max = 270  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
-                azmth_deg = deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
+                azmth_deg_meas = deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
         else:  # Conditional statement. Converts transect bearing to azimuth.
             if bearing_functional == 'NW':  # Conditional statement.
                 qdrnt_meas = 2  # Defines variable. Establishes azimuthal quadrant of transect bearing.
                 deg_min = 90  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
-                azmth_deg = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
+                azmth_deg_meas = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
             else:  # Conditional statement. Converts transect bearing to azimuth.
                 # elif bearing_functional == 'SE':
                 qdrnt_meas = 4  # Defines variable. Establishes azimuthal quadrant of transect bearing.
                 deg_min = 270  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
-                azmth_deg = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
+                azmth_deg_meas = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
     else:  # Conditional statement. Converts transect bearing to azimuth.
         if bearing_angle_direction == 'W':  # Conditional statement.
             if bearing_functional == 'SW':  # Conditional statement.
                 qdrnt_meas = 3  # Defines variable. Establishes azimuthal quadrant of transect bearing.
                 deg_max = 270  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
-                azmth_deg= deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
+                azmth_deg_meas= deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
             else:  # Conditional statement. Converts transect bearing to azimuth.
                 qdrnt_meas = 1  # Defines variable. Establishes azimuthal quadrant of transect bearing.
                 deg_max = 90  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
-                azmth_deg = deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
+                azmth_deg_meas = deg_max - bearing_deg  # Defines variable. Converts bearing to azimuth.
         else:  # Conditional statement. Converts transect bearing to azimuth.
             if bearing_functional == 'SE':  # Conditional statement.
                 qdrnt_meas = 4  # Defines variable. Establishes azimuthal quadrant of transect bearing.
                 deg_min = 270  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
-                azmth_deg = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
+                azmth_deg_meas = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
             else:  # Conditional statement. Converts transect bearing to azimuth.
                 qdrnt_meas = 2  # Defines variable. Establishes azimuthal quadrant of transect bearing.
                 deg_min = 90  # Defines variable. Establishes relevant azimuth limit for bearing conversion.
-                azmth_deg = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
-    azmth_rad = azmth_deg * (np.pi/180)  # Defines variable. Converts degrees to radians.
-    # GPS data.
+                azmth_deg_meas = deg_min + bearing_deg  # Defines variable. Converts bearing to azimuth.
+    azmth_rad_meas = azmth_deg_meas * (np.pi / 180)  # Defines variable. Converts degrees to radians.
+    # From GPS data.
     delta_x = x2 - x1  # Defines variable. Calculates change in x between coordinates.
     delta_y = y2 - y1  # Defines variable. Calculates change in y between coordinates.
-    offset_clc = math.sqrt(delta_x ** 2 + delta_y ** 2)  # Defines variable. Calculates transect offset between
-    # benchmark coordinates.
     azmth_rad_clc = math.atan(delta_y / delta_x)  # Defines variable. Calculates azmiuth along line between
     # coordinates.
-    azmth_deg_clc= azmth_rad_clc * (180 / np.pi)  # Defines variable. Converts radians to degrees.
-    if delta_x > 1:
-        if delta_y > 1:
-            qdrnt_clc = 1
-            clc_bearing_rad = azmth_rad_clc
-        if delta_y < 1:
-            qdrnt_clc = 4
-            rad_max = 2 * np.pi
-            clc_bearing_rad = rad_max + azmth_rad_clc
-    if delta_x < 1:
-        if delta_y > 1:
-            qdrnt_clc = 2
-            rad_max = np.pi
-            clc_bearing_rad = rad_max + azmth_rad_clc
-        if delta_y < 1:
-            qdrnt_clc = 3
-            rad_min = np.pi
-            clc_bearing_rad = rad_min + azmth_rad_clc
-    cor_bearing_deg = clc_bearing_rad * (180 / np.pi)
-    bearing_diff = clc_bearing_rad - meas_bearing_rad
-    bearing_diff_deg = bearing_diff * (180 / np.pi)
-    offset_diff = offset_clc - offset_meas
+    azmth_deg_clc = azmth_rad_clc * (180 / np.pi)  # Defines variable. Converts radians to degrees.
+    if delta_x > 1:  # Conditional statement. Transforms transect azimuth based on components.
+        if delta_y > 1:  # Conditional statement.
+            qdrnt_clc = 1  # Defines variable. Establishes azimuthal quadrant of transect.
+            azmth_rad_cor = azmth_rad_clc  # Defines variable. Transforms azimuth.
+        if delta_y < 1:  # Conditional statement.
+            qdrnt_clc = 4  # Defines variable. Establishes azimuthal quadrant of transect.
+            rad_max = 2 * np.pi  # Defines variable. Establishes relevant azimuth limit for transformation.
+            azmth_rad_cor = rad_max + azmth_rad_clc  # Defines variable. Transforms azimuth.
+    if delta_x < 1:  # Conditional statement. Transforms transect azimuth based on components.
+        if delta_y > 1:  # Conditional statement.
+            qdrnt_clc = 2  # Defines variable. Establishes azimuthal quadrant of transect.
+            rad_max = np.pi  # Defines variable. Establishes relevant azimuth limit for transformation.
+            azmth_rad_cor = rad_max + azmth_rad_clc  # Defines variable. Transforms azimuth.
+        if delta_y < 1:  # Conditional statement.
+            qdrnt_clc = 3  # Defines variable. Establishes azimuthal quadrant of transect.
+            rad_min = np.pi  # Defines variable. Establishes relevant azimuth limit for transformation.
+            azmth_rad_cor = rad_min + azmth_rad_clc  # Defines variable. Transforms azimuth.
+    azmth_deg_cor = azmth_rad_cor * (180 / np.pi)  # Defines variable. Converts radians to degrees.
+    azmth_rad_dff = azmth_rad_cor - azmth_rad_meas  # Defines variable. Calculates difference in calculated and measured
+    # azimuths.
+    azmth_deg_dff = azmth_rad_dff * (180 / np.pi)  # Defines variable. Converts radians to degrees.
+    if qdrnt_clc != qdrnt_meas:  # Conditional statement. Sets error contingency.
+        sys.exit('Quadrants misaligned - error in transformation')  # Exits code and displays string.
+    sin = math.sin(azmth_rad_cor)  # Calculates sine of azimuth.
+    cos = math.cos(azmth_rad_cor)  # Calculates cosine of azimuth.
+    if display == 1:  # Conditional statement. For display.
+        deg_sign = chr(176)  # Defines variable. Creates degree sign object.
+        if abs(azmth_deg_dff) > 5:  # Conditional statement. Displays objects if threshold met.
+            print('Transect orientation' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' +
+                  str(qdrnt_clc) + '\n Field bearing: ' + bearing_reference_direction + str(bearing_deg) + deg_sign +
+                  bearing_angle_direction + '\n Azimuth' + '\n  Field: ' + str('%.2f' % azmth_rad_meas) + ' (' +
+                  str('%.1f' % azmth_deg_meas) + deg_sign + ')' + '\n  Calculated: ' + str('%.2f' % azmth_rad_clc) +
+                  ' (' +  str('%.1f' % azmth_deg_clc) + deg_sign + ')' + '\n   Transformed: ' +
+                  str('%.2f' % azmth_rad_cor) + ' (' + str('%.1f' % azmth_deg_cor) + deg_sign + ')' +
+                  '\n  Difference: ' + '\033[0;31m' + str('%.2f' % azmth_rad_dff) + ' (' + str('%.1f' % azmth_deg_dff)
+                  + deg_sign + ')' + '\033[0m' + '\n Trig. components' + '\n  Sine: ' + str('%.4f'%sin) +
+                  '\n  Cosine: ' + str('%.4f'%cos))  # Displays objects.
+        else:  # Conditional statement. Displays objects if threshold met.
+            print('Transect orientation' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' +
+                  str(qdrnt_clc) + '\n Field bearing: ' + bearing_reference_direction + str(bearing_deg) + deg_sign +
+                  bearing_angle_direction + '\n Azimuth' + '\n  Field: ' + str('%.2f' % azmth_rad_meas) + ' (' +
+                  str('%.1f' % azmth_deg_meas) + deg_sign + ')' + '\n  Calculated: ' + str('%.2f' % azmth_rad_clc) +
+                  ' (' + str('%.1f' % azmth_deg_clc) + deg_sign + ')' + '\n   Transformed: ' +
+                  str('%.2f' % azmth_rad_cor) + ' (' + str('%.1f' % azmth_deg_cor) + deg_sign + ')' +
+                  '\n  Difference: ' + '\033[0;36m' + str('%.2f' % azmth_rad_dff) + ' (' + str('%.1f' % azmth_deg_dff)
+                  + deg_sign + ')' + '\033[0m' + '\n Trig. components' + '\n  Sine: ' + str('%.4f' % sin) +
+                  '\n  Cosine: ' + str('%.4f' % cos))  # Displays objects.
+    return sin, cos  # Ends function execution.
 
-    # if qdrnt_clc != qdrnt_meas:
-    #     sys.exit('Quadrants misaligned')
-    sin = math.sin(clc_bearing_rad)  # Calculates sine of heading.
-    cos = math.cos(clc_bearing_rad)  # Calculates cosine of heading.
-    if display == 1:
-        degree_sign=chr(176)
-        if abs(bearing_diff) > 5*(np.pi/180):
-            print('Directional data' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' + str(qdrnt_clc) +
-            '\n Bearings' + '\n  Field range: ' + bearing_reference_direction + str(bearing_deg) + degree_sign + bearing_angle_direction + ' (' + str('%.1f'%new_bearing_deg) + degree_sign +')' +'\n  Azimuthal equivalent: ' + str('%.2f'%meas_bearing_rad) +' (' + str('%.1f'%new_bearing_deg) + degree_sign +')' +
-                  '\n  Calculated: ' + str('%.2f' % azmth_rad_clc) + ' (' + str('%.1f' % azmth_deg_clc) + degree_sign + ')' + '\n  Corrected to azimuth: ' + str('%.2f' % clc_bearing_rad) + ' (' + str('%.1f' % cor_bearing_deg) + degree_sign + ')' + '\n  Difference: ' + '\033[0;31m' + str('%.2f' % bearing_diff) + ' (' + str('%.1f' % bearing_diff_deg) + degree_sign + ')' + '\033[0m'
-                  + '\n Trig. components' + '\n  Sine: ' + str('%.4f'%sin) + '\n  Cosine: ' + str('%.4f'%cos))
-        else:
-            print('Directional data' + '\n Quadrant' + '\n  Measured: ' + str(qdrnt_meas) + '\n  Calculated: ' + str(
-                qdrnt_clc) +
-                  '\n Bearings' + '\n  Field range: ' + bearing_reference_direction + str(
-                bearing_deg) + degree_sign + bearing_angle_direction + ' (' + str(
-                '%.1f' % new_bearing_deg) + degree_sign + ')' + '\n  Azimuthal equivalent: ' + str(
-                '%.2f' % meas_bearing_rad) + ' (' + str('%.1f' % new_bearing_deg) + degree_sign + ')' +
-                  '\n  Calculated: ' + str('%.2f' % azmth_rad_clc) + ' (' + str(
-                '%.1f' % azmth_deg_clc) + degree_sign + ')' + '\n  Corrected to azimuth: ' + str(
-                '%.2f' % clc_bearing_rad) + ' (' + str(
-                '%.1f' % cor_bearing_deg) + degree_sign + ')' + '\n  Difference: ' + '\033[0;36m' + str(
-                '%.2f' % bearing_diff) + ' (' + str('%.1f' % bearing_diff_deg) + degree_sign + ')' + '\033[0m' + '\n Trig. components' + '\n  Sine: ' + str('%.4f'%sin) + '\n  Cosine: ' + str('%.4f'%cos))
-        if abs(offset_diff) >= 1:
-            print(' Coordinate offset'+ '\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' +str('%.2f'%delta_y)+'\n  Measured: '+str('%.1f'%offset_meas)+'\n  Calculated: '+str('%.1f'%offset_clc)+'\n  Difference: '+'\033[0;31m'+str('%.1f'%offset_diff) + '\033[0m')
-        else:
-            print(' Coordinate offset'+'\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' +str('%.2f'%delta_y)+'\n  Measured: '+str('%.1f'%offset_meas)+'\n  Calculated: '+str('%.1f'%offset_clc)+'\n  Difference: '+'\033[0;36m'+str('%.1f'%offset_diff) + '\033[0m')
-    return meas_bearing_rad,sin,cos
+def find_exp(value):  # Defines function. For retrieving exponent of value.
+    bs10 = math.log10(value)  # Defines variable. Retrieves base 10 log of value.
+    return math.floor(bs10)  # Defines variable. Rounds value to nearest integer.
+
+def coordinate_error(x1, x2, y1, y2, transect_length, display):  # Defines function. For coordinate geometry error
+    # analysis. Compares transect lengths from the field and calculated coordinates.
+    dlta_x = x2 - x1  # Defines variable. Calculates difference in x coordinate for measurement limits of transect.
+    dlta_y = y2 - y1  # Defines variable. Calculates difference in y coordinate for measurement limits of transect.
+    dlta_off = math.sqrt(dlta_x ** 2 + dlta_y ** 2)  # Defines variable. Calculates line difference between
+    # coordinates.
+    prcnt_dff = (abs(transect_length - dlta_off)) / transect_length * 100  # Defines variable. Calculates percent
+    # difference between measured and calculated transect lengths.
+    exp = find_exp(prcnt_dff)  # Defines variable. Retrieves exponent of percent difference.
+    if display == 1:  # Conditional statement. For display.
+        print('Change in' + '\n X: ' + str('%.2f' % dlta_x) + '\n Y: ' + str('%.2f' % dlta_y) + '\n Length' +
+              '\n  Measured: ' + str('%.2f' % transect_length) + '\n  Calculated: ' + str('%.2f' % dlta_off) +
+              '\n  Percent difference: ' + str('%.2f' % prcnt_dff) + '%' + ' (First nonzero at ' + str(exp) +
+              ' decimal place)')  # Displays objects.
+    return prcnt_dff  # Ends function execution.
 
 # ======================================================================================================================
 # END ------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
-
-
+# if abs(offst_dff) >= 1:
+        #     print(' Coordinate offset' + '\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' + str('%.2f'%delta_y) +'\n  Measured: ' + str('%.1f' % offst_meas) + '\n  Calculated: ' + str('%.1f' % offst_clc) + '\n  Difference: ' + '\033[0;31m' + str('%.1f' % offst_dff) + '\033[0m')
+        # else:
+        #     print(' Coordinate offset' +'\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' + str('%.2f'%delta_y) +'\n  Measured: ' + str('%.1f' % offst_meas) + '\n  Calculated: ' + str('%.1f' % offst_clc) + '\n  Difference: ' + '\033[0;36m' + str('%.1f' % offst_dff) + '\033[0m')
+# offst_dff = offst_clc - offst_meas  # Defines variable. Calculates difference in calculated and measured transect
+    # lengths.
+# offst_meas = c2 - c1  # Defines variable. Calculates transect offset between benchmark positions.
+    # offst_meas = offst_meas * 1 / 3.281  # Redefines variable. Converts to meters.
 
 location = ['upper left', 'upper right', 'lower left', 'lower right', 'upper center', 'lower center', 'center left', 'center right', 'center', 'best']  # Defines list. Complete list of matplotlib legend placements.
 ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
