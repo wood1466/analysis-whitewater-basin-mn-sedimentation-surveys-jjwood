@@ -34,10 +34,10 @@ Sngl = 1  # Defines variable as integer. Sets binary toggle.
 # Plot single cross-section
 Plt_sngl = 0  # Defines variable as integer. Sets binary toggle.
 # Plot all cross-sections
-Plt_all = 1 # Defines variable as integer. Sets binary toggle.
+Plt_all = 0 # Defines variable as integer. Sets binary toggle.
 
 # Calculate coordinate geometry
-Crdnts = 0  # Defines variable as integer. Sets binary toggle.
+Crdnts = 1  # Defines variable as integer. Sets binary toggle.
 
 # Dual cross-sections analysis -----------------------------------------------------------------------------------------
 
@@ -224,7 +224,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                   ' (' + str('%.0f' % strm_stat1_m) + ' m)')  # Displays objects.
             print('\033[1m' + 'Transect survey: ' + '\033[0m' + str(srvy_yr1) + ' (' + str(j) + ' of ' +
                   str(srvy_nums_max) + ')')  # Displays objects.
-            print('\033[1m' + 'Survey type: ' + '\033[0m]' + str(srvy_typ1))  # Displays objects.
+            print('\033[1m' + 'Survey type: ' + '\033[0m' + str(srvy_typ1))  # Displays objects.
             print('\033[1m' + 'Survey date(s): ' + '\033[0m' + str(srvy_dt1))  # Displays objects.
             print('\033[1m' + 'Survey length: ' + '\033[0m' + str('%.2f' % rng_lngth1) + ' ft' +
                   ' (' + str('%.0f' % rng_lngth1_m) + ' m)')  # Displays objects.
@@ -324,35 +324,57 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                     # CALCULATE TRANSECT ORIENTATION -------------------------------------------------------------------
 
-                    rng_brng, sin, cos = coordinate_bearing(BM1_e, BM2_e, BM1_n, BM2_n, BM1_off, BM2_off, brng_r_dir,
-                                                          brng_a_dir,brng_angl,brng_fnctl, 'Directional data', 1)
-                    # Defines variables. Calls function. Calculates trigonometric components of transect from GPS
-                    # points.
+                    sin, cos = transect_orientation(BM1_e, BM2_e, BM1_n, BM2_n, brng_r_dir, brng_a_dir, brng_angl,
+                                                    brng_fnctl, 'Directional data', 0)  # Defines variables. Calls
+                    # function. Calculates trigonometric components of transect from GPS points.
 
-                    #NEED ERROR ANALYSIS FUNCTION BECAUSE OFFSET CALC AND OFFSET MEAS INCOMPARABLE FOR ALL BUT 90S DATA SHOULD CHOOSE COORD OF LAST POINT FOR DISTANCE MEAS
-                    # breakpoint()
-                    if BM1_off == BM1_crd_off:
-                        df_offst1_shft = df_offst1 - BM1_off
-                        # print(df_offst1_shft)
-                    else:
-                        df_offst1_shft = df_offst1 - BM1_crd_off
-                        # print(df_offst1_shft)
-                    df_offst1_shft_m=df_offst1_shft/ft_to_m
-                    # print(df_offst1_shft_m)
-                    offsets_East = cos * df_offst1_shft_m
-                    # print(offsets_East)
-                    offsets_North = sin * df_offst1_shft_m
-                    # print(offsets_North)
-                    smpl_eastings = BM1_e_std + offsets_East
-                    smpl_eastings = smpl_eastings.rename('Easting_m')
-                    # print(smpl_eastings)
-                    smpl_northings = BM1_n_std + offsets_North
-                    smpl_northings=smpl_northings.rename('Northing_m')
-                    # print(smpl_northings)
-                    # breakpoint()
-                    df_srvy1=pd.concat([df_srvy1,smpl_eastings,smpl_northings],axis=1)
-                    # print(df_srvy1)
-                    # breakpoint()
+                    # TRANSFORM MEASUREMENT OFFSETS --------------------------------------------------------------------
+                    if BM1_off == BM1_crd_off:  # Conditonal statement. Selects standard to transform offsets.
+                        df_offst1_shft = df_offst1 - BM1_off  # Defines DataFrame. Shifts measurement offsets by
+                        # benchmark position.
+                    else:  # Conditional statement.
+                        df_offst1_shft = df_offst1 - BM1_crd_off  # Defines DataFrame. Shifts measurement offsets by
+                        # benchmark position.
+                    df_offst1_shft_m = df_offst1_shft / ft_to_m  # Defines DataFrame. Converts feet to meters.
+
+                    # CALCULATE COORDINATES ----------------------------------------------------------------------------
+
+                    # Directional offsets ------------------------------------------------------------------------------
+
+                    df_offsts_e = cos * df_offst1_shft_m  # Defines DataFrame. Calculates measurement easting offsets.
+                    df_offsts_n = sin * df_offst1_shft_m  # Defines DataFrame. Calculates measurement northing offsets.
+
+                    # Coordinates --------------------------------------------------------------------------------------
+
+                    df_e = BM1_e + df_offsts_e  # Defines DataFrame. Calculates measurement easting.
+                    df_e = df_e.rename('Easting_m')  # Redefines DataFrame. Renames column.
+                    df_n = BM1_n + df_offsts_n  # Defines DataFrame. Calculates measurement northing.
+                    df_n = df_n.rename('Northing_m')  # Redefines DataFrame. Renames column.
+
+                    # CALCULATE ERROR ----------------------------------------------------------------------------------
+
+                    crd1_e = slice_DataFrame_cell('Float', 0, None, df_e, 0, None, 'Measurement 1 Easting (m): ', 1)
+                    # Defines variable. Calls function. Slices DataFrame to yield easting coordinate of first
+                    # measurement of present dataset.
+                    crd1_n = slice_DataFrame_cell('Float', 0, None, df_n, 0, None, 'Measurement 1 Northing (m): ', 1)
+                    # Defines variable. Calls function. Slices DataFrame to yield northing coordinate of first
+                    # measurement of present dataset.
+                    crd2_e = slice_DataFrame_cell('Float', 0, None, df_e, -1, None, 'Measurement 2 Easting (m): ', 1)
+                    # Defines variable. Calls function. Slices DataFrame to yield easting coordinate of last
+                    # measurement of present dataset.
+                    crd2_n = slice_DataFrame_cell('Float', 0, None, df_n, -1, None, 'Measurement 2 Northing (m): ', 1)
+                    # Defines variable. Calls function. Slices DataFrame to yield northing coordinate of last
+                    # measurement of present dataset.
+
+                    lgnth_prcnt_dff = coordinate_error(crd1_e, crd2_e, crd1_n, crd2_n, rng_lngth1_m, 1)  # Defines
+                    # variable. Calculates percent difference between field measured and GPS calculated transect
+                    # lengths.
+
+                    # UPDATE FILE --------------------------------------------------------------------------------------
+
+                    df_srvy1 = pd.concat([df_srvy1, df_e, df_n], axis=1)  # Redefines DataFrame. Concatenates
+                    # coordinates to survey DataFrame.
+
                     plt.figure(1, figsize=(7, 7))
                     ax1 = plt.gca()
                     ax1.scatter(smpl_eastings, smpl_northings, s=5, label='Predicted', c='Orange', marker='o', alpha=0.5)
