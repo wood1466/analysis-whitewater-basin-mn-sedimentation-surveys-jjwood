@@ -317,6 +317,7 @@ def transect_orientation(x1, x2, y1, y2, bearing_reference_direction, bearing_an
     azmth_rad_dff = azmth_rad_cor - azmth_rad_meas  # Defines variable. Calculates difference in calculated and measured
     # azimuths.
     azmth_deg_dff = azmth_rad_dff * (180 / np.pi)  # Defines variable. Converts radians to degrees.
+
     if qdrnt_clc != qdrnt_meas:  # Conditional statement. Sets error contingency.
         sys.exit('Quadrants misaligned - error in transformation')  # Exits code and displays string.
     sin = math.sin(azmth_rad_cor)  # Calculates sine of azimuth.
@@ -364,6 +365,29 @@ def coordinate_error(x1, x2, y1, y2, transect_length, display):  # Defines funct
               '\n  Percent difference: ' + str('%.2f' % prcnt_dff) + '%' + ' (First nonzero at ' + str(exp) +
               ' decimal place)')  # Displays objects.
     return prcnt_dff  # Ends function execution.
+
+def plot_scatter(plot_number, figure_size, x, y, label, color, edge_color, marker, marker_size, line_width, alpha,
+                show_legend, location, marker_scale, frame_alpha, label_spacing, aspect, adjustible, fontsize_ticks, fontsize_axis, label_pad,
+                x_label, y_label, title, pause, pause_length):  # Defines function. For scatter plotting.
+    plt.figure(plot_number, figsize=figure_size)  # Creates plot window. Sets figure size.
+    ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
+    ax.scatter(x, y, label=label, c=color, edgecolors=edge_color, marker=marker, s=marker_size, linewidth=line_width,
+               alpha=alpha)  # Creates scatter plot. Sets display format.
+    if show_legend == 1:  # Conditional statement. Shows legend if desired for single line plotting.
+        ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha, labelspacing=label_spacing)
+        # Creates legend. Through automatic label detection.
+    ax.set_aspect(aspect, adjustible)  # Sets aspect of axis scaling.
+    plt.xticks(fontsize=fontsize_ticks)  # Sets x-axis ticks. Sets format.
+    plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets format.
+    plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates y-axis label. Sets format.
+    plt.yticks(fontsize=fontsize_ticks)  # Sets y-axis ticks. Sets format.
+    plt.title(title)  # Creates plot title.
+    if pause == 1:  # Conditional statement. For display format.
+        plt.pause(pause_length)  # Displays plot. For set interval of seconds and closes without clearing.
+    elif pause == 0:  # Conditional statement. For display format.
+        plt.show()  # Displays plot. Indefinite and cleared upon close.
+    else:  # Conditional statement. For display format
+        pass  # Pass command. Moves on to next line.
 
 # ======================================================================================================================
 # END ------------------------------------------------------------------------------------------------------------------
