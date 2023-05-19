@@ -39,6 +39,9 @@ Plt_all = 0 # Defines variable as integer. Sets binary toggle.
 # Calculate coordinate geometry
 Crdnts = 1  # Defines variable as integer. Sets binary toggle.
 
+# Plot measurement coordinates
+Plt_crdnts = 1  # Defines variable as integer. Sets binary toggle.
+
 # Dual cross-sections analysis -----------------------------------------------------------------------------------------
 
 Dbl = 0  # Defines variable as integer. Sets binary toggle.
@@ -68,7 +71,7 @@ rvr_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data fo
 rng_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one survey range only.
 xtra_srvys = 0  # Defines variable as integer. Sets binary toggle. Analyzes extra survey data for range 11B (13).
 rng_strt = 1  # Defines variable as integer. Sets start survey range number for analysis loop.
-rng_end = 15  # Defines variable as integer. Sets end survey range number for analysis loop.
+rng_end = 2  # Defines variable as integer. Sets end survey range number for analysis loop.
 
 # Conversion factors ---------------------------------------------------------------------------------------------------
 
@@ -289,7 +292,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     # directory and exports figure. Calls function.
 
             # ==========================================================================================================
-            # CALCULATE MEASUREMENT COORDINATES ------------------------------------------------------------------------
+            # DIGITIZE SURVEY MEASUREMENTS -----------------------------------------------------------------------------
 
             if Crdnts == 1:  # Conditional statement. Digitizes survey measurements.
                 if srvy_typ1 != 'Lidar':  # Conditional statement. Performs calculations for field data only.
@@ -375,24 +378,43 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     df_srvy1 = pd.concat([df_srvy1, df_e, df_n], axis=1)  # Redefines DataFrame. Concatenates
                     # coordinates to survey DataFrame.
 
-                    plt.figure(1, figsize=(7, 7))
-                    ax1 = plt.gca()
-                    ax1.scatter(smpl_eastings, smpl_northings, s=5, label='Predicted', c='Orange', marker='o', alpha=0.5)
-                    ax1.scatter(BM1_e_std, BM1_n_std, s=5, label='Measured', c='Blue', marker='o', alpha=1)
-                    ax1.scatter(BM2_e_std, BM2_n_std, s=5, c='Blue', marker='o', alpha=1)
-                    ax1.set_aspect('equal', 'box')
-                    plt.xlabel('Easting (m)', fontsize=8)
-                    plt.ylabel('Northing (m)', fontsize=8)
-                    plt.pause(1)
-                    # plt.show()
-                    gdf_srvy = gpd.GeoDataFrame(df_srvy1, geometry=gpd.points_from_xy(df_srvy1.Easting_m, df_srvy1.Northing_m),crs='EPSG:26915')
-                    fldr_lbls = ['/Cross_sectional_analysis', '/Geographic_data', '/Cross_sections', '/Points','/' + chnl_name ]
-                    layer = 'R_' + str(rng_name1) + '_'+ str(srvy_yr1)
-                    geopackage = '/'+chnl_abrv+'_survey_points.gpkg'
-                    # gdf_srvy.to_file(opt_fldr + dig_fldrout + gis_fldr + gpkg_fl, layer=feature, driver='GPKG', index=False)
-                    export_file_to_directory(1, 'geo table', 5, fldr_lbls,opt_fldr,'Directiories named: ',layer,None,None,None,False,'GIS layer',gdf_srvy,geopackage,'GPKG',0)
+                    # DISPLAY DATA -------------------------------------------------------------------------------------
 
-        # Creates and exports geopackage at specified path.
+                    if Plt_crdnts == 1:  # Conditional statement. Plots all measurement coordinates on transect.
+                        plot_scatter(3, fig_sz, df_e, df_n, 'Predicted', tol_mtd[6], tol_mtd[6], 'o', 10, 1, 0.5, 0,
+                                     'best', mrkr_scl, 0.3, lbl_spcng, 'equal', 'box', fntsz[1], fntsz[0], lbl_pd,
+                                     'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates plot. Calls
+                        # function.
+                        if j == srvy_nums1[-1]:  # Conditional statement. Plots benchmark GPS coordinates.
+                            plot_scatter(3, fig_sz, BM1_e, BM1_n, None, tol_mtd[1], tol_mtd[0], 'o', 10, 1, 1, 0,
+                                         'best', mrkr_scl, 0.3, lbl_spcng, 'equal', 'box', fntsz[1], fntsz[0], lbl_pd,
+                                         'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates plot. Calls
+                            # function.
+                            plot_scatter(3, fig_sz, BM2_e, BM2_n, 'Original gps', tol_mtd[1], tol_mtd[0], 'o', 10, 1,
+                                         1, 0, 'best', mrkr_scl, 0.3, lbl_spcng, 'equal', 'box', fntsz[1], fntsz[0],
+                                         lbl_pd, 'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates plot.
+                            # Calls function.
+
+                    # DIGITIZE COORDINATES -----------------------------------------------------------------------------
+
+                    gdf_srvy = gpd.GeoDataFrame(df_srvy1, geometry=gpd.points_from_xy(df_srvy1.Easting_m,
+                                                df_srvy1.Northing_m), crs='EPSG:26915')  # Defines GeoDataFrame.
+                    # Creates GIS layer from DataFrame and coordinate geometry.
+
+                    # Export data
+                    fldr_lbls = ['/Cross_sectional_analysis', '/Geographic_data', '/Cross_sections', '/Points',
+                                 '/' + chnl_name ]  # Defines list. Sets folder labels for directory to be made.
+
+                    lyr_name = 'R_' + str(rng_name1) + '_'+ str(srvy_yr1)  # Defines variable as string. Sets name of
+                    # layer for export.
+
+                    gpckg = '/' + chnl_abrv + '_survey_points.gpkg'  # Defines variable as string. Sets name and
+                    # location of GeoPackage.
+
+                    export_file_to_directory(1, 'Geospatial', 5, fldr_lbls, opt_fldr, 'Directiories named: ', lyr_name,
+                                             None, None, None, False, 'GIS layer', gdf_srvy, gpckg, 'GPKG', 0)
+                    # Creates directory and exports figure. Calls function.
+
         # SELECT DATA ----------------------------------------------------------------------------------------------
 
         if Dbl == 1:  # Conditional statement. Executes analysis of cross-sections as subsequent pairs.
