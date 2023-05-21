@@ -20,6 +20,33 @@ import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopand
 # Imports a plotting interface with alias.
 # Imports a geographic data libray with alias. Enables spatial operations.
 
+# SELECT INPUT PARAMETERS ----------------------------------------------------------------------------------------------
+
+# Plot format ----------------------------------------------------------------------------------------------------------
+
+# Set general plot format
+wdth = 4.5  # Defines variable as float. Sets plot window width.
+hght = wdth * 1.618  # Defines variable. Sets plot window height. Uses golden ratio.
+fig_sz = (hght, wdth)  # Defines object. Sets plot window size.
+fntsz = [10, 8]  # Defines list. Sets font size for axes labels and tick marks.
+lbl_pd = 10  # Defines variable as integer. Sets plot-axes label spacing.
+
+# Set data display format
+tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDDD']
+# Defines list. Sets Paul Tol, muted, colorblind friendly palette with hex color codes.
+lin_wdth = 2  # Defines variable as integer. Sets plot line width.
+lin_styl = ['solid', 'dashed', 'dotted', 'dashdot']  # Defines list. Sets line style.
+mrkrs = ['h', 'v', 'P', 'o', 'X', 's', '^', 'D', '<', '>', '8', 'p', 'H', 'd', ' ']  # Defines list. Sets plot markers.
+# Uses matplotlib markers.
+mrkr_sz = 4  # Defines variable as integer. Sets plot marker size.
+alpha = [0.5, 0.3]  # Defines list. Sets object transparency for plotted data and fill.
+
+# Set legend display format
+lctn = 'best'  # Defines variable as string. Sets legend location on plot. Automatically chooses.
+mrkr_scl = 2  # Defines variable as integer. Sets marker size on legend.
+frm_alpha = 0.7  # Defines variable as float. Sets legend box transparency.
+lbl_spcng = 0.7  # Defines variable as float. Sets legend object spacing.
+
 # ======================================================================================================================
 # PART 2: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
 # ======================================================================================================================
@@ -367,8 +394,9 @@ def coordinate_error(x1, x2, y1, y2, transect_length, display):  # Defines funct
     return prcnt_dff  # Ends function execution.
 
 def plot_scatter(plot_number, figure_size, x, y, label, color, edge_color, marker, marker_size, line_width, alpha,
-                show_legend, location, marker_scale, frame_alpha, label_spacing, aspect, adjustible, fontsize_ticks, fontsize_axis, label_pad,
-                x_label, y_label, title, pause, pause_length):  # Defines function. For scatter plotting.
+                show_legend, location, marker_scale, frame_alpha, label_spacing, aspect, adjustible, fontsize_ticks,
+                fontsize_axis, label_pad, x_label, y_label, title, pause, pause_length):  # Defines function. For
+    # scatter plotting.
     plt.figure(plot_number, figsize=figure_size)  # Creates plot window. Sets figure size.
     ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
     ax.scatter(x, y, label=label, c=color, edgecolors=edge_color, marker=marker, s=marker_size, linewidth=line_width,
@@ -392,6 +420,7 @@ def plot_scatter(plot_number, figure_size, x, y, label, color, edge_color, marke
 # ======================================================================================================================
 # END ------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
+
 # if abs(offst_dff) >= 1:
         #     print(' Coordinate offset' + '\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' + str('%.2f'%delta_y) +'\n  Measured: ' + str('%.1f' % offst_meas) + '\n  Calculated: ' + str('%.1f' % offst_clc) + '\n  Difference: ' + '\033[0;31m' + str('%.1f' % offst_dff) + '\033[0m')
         # else:
@@ -401,20 +430,20 @@ def plot_scatter(plot_number, figure_size, x, y, label, color, edge_color, marke
 # offst_meas = c2 - c1  # Defines variable. Calculates transect offset between benchmark positions.
     # offst_meas = offst_meas * 1 / 3.281  # Redefines variable. Converts to meters.
 
-location = ['upper left', 'upper right', 'lower left', 'lower right', 'upper center', 'lower center', 'center left', 'center right', 'center', 'best']  # Defines list. Complete list of matplotlib legend placements.
-ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
-ibm_clr_hx = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
-ibm_clr_rgb = [(100, 143, 255), (120, 94, 240), (220, 38, 127), (254, 97, 0), (255, 176, 0)]
+# location = ['upper left', 'upper right', 'lower left', 'lower right', 'upper center', 'lower center', 'center left', 'center right', 'center', 'best']  # Defines list. Complete list of matplotlib legend placements.
+# ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
+# ibm_clr_hx = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
+# ibm_clr_rgb = [(100, 143, 255), (120, 94, 240), (220, 38, 127), (254, 97, 0), (255, 176, 0)]
 # Sets muted Tol colorblind friendly palette in color hex color codes for indigo, cyan, teal, green, olive, sand, rose, wine, purple, and pale grey.
 # 2008 = 0, 1994 = 3, 1978 = 2, 1975 = 4, 1964 = 5, 1939 = 6, 1850S = 7.
-tol_vibrant = ['#0077BB', '#33BBEE', '#009988', '#EE7733', '#CC3311', '#EE3377', '#BBBBBB']  # Defines list. Sets
+# tol_vibrant = ['#0077BB', '#33BBEE', '#009988', '#EE7733', '#CC3311', '#EE3377', '#BBBBBB']  # Defines list. Sets
 # vibrant Tol colorblind friendly palette in color hex color codes for blue, cyan, teal, orange, red, magenta, grey.
-marker_mpltlib = ['.', ',', 'o', 'v', '^', '<', '>',
-                          '1', '2', '3', '4', '8',
-                          's', 'p', 'P', '*', 'h', 'H', '+', 'x', 'X', 'D', 'd',
-                          '|', '_', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ' ']  # Defines list. Complete list of matplotlib plot markers.
-tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDD']  # Defines list. Sets Paul Tol muted colorblind friendly palette via hex color codes.
-lin_styls = ['solid', 'dotted', 'dashed', 'dashdot']
+# marker_mpltlib = ['.', ',', 'o', 'v', '^', '<', '>',
+#                           '1', '2', '3', '4', '8',
+#                           's', 'p', 'P', '*', 'h', 'H', '+', 'x', 'X', 'D', 'd',
+#                           '|', '_', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ' ']  # Defines list. Complete list of matplotlib plot markers.
+# tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDD']  # Defines list. Sets Paul Tol muted colorblind friendly palette via hex color codes.
+# lin_styls = ['solid', 'dotted', 'dashed', 'dashdot']
 # TEMPORARY FUNCTION HOUSING ===========================================================================================
 
 
