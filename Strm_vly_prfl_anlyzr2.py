@@ -24,12 +24,13 @@ import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopand
 # Imports a plotting interface with alias.
 # Imports a geographic data libray with alias. Enables spatial operations.
 from Functions import *  # Imports all functions from outside program.
+import Functions as fn
 
 # SELECT OPERATIONS ----------------------------------------------------------------------------------------------------
 
 # Single cross-section analysis ----------------------------------------------------------------------------------------
 
-Sngl = 1  # Defines variable as integer. Sets binary toggle.
+Sngl = 0  # Defines variable as integer. Sets binary toggle.
 
 # Plot single cross-section
 Plt_sngl = 0  # Defines variable as integer. Sets binary toggle.
@@ -37,31 +38,31 @@ Plt_sngl = 0  # Defines variable as integer. Sets binary toggle.
 Plt_all = 0 # Defines variable as integer. Sets binary toggle.
 
 # Calculate coordinate geometry
-Crdnts = 1  # Defines variable as integer. Sets binary toggle.
+Crdnts = 0  # Defines variable as integer. Sets binary toggle.
 
 # Plot measurement coordinates
-Plt_crdnts = 1  # Defines variable as integer. Sets binary toggle.
+Plt_crdnts = 0  # Defines variable as integer. Sets binary toggle.
 
 # Dual cross-sections analysis -----------------------------------------------------------------------------------------
 
-Dbl = 0  # Defines variable as integer. Sets binary toggle.
+Dbl = 1  # Defines variable as integer. Sets binary toggle.
 
 # Plot dual cross-sections
-Plt_dbl = 0  # Defines variable as integer. Sets binary toggle.
+Plt_dbl = 1  # Defines variable as integer. Sets binary toggle.
 # Plot dual interpolated cross-sections
 Plt_intrp = 0  # Defines variable as integer. Sets binary toggle.
 # Plot dual re-interpolated cross-sections
 Plt_reintrp = 0  # Defines variable as integer. Sets binary toggle.
 
 # Calculate sediment thickness
-Dpth = 1  # Defines variable as integer. Sets binary toggle.
+Dpth = 0  # Defines variable as integer. Sets binary toggle.
 
 # Plot sediment thickness
-Plt_dpth = 1  # Defines variable as integer. Sets binary toggle.
+Plt_dpth = 0  # Defines variable as integer. Sets binary toggle.
 # Plot sedimentation rate
-Plt_dpth_rt = 1  # Defines variable as integer. Sets binary toggle.
+Plt_dpth_rt = 0  # Defines variable as integer. Sets binary toggle.
 # Plot sedimentation rate change
-Plt_rt_chng=1  # Defines variable as integer. Sets binary toggle.
+Plt_rt_chng=0  # Defines variable as integer. Sets binary toggle.
 
 # SELECT INPUT PARAMETERS ----------------------------------------------------------------------------------------------
 
@@ -77,31 +78,6 @@ rng_end = 2  # Defines variable as integer. Sets end survey range number for ana
 
 deg_to_rad = math.pi / 180  # Defines variable as float. Converts between degrees and radians.
 ft_to_m = 3.281  # Defines variable as float. Converts between international feet meters.
-
-# Plot format ----------------------------------------------------------------------------------------------------------
-
-# Set general plot format
-wdth = 4.5  # Defines variable as float. Sets plot window width.
-hght = wdth * 1.618  # Defines variable. Sets plot window height. Uses golden ratio.
-fig_sz = (hght, wdth)  # Defines object. Sets plot window size.
-fntsz = [10, 8]  # Defines list. Sets font size for axes labels and tick marks.
-lbl_pd = 10  # Defines variable as integer. Sets plot-axes label spacing.
-
-# Set data display format
-tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDDD']
-# Defines list. Sets Paul Tol, muted, colorblind friendly palette with hex color codes.
-lin_wdth = 2  # Defines variable as integer. Sets plot line width.
-lin_styl = ['solid', 'dashed', 'dotted', 'dashdot']  # Defines list. Sets line style.
-mrkrs = ['h', 'v', 'P', 'o', 'X', 's', '^', 'D', '<', '>', '8', 'p', 'H', 'd', ' ']  # Defines list. Sets plot markers.
-# Uses matplotlib markers.
-mrkr_sz = 4  # Defines variable as integer. Sets plot marker size.
-alpha = [0.5, 0.3]  # Defines list. Sets object transparency for plotted data and fill.
-
-# Set legend display format
-lctn = 'best'  # Defines variable as string. Sets legend location on plot. Automatically chooses.
-mrkr_scl = 2  # Defines variable as integer. Sets marker size on legend.
-frm_alpha = 0.7  # Defines variable as float. Sets legend box transparency.
-lbl_spcng = 0.7  # Defines variable as float. Sets legend object spacing.
 
 # SET UP DIRECTORY -----------------------------------------------------------------------------------------------------
 
@@ -381,18 +357,18 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     # DISPLAY DATA -------------------------------------------------------------------------------------
 
                     if Plt_crdnts == 1:  # Conditional statement. Plots all measurement coordinates on transect.
-                        plot_scatter(3, fig_sz, df_e, df_n, 'Predicted', tol_mtd[6], tol_mtd[6], 'o', 10, 1, 0.5, 0,
-                                     'best', mrkr_scl, 0.3, lbl_spcng, 'equal', 'box', fntsz[1], fntsz[0], lbl_pd,
+                        plot_scatter(3, fn.fig_sz, df_e, df_n, 'Predicted', fn.tol_mtd[6], fn.tol_mtd[6], 'o', 10, 1, 0.5, 0,
+                                     fn.lctn, fn.mrkr_scl, 0.3, fn.lbl_spcng, 'equal', 'box', fn.fntsz[1], fn.fntsz[0], fn.lbl_pd,
                                      'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates plot. Calls
                         # function.
                         if j == srvy_nums1[-1]:  # Conditional statement. Plots benchmark GPS coordinates.
-                            plot_scatter(3, fig_sz, BM1_e, BM1_n, None, tol_mtd[1], tol_mtd[0], 'o', 10, 1, 1, 0,
-                                         'best', mrkr_scl, 0.3, lbl_spcng, 'equal', 'box', fntsz[1], fntsz[0], lbl_pd,
+                            plot_scatter(3, fn.fig_sz, BM1_e, BM1_n, None, fn.tol_mtd[1], fn.tol_mtd[0], 'o', 10, 1, 1, 0,
+                                         fn.lctn, fn.mrkr_scl, 0.3, fn.lbl_spcng, 'equal', 'box', fn.fntsz[1], fn.fntsz[0], fn.lbl_pd,
                                          'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates plot. Calls
                             # function.
-                            plot_scatter(3, fig_sz, BM2_e, BM2_n, 'Original gps', tol_mtd[1], tol_mtd[0], 'o', 10, 1,
-                                         1, 0, 'best', mrkr_scl, 0.3, lbl_spcng, 'equal', 'box', fntsz[1], fntsz[0],
-                                         lbl_pd, 'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates plot.
+                            plot_scatter(3, fn.fig_sz, BM2_e, BM2_n, 'Original gps', fn.tol_mtd[1], fn.tol_mtd[0], 'o', 10, 1,
+                                         1, 0, fn.lctn, mrkr_scl, 0.3, lbl_spcng, 'equal', 'box', fn.fntsz[1], fn.fntsz[0],
+                                         fn.lbl_pd, 'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates plot.
                             # Calls function.
 
                     # DIGITIZE COORDINATES -----------------------------------------------------------------------------
@@ -415,107 +391,109 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                              None, None, None, False, 'GIS layer', gdf_srvy, gpckg, 'GPKG', 0)
                     # Creates directory and exports figure. Calls function.
 
-        # SELECT DATA ----------------------------------------------------------------------------------------------
+        # SELECT DATA --------------------------------------------------------------------------------------------------
 
-        if Dbl == 1:  # Conditional statement. Executes analysis of cross-sections as subsequent pairs.
-            if j > 1:  # Conditional statement. Executes lines below if dataset is not second to last survey.
-                index1 = srvy_nums.index(j)
+        if Dbl == 1:  # Conditional statement. Executes analysis of cross-sections as pairs.
+            if j > 1:  # Conditional statement. Performs operations for all but the last survey.
+                index1 = srvy_nums1.index(j)  # Defines variable. Retrieves index of survey number from list. Enables
+                # selection of second survey.
 
-                index1 = index1 + 1
+                index1 = index1 + 1  # Redefines variable. Retrieves index for second dataset selection.
 
-                k = srvy_nums[index1]# Defines variable as integer. Allows for selection of second dataset.
+                k = srvy_nums1[index1]  # Defines variable as integer. Allows for selection of second dataset.
 
-                # Survey dataset -----------------------------------------------------------------------------------
-
+                # Select second survey dataset
                 df_srvy2 = slice_DataFrame_rows('equals', df_rng, 'Srvy_num', k, 'SURVEY NUMBER', 0)  # Defines
                 # DataFrame. Calls function. Slices DataFrame to yield singular survey data.
 
                 # Retrieve metadata
-                srvy_yr2 = slice_DataFrame_cell(df_srvy2, 0, 'Srvy_year', 'Survey year', 0)  # Defines variable.
-                # Calls function. Slices DataFrame to yield survey year of present dataset.
-                srvy_dt2 = slice_DataFrame_cell(df_srvy2, 0, 'Srvy_date', 'Survey date', 0)  # Defines variable.
-                # Calls function. Slices DataFrame to yield survey date of present dataset.
-
-                # Survey measurements ----------------------------------------------------------------------------------
-
-                df_offst2 = slice_DataFrame_columns(df_srvy2, 'Offset_ft', 0, 'OFFSET', 0)  # Defines DataFrame.
-                # Calls function. Slices DataFrame to yield survey offsets of present dataset.
-
-                df_elvtn2 = slice_DataFrame_columns(df_srvy2, 'Elv_geo_ft', 0, 'ELEVATION',0)  # Defines
-                # DataFrame. Calls function. Slices DataFrame to yield survey elevations of present dataset.
-
+                srvy_yr2 = slice_DataFrame_cell('Integer', 0, None, df_srvy2, 0, 'Srvy_year', 'Survey year', 0)
+                # Defines variable. Calls function. Slices DataFrame to yield survey year of present dataset.
+                srvy_dt2 = slice_DataFrame_cell('String', 0, None, df_srvy2, 0, 'Srvy_date', 'Survey date', 0)
+                # Defines variable. Calls function. Slices DataFrame to yield survey date of present dataset.
+                srvy_typ2 = slice_DataFrame_cell('String', 0, None, df_srvy2, 0, 'Srvy_type', 'Survey type', 0)
+                # Defines variable. Calls function. Slices DataFrame to yield survey type of present dataset.
+                # Select survey measurements
+                df_offst2 = slice_DataFrame_columns('DataFrame', 'Float', df_srvy2, 'Offset_ft', 0, 'OFFSET', 0)
+                # Defines DataFrame. Calls function. Slices DataFrame to yield survey offsets of present dataset.
+                df_elvtn2 = slice_DataFrame_columns('DataFrame', 'Float', df_srvy2, 'Elv_geo_ft', 0, 'ELEVATION', 0)
+                # Defines DataFrame. Calls function. Slices DataFrame to yield survey elevations of present dataset.
                 # Retrieve metadata
-                offst_min2 = min_value_DataFrame(df_offst2, 'Offset', 0)  # Defines variable. Calls function.
+                offst_min2 = min_value_DataFrame('Float', df_offst2, 'Offset', 0)  # Defines variable. Calls function.
                 # Slices DataFrame to yield first offset of present dataset.
-                offst_max2 = max_value_DataFrame(df_offst2, 'Offset', 0)  # Defines variable. Calls function.
+                offst_max2 = max_value_DataFrame('Float', df_offst2, 'Offset', 0)  # Defines variable. Calls function.
                 # Slices DataFrame to yield last offset of present dataset.
-                elvtn_min2 = min_value_DataFrame(df_elvtn2, 'Elevation', 0)  # Defines variable. Calls function.
-                # Slices DataFrame to yield lowest elevation of present dataset.
-                elvtn_max2 = max_value_DataFrame(df_elvtn2, 'Elevation', 0)  # Defines variable. Calls function.
-                # Slices DataFrame to yield highest elevation of present dataset.
-
-                num_smpls2 = df_srvy2.shape[0]
-                # Defines variable. Calls function. Slices DataFrame to yield number of measurements of present
-                # dataset.
-
-                # Calculate metadata
+                elvtn_min2 = min_value_DataFrame('Float', df_elvtn2, 'Elevation', 0)  # Defines variable. Calls
+                # function. Slices DataFrame to yield lowest elevation of present dataset.
+                elvtn_max2 = max_value_DataFrame('Float', df_elvtn2, 'Elevation', 0)  # Defines variable. Calls
+                # function. Slices DataFrame to yield highest elevation of present dataset.
+                num_smpls2 = df_srvy2.shape[0]  # Defines variable. Returns dimensionality of DataFrame.
                 rng_lngth2 = offst_max2 - offst_min2  # Defines variable. Calculates survey length.
-                rng_lngth2_m = rng_lngth2 / cnvrt_ft_t_m
+                rng_lngth2_m = rng_lngth2 / ft_to_m  # Defines variable. Converts to meters.
                 srvy_rlf2 = elvtn_max2 - elvtn_min2  # Defines variable. Calculates survey relief.
-                srvy_rlf2_m = srvy_rlf2 / cnvrt_ft_t_m
+                srvy_rlf2_m = srvy_rlf2 / ft_to_m  # Defines variable. Converts to meters.
 
-                # DISPLAY DATA -------------------------------------------------------------------------------------
+                # DISPLAY DATA -----------------------------------------------------------------------------------------
 
-                # Metadata -----------------------------------------------------------------------------------------
+                # Metadata ---------------------------------------------------------------------------------------------
 
                 print('==================================================')  # Displays objects.
                 print('\033[1m' + 'Stream channel: ' + '\033[0m' + str(chnl_name))  # Displays objects.
-                print('\033[1m' + 'Field range: ' + '\033[0m' + str(rng_name1) + ' (' + str(i) + ')')  # Displays
+                print('\033[1m' + 'Field transect: ' + '\033[0m' + str(rng_name1) + ' (' + str(i) + ')')  # Displays
                 # objects.
-                print('\033[1m' + 'Range surveys: ' + '\033[0m' + str(srvy_yr1) + '–' + str(srvy_yr2) + ' (' +
-                      str(j) + '–' + str(k) + ' of ' + str(srvy_num_max) + ')')  # Displays objects.
-                # print('\033[1m' + 'Survey dates: ' + '\033[0m' + str(srvy_dt1) + ' & ' + str(srvy_dt2))  # Displays
+                print(
+                    '\033[1m' + 'Transect bearing: ' + '\033[0m' + str(brng_r_dir) + str(brng_angl) + str(brng_a_dir) +
+                    ' (' + str(brng_fnctl) + ')')  # Displays objects.
+                print('\033[1m' + 'Stream station: ' + '\033[0m' + str(strm_stat1) + ' ft' +
+                      ' (' + str('%.0f' % strm_stat1_m) + ' m)')  # Displays objects.
+                print('\033[1m' + 'Transect survey: ' + '\033[0m' + str(srvy_yr1) + '–' + str(srvy_yr2) + ' (' +
+                      str(j) + '–' + str(k) + ' of ' + str(srvy_nums_max) + ')')  # Displays objects.
+                print('\033[1m' + 'Survey types: ' + '\033[0m' + str(srvy_typ1) + ' & ' + str(srvy_typ2))  # Displays
                 # objects.
-                print('\033[1m' + 'Survey lengths: ' + '\033[0m' + str('%.1f' % rng_lngth1) + ' & ' + str('%.1f' % rng_lngth2) +
-                      ' ft' + ' (' + str('%.0f' % rng_lngth1_m) + ' & ' + str('%.0f' % rng_lngth2_m) + ' m)')  # Displays objects.
+                print('\033[1m' + 'Survey dates: ' + '\033[0m' + str(srvy_dt1) + ' & ' + str(srvy_dt2))  # Displays
+                # objects.
+                print('\033[1m' + 'Survey lengths: ' + '\033[0m' + str('%.1f' % rng_lngth1) + ' & ' + str(
+                    '%.1f' % rng_lngth2) +
+                      ' ft' + ' (' + str('%.0f' % rng_lngth1_m) + ' & ' + str(
+                    '%.0f' % rng_lngth2_m) + ' m)')  # Displays objects.
                 print('\033[1m' + 'Range relief: ' + '\033[0m' + str('%.1f' % srvy_rlf1) + ' & ' +
-                      str('%.1f' % srvy_rlf2) + ' ft' + ' (' + str('%.0f' % srvy_rlf1_m) + ' & ' + str('%.0f' % srvy_rlf2_m) + ' m)')  # Displays objects.
+                      str('%.1f' % srvy_rlf2) + ' ft' + ' (' + str('%.0f' % srvy_rlf1_m) + ' & ' + str(
+                    '%.0f' % srvy_rlf2_m) + ' m)')  # Displays objects.
                 print('\033[1m' + 'Number of samples: ' + '\033[0m' + str(num_smpls1) + ' & ' + str(num_smpls2))
                 # Displays objects.
                 print('--------------------------------------------------')  # Displays objects.
 
-                # Cross-section plot -------------------------------------------------------------------------------
+                # Two cross-sections -------------------------------------------------------------------------------
 
-                if Plt_dbl == 1:  # Conditional statement. Plots cross-sections as subsequent pairs.
-                    clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 0)  # Defines variable. Calls function. Sets
-                    # plot color.
-                    mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 0)  # Defines variable. Calls function. Sets
-                    # plot marker type.
-                    clr2 = get_plot_feature_by_year(srvy_yr2, tol_mtd, 0)  # Defines variable. Calls function. Sets
-                    # plot color.
-                    mrkr2 = get_plot_feature_by_year(srvy_yr2, mrkrs, 0)  # Defines variable. Calls function. Sets
-                    # plot marker type.
+                if Plt_dbl == 1:  # Conditional statement. Plots cross-sections as dual pairs.
+                    clr1 = get_plot_feature_by_year(srvy_yr1, fn.tol_mtd, 'Color : ', 0)  # Defines variable. Calls
+                    # function. Sets plot color.
+                    mrkr1 = get_plot_feature_by_year(srvy_yr1, fn.mrkrs, 'Marker: ', 0)  # Defines variable. Calls
+                    # function. Sets plot marker type.
+                    clr2 = get_plot_feature_by_year(srvy_yr2, fn.tol_mtd, 'Color : ', 0)  # Defines variable. Calls
+                    # function. Sets plot color.
+                    mrkr2 = get_plot_feature_by_year(srvy_yr2, fn.mrkrs, 'Marker: ', 0)  # Defines variable. Calls
+                    # function. Sets plot marker type.
 
-                    title = 'Range ' + str(rng_name1) + ' (' + str(i) + ') ' + str(srvy_yr1) + '–' + str(srvy_yr2) + ' surveys'
-                    # Defines string. Sets title of plot.  # Defines string. Sets plot title.
+                    title = 'Range ' + str(rng_name1) + ' (' + str(i) + ') ' + str(srvy_yr1) + '–' + str(srvy_yr2) + \
+                            ' surveys'  # Defines string. Sets title of plot.
 
-                    plot_lines(2, 3, fig_sz, [df_offst2, df_offst1], [df_elvtn2, df_elvtn1], [srvy_yr2, srvy_yr1],
-                               [clr2, clr1], [mrkr2, mrkr1], mrkr_sz, lin_wdth, [lin_styl[0], lin_styl[0]], alpha,
-                               0, lctn, mrkr_scl, frm_alpha, lbl_spcng, 0, fntsz_tcks, 'Survey offset (ft)', fntsz_ax,
-                               lbl_pd, 'Surface elevation (ft)', title, 2, 1)  # Creates plot. Calls function.
+                    plot_lines(2, 3, fn.fig_sz, [df_offst2, df_offst1], [df_elvtn2, df_elvtn1], [srvy_yr2, srvy_yr1],
+                               [clr2, clr1], [mrkr2, mrkr1], fn.mrkr_sz, fn.lin_wdth, [fn.lin_styl[0], fn.lin_styl[0]],
+                               fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1], fn.lbl_spcng, 0, fn.fntsz[-1],
+                               'Survey offset (ft)', fntsz[0], fn.lbl_pd, 'Surface elevation (ft)', title, 1, 1)
+                    # Creates plot. Calls function.
 
-                    # EXPORT FIGURE --------------------------------------------------------------------------------
-
-                    fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/Double', '/' + chnl_name, '/Measured']
-                    # Defines list. Sets folder labels for directory to be made.
+                    # Export data
+                    fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/Double', '/' + chnl_name,
+                                 '/Measured']  # Defines list. Sets folder labels for directory to be made.
 
                     fig_name = '/' + str(rng_name1) + '_s' + str(j) + '–' + str(k) + '_' + str(srvy_yr1) + '–' + \
-                               str(srvy_yr2) + '.pdf'  # Defines variable as strIng. Sets name of figure for
-                    # export.
+                               str(srvy_yr2) + '.pdf'  # Defines variable as strIng. Sets name of figure for export.
 
                     export_file_to_directory(1, 'figure', 6, fldr_lbls, opt_fldr, 'Directories named: ', fig_name,
-                                             3, 'pdf', None, None, 'Cross-sectional plot', 0)  # Creates directory
-                    # and exports figure. Calls function.
+                                             3, 'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)
+                    # Creates directory and exports figure. Calls function.
 
                 # INTERPOLATE DATASETS -----------------------------------------------------------------------------
 
