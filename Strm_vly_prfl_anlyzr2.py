@@ -48,9 +48,9 @@ Plt_crdnts = 0  # Defines variable as integer. Sets binary toggle.
 Dbl = 1  # Defines variable as integer. Sets binary toggle.
 
 # Plot dual cross-sections
-Plt_dbl = 1  # Defines variable as integer. Sets binary toggle.
+Plt_dbl = 0  # Defines variable as integer. Sets binary toggle.
 # Plot dual interpolated cross-sections
-Plt_intrp = 0  # Defines variable as integer. Sets binary toggle.
+Plt_intrp = 1  # Defines variable as integer. Sets binary toggle.
 # Plot dual re-interpolated cross-sections
 Plt_reintrp = 0  # Defines variable as integer. Sets binary toggle.
 
@@ -223,7 +223,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                 title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')' + ' ' + str(srvy_yr1) + ' survey '  # Defines
                 # string. Sets plot title.
 
-                plot_lines(1, 1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz, lin_wdth,
+                plot_lines(1, 1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz[0], lin_wdth[0],
                            lin_styl[0], alpha[0], 0, lctn, mrkr_scl, frm_alpha, lbl_spcng, 0, fntsz[1],
                            'Survey offset (ft)',fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 1, 1)  # Creates
                 # plot. Calls function.
@@ -249,7 +249,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                 title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')'  # Defines string. Sets plot title.
 
-                plot_lines(1, 2, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz, lin_wdth,
+                plot_lines(1, 2, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz[0], lin_wdth[0],
                            lin_styl[0], alpha[0], 1, lctn, mrkr_scl, frm_alpha, lbl_spcng,0, fntsz[-1],
                            'Survey offset (ft)', fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 1, 1)  # Creates
                 # plot. Calls function.
@@ -355,21 +355,28 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     # coordinates to survey DataFrame.
 
                     # DISPLAY DATA -------------------------------------------------------------------------------------
-
+                    plot_scatter(  alpha,
+                                 show_legend, location, marker_scale, frame_alpha, label_spacing, aspect, adjustible,
+                                 fontsize_ticks,
+                                 fontsize_axis, label_pad, x_label, y_label, title, pause,
+                                 pause_length)  # Defines funct
                     if Plt_crdnts == 1:  # Conditional statement. Plots all measurement coordinates on transect.
-                        plot_scatter(3, fn.fig_sz, df_e, df_n, 'Predicted', fn.tol_mtd[6], fn.tol_mtd[6], 'o', 10, 1, 0.5, 0,
-                                     fn.lctn, fn.mrkr_scl, 0.3, fn.lbl_spcng, 'equal', 'box', fn.fntsz[1], fn.fntsz[0], fn.lbl_pd,
-                                     'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates plot. Calls
+                        plot_scatter(3, fn.fig_sz, df_e, df_n, 'Predicted', fn.tol_mtd[6], fn.tol_mtd[6], fn.mrkrs[3],
+                                     fn.mrkr_sz[0], fn.lin_wdth[1], fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1],
+                                     fn.lbl_spcng, 'equal', 'box', fn.fntsz[1], fn.fntsz[0], fn.lbl_pd, 'Easting (m)',
+                                     'Northing (m)', 'Coordinates', 1, 1)  # Creates plot. Calls
                         # function.
                         if j == srvy_nums1[-1]:  # Conditional statement. Plots benchmark GPS coordinates.
-                            plot_scatter(3, fn.fig_sz, BM1_e, BM1_n, None, fn.tol_mtd[1], fn.tol_mtd[0], 'o', 10, 1, 1, 0,
-                                         fn.lctn, fn.mrkr_scl, 0.3, fn.lbl_spcng, 'equal', 'box', fn.fntsz[1], fn.fntsz[0], fn.lbl_pd,
-                                         'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates plot. Calls
-                            # function.
-                            plot_scatter(3, fn.fig_sz, BM2_e, BM2_n, 'Original gps', fn.tol_mtd[1], fn.tol_mtd[0], 'o', 10, 1,
-                                         1, 0, fn.lctn, mrkr_scl, 0.3, lbl_spcng, 'equal', 'box', fn.fntsz[1], fn.fntsz[0],
-                                         fn.lbl_pd, 'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates plot.
-                            # Calls function.
+                            plot_scatter(3, fn.fig_sz, BM1_e, BM1_n, None, fn.tol_mtd[1], fn.tol_mtd[0], fn.mrkrs[3],
+                                         fn.mrkr_sz[0], fn.lin_wdth[1], fn.alpha[2], 0, fn.lctn, fn.mrkr_scl,
+                                         fn.alpha[1], fn.lbl_spcng, 'equal', 'box', fn.fntsz[1], fn.fntsz[0],
+                                         fn.lbl_pd, 'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)  # Creates
+                            # plot. Calls function.
+                            plot_scatter(3, fn.fig_sz, BM2_e, BM2_n, 'Original gps', fn.tol_mtd[1], fn.tol_mtd[0],
+                                         fn.mrkrs[3], fn.mrkr_sz[0], fn.lin_wdth[1], fn.alpha[2], 0, fn.lctn,
+                                         fn.mrkr_scl, fn.alpha[1], fn.lbl_spcng, 'equal', 'box', fn.fntsz[1],
+                                         fn.fntsz[0], fn.lbl_pd, 'Easting (m)', 'Northing (m)', 'Coordinates', 1, 1)
+                            # Creates plot. Calls function.
 
                     # DIGITIZE COORDINATES -----------------------------------------------------------------------------
 
@@ -479,10 +486,10 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                             ' surveys'  # Defines string. Sets title of plot.
 
                     plot_lines(2, 3, fn.fig_sz, [df_offst2, df_offst1], [df_elvtn2, df_elvtn1], [srvy_yr2, srvy_yr1],
-                               [clr2, clr1], [mrkr2, mrkr1], fn.mrkr_sz, fn.lin_wdth, [fn.lin_styl[0], fn.lin_styl[0]],
-                               fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1], fn.lbl_spcng, 0, fn.fntsz[-1],
-                               'Survey offset (ft)', fntsz[0], fn.lbl_pd, 'Surface elevation (ft)', title, 1, 1)
-                    # Creates plot. Calls function.
+                               [clr2, clr1], [mrkr2, mrkr1], fn.mrkr_sz[0], fn.lin_wdth[0],
+                               [fn.lin_styl[0], fn.lin_styl[0]], fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1],
+                               fn.lbl_spcng, 0, fn.fntsz[-1], 'Survey offset (ft)', fntsz[0], fn.lbl_pd,
+                               'Surface elevation (ft)', title, 1, 1)  # Creates plot. Calls function.
 
                     # Export data
                     fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/Double', '/' + chnl_name,
@@ -495,59 +502,54 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                              3, 'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)
                     # Creates directory and exports figure. Calls function.
 
-                # INTERPOLATE DATASETS -----------------------------------------------------------------------------
+                # INTERPOLATE DATA -------------------------------------------------------------------------------------
 
-                offsts_int1, elvtns_int1, x_rng_int1, num_smpls_int1 = interpolate_cross_section('dataframe',
-                                                                                                 df_offst1,
-                                                                                                 df_elvtn1, None,
-                                                                                                 None, 'linear',
-                                                                                                 0.01, 2, 0)
-                # Defines variables and interpolates cross-section. Calls function.
+                df_off_i1, df_elv_i1, x_rng_i1 = interpolate_cross_section('DataFrame', df_offst1,
+                                                                                         df_elvtn1, None, None,
+                                                                                         'linear', 0.01, 2, 1)
+                # Defines variables. Calls function. Interpolates cross-section.
 
-                offsts_int2, elvtns_int2, x_rng_int2, num_smpls_int2 = interpolate_cross_section('dataframe',
-                                                                                                 df_offst2,
-                                                                                                 df_elvtn2, None,
-                                                                                                 None, 'linear',
-                                                                                                 0.01, 2, 0)
-                # Defines variables and interpolates cross-section. Calls function.
+                df_off_i2, df_elv_i2, x_rng_i2 = interpolate_cross_section('DataFrame', df_offst2,
+                                                                                         df_elvtn2, None, None,
+                                                                                         'linear', 0.01, 2, 1)
+                # Defines variables. Calls function. Interpolates cross-section.
 
-                # PLOT DATA ----------------------------------------------------------------------------------------
+                # DISPLAY DATA -----------------------------------------------------------------------------------------
 
-                if Plt_dbl_intrp == 1:  # Conditional statement. Plots interpolated cross-sections as subsequent
-                    # pairs.
-                    clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 0)  # Defines variable. Calls function. Sets
-                    # plot color.
-                    mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 0)  # Defines variable. Calls function. Sets
-                    # plot marker type.
-                    clr2 = get_plot_feature_by_year(srvy_yr2, tol_mtd, 0)  # Defines variable. Calls function. Sets
-                    # plot color.
-                    mrkr2 = get_plot_feature_by_year(srvy_yr2, mrkrs, 0)  # Defines variable. Calls function. Sets
-                    # plot marker type.
+                # Two cross-sections (Interpolated) --------------------------------------------------------------------
+                if Plt_intrp == 1:  # Conditional statement. Plots cross-sections as interpolated dual pairs.
+                    clr1 = get_plot_feature_by_year(srvy_yr1, fn.tol_mtd, 'Color : ', 0)  # Defines variable. Calls
+                    # function. Sets plot color.
+                    mrkr1 = get_plot_feature_by_year(srvy_yr1, fn.mrkrs, 'Marker: ', 0)  # Defines variable. Calls
+                    # function. Sets plot marker type.
+                    clr2 = get_plot_feature_by_year(srvy_yr2, fn.tol_mtd, 'Color : ', 0)  # Defines variable. Calls
+                    # function. Sets plot color.
+                    mrkr2 = get_plot_feature_by_year(srvy_yr2, fn.mrkrs, 'Marker: ', 0)  # Defines variable. Calls
+                    # function. Sets plot marker type.
 
                     title = 'Range ' + str(rng_name1) + ' (' + str(i) +') ' + str(srvy_yr1) + '–' + str(srvy_yr2) + \
                             ' interpolated surveys'  # Defines string. Sets title of plot.  # Defines string. Sets
                     # plot title.
 
-                    plot_lines(2, 4, fig_sz, [offsts_int2, offsts_int1], [elvtns_int2, elvtns_int1],
-                               [srvy_yr2, srvy_yr1], [clr2, clr1], [mrkr2, mrkr1], mrkr_sz, lin_wdth,
-                               [lin_styl[0], lin_styl[0]], alpha, 0, lctn, mrkr_scl, frm_alpha, lbl_spcng,
-                               0, fntsz_tcks, 'Survey offset (ft)', fntsz_ax, lbl_pd, 'Surface elevation (ft)', title,
-                               2, 1)  # Creates plot. Calls function.
+                    plot_lines(2, 4, fn.fig_sz, [df_off_i2, df_off_i1], [df_elv_i2, df_elv_i1], [srvy_yr2, srvy_yr1],
+                               [clr2, clr1], [mrkr2, mrkr1], fn.mrkr_sz[0], fn.lin_wdth[0], [lin_styl[0], lin_styl[0]],
+                               fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1], fn.lbl_spcng, 0, fn.fntsz[1],
+                               'Survey offset (ft)', fn.fntsz[0], fn.lbl_pd, 'Surface elevation (ft)', title, 1, 4)
+                    # Creates plot. Calls function.
 
-                    # EXPORT FIGURE --------------------------------------------------------------------------------
-
+                    # Export data
                     fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/Double', '/' + chnl_name,
                                  '/Interpolated']  # Defines list. Sets folder labels for directory to be made.
 
-                    fig_name = '/' + str(rng_name1) + '_s' + str(j) + '–' + str(k) + '_' + str(srvy_yr1) + '–' \
-                               + str(srvy_yr2) + '_Interp' + '.pdf'  # Defines variable as strIng. Sets name of
-                    # figure for export.
+                    fig_name = '/' + str(rng_name1) + '_s' + str(j) + '–' + str(k) + '_' + str(srvy_yr1) + '–' + \
+                               str(srvy_yr2) + '_Interp' + '.pdf'  # Defines variable as strIng. Sets name of figure
+                    # for export.
 
                     export_file_to_directory(1, 'figure', 6, fldr_lbls, opt_fldr, 'Directories named: ', fig_name,
-                                             4, 'pdf', None, None, 'Cross-sectional plot', 0)  # Creates directory
-                    # and exports figure. Calls function.
+                                             4, 'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)
+                    # Creates directory and exports figure. Calls function.
 
-                # SELECT CALCULATION RANGE -------------------------------------------------------------------------
+                # SELECT CALCULATION RANGE -----------------------------------------------------------------------------
 
                 start, end, srvy_lngth_shrd = select_coincident_x_range('dataframe', df_offst1, df_offst2,
                                                                         ' ft', 0)  # Defines variables. Calls
