@@ -34,12 +34,12 @@ lbl_pd = 10  # Defines variable as integer. Sets plot-axes label spacing.
 # Set data display format
 tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDDD']
 # Defines list. Sets Paul Tol, muted, colorblind friendly palette with hex color codes.
-lin_wdth = 2  # Defines variable as integer. Sets plot line width.
+lin_wdth = [2, 1]  # Defines list. Sets plot line width.
 lin_styl = ['solid', 'dashed', 'dotted', 'dashdot']  # Defines list. Sets line style.
 mrkrs = ['h', 'v', 'P', 'o', 'X', 's', '^', 'D', '<', '>', '8', 'p', 'H', 'd', ' ']  # Defines list. Sets plot markers.
 # Uses matplotlib markers.
-mrkr_sz = 4  # Defines variable as integer. Sets plot marker size.
-alpha = [0.5, 0.3]  # Defines list. Sets object transparency for plotted data and fill.
+mrkr_sz = [4, 10]  # Defines list. Sets plot marker size.
+alpha = [0.5, 0.3, 1]  # Defines list. Sets object transparency for plotted data and fill.
 
 # Set legend display format
 lctn = 'best'  # Defines variable as string. Sets legend location on plot. Automatically chooses.
@@ -417,6 +417,35 @@ def plot_scatter(plot_number, figure_size, x, y, label, color, edge_color, marke
     else:  # Conditional statement. For display format
         pass  # Pass command. Moves on to next line.
 
+def interpolate_cross_section(type, x, y, start, end, interpolation_type, step, decimal_place, display):  # Defines
+    # function. For interpolating cross-sections for comparison.
+    x = np.around(x, decimals=decimal_place)  # Redefines array. Rounds decimal places for interpolation within bounds.
+    y = np.around(y, decimals=decimal_place)  # Redefines array. Rounds decimal places for interpolation within bounds.
+    f = sc.interpolate.interp1d(x, y, kind=interpolation_type)  # Sets interpolation format.
+    if type == 'DataFrame':  # Conditional statement.
+        x_lst = x.tolist()  # Defines list. Converts DataFrame to list.
+        start = x_lst[0]  # Defines variable. Selects first element of list.
+        end = x_lst[-1]  # Defines variable. Selects first element of list.
+    elif type == 'List':  # Conditional statement.
+        start = x[0]  # Defines variable. Selects first element of list.
+        end = x[-1]  # Defines variable. Selects first element of list.
+    elif type == 'Limits':  # Conditional statement.
+        pass  # Executes nothing. Moves on to next line.
+    new_end = end + step  # Defines variable. Resets end of range so array includes final input value.
+    x_intrpltd = np.arange(start, new_end, step)  # Defines array. Creates x array to interpolate y values.
+    if x_intrpltd[-1] > end:  # Conditional statement. Forces x to interpolate between true range.
+        x_intrpltd = x_intrpltd[0:-1]  # Defines array. Slices array to include all but last element.
+    if x_intrpltd[-1] == end:  # Conditional statement. Forces x to interpolate between true range.
+        pass  # Pass command. Moves on to next line.
+    x_intrpltd = np.around(x_intrpltd, decimals=decimal_place)  # Redefines array. Rounds values.
+    y_intrpltd = f(x_intrpltd)  # Sets function format. Interpolates y based on x.
+    x_rng_intrpltd = x_intrpltd[-1] - x_intrpltd[0]  # Defines variable. Calculates x range.
+    nmbr_smpls = len(x_intrpltd)  # Defines variable. Calclates number of measurements.
+    if display == 1:  # Conditional Statement. For Display.
+        print('Interpolated datasets' + '\n  Limits: ' + str(start) + '–' + str(end) + '\n  Number of measurements: '
+              + str(nmbr_smpls))  # Displays objects.
+    return x_intrpltd, y_intrpltd, x_rng_intrpltd  # Ends function execution.
+
 # ======================================================================================================================
 # END ------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
@@ -547,41 +576,6 @@ def create_DataFrame(array1, array2, display_label, display):  # Defines functio
     if display == 1:  # Conditional statement. For display.
         print('\033[1m' + display_label + ' DATA' + '\033[0m', '\n...\n', df_new, '\n')  # Displays objects.
     return df_new  # Ends function execution.
-
-
-
-def interpolate_cross_section(type, x, y, start, end, interpolation_type, step,
-                              decimal_place, display):  # Defines function. For interpolating cross-sections for comparison.
-    f = sc.interpolate.interp1d(x, y, kind=interpolation_type)  # Sets interpolation format.
-    if type == 'dataframe':  # Conditional statement.
-        x_list = x.tolist()  # Defines list. Converts DataFrame to list.
-        start = x_list[0]  # Defines variable. Selects first element of list.
-        end = x_list[-1]  # Defines variable. Selects first element of list.
-    elif type == 'list':  # Conditional statement.
-        x_list = x  # Defines list.
-        start = x_list[0]  # Defines variable. Selects first element of list.
-        end = x_list[-1]  # Defines variable. Selects first element of list.
-    elif type == 'limits':  # Conditional statement.
-        pass  # Executes nothing. Moves on to next line.
-    new_end = end + step  # Defines variable. Resets end of range so array includes final input value.
-    x_interpolated = np.arange(start, new_end, step)  # Defines array. Creates x array to interpolate y
-    # values.
-
-    if x_interpolated[-1] > end:
-        x_interpolated = x_interpolated[0:-1]
-    if x_interpolated[-1] == end:
-        pass
-
-    x_interpolated = np.around(x_interpolated, decimals=decimal_place)  # Redefines array. Rounds
-    # values.
-    y_interpolated = f(x_interpolated)  # Sets function format.
-    x_range_interpolated = x_interpolated[-1] - x_interpolated[0]  # Defines variable. Calculates x
-    # range.
-    number_samples = len(x_interpolated)  # Defines variable. Calclates number of measurements.
-    if display == 1:  # Conditional Statement. For Display.
-        print('Interpolated datasets' + '\n  Limits: ' + str(start) + '–' + str(end) + '\n  Number of measurements: '
-              + str(number_samples))  # Displays objects.
-    return x_interpolated, y_interpolated, x_range_interpolated, number_samples
 
 def select_coincident_x_range(type, x1, x2, units,
                               display):  # Defines function. For selecting coincident x values for reinpterpolation.
