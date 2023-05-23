@@ -78,6 +78,7 @@ rng_end = 13  # Defines variable as integer. Sets end survey range number for an
 
 deg_to_rad = math.pi / 180  # Defines variable as float. Converts between degrees and radians.
 ft_to_m = 3.281  # Defines variable as float. Converts between international feet meters.
+in_to_ft = 12  # Defines variable as integer. Converts between inches and feet.
 
 # SET UP DIRECTORY -----------------------------------------------------------------------------------------------------
 
@@ -611,7 +612,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                     for x in index1:  # Begins loop through array. Loops through coordinate indices.
                         off1, elv1_top, elv1_btm = get_coordinate_pairs('Depth', x, None, df_off_i1, df_elv_i1,
-                                                                        df_elv_i2, 1)  # Defines variables. Calls
+                                                                        df_elv_i2, 0)  # Defines variables. Calls
                         # function.
 
                         # CALCULATE SEDIMENT THICKNESS -----------------------------------------------------------------
@@ -620,118 +621,130 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                         dpth1, prcs1, dpth_rt1, prcs_rt1, tm_intrvl = sediment_thickness(elv1_top, elv1_btm, srvy_yr1,
                                                                                          srvy_yr2,
-                                                                                         'Sedimentation over ', 1)
+                                                                                         'Sedimentation over ', 0)
                         # Defines variables. Calls function.
 
-                        if x == index1[0]:
-                            dpth1_list=[]  # Defines list. Empty for looped population.
-                            dpth1_rt_list=[]
-
-                        
-                        dpth1_list = create_appended_list(dpth1, 'Sediment thickness', dpth1_list, 'New list appended: ', 0)  # Redefines list. Calls
-                        # function.
-                        dpth1_rt_list=create_appended_list(dpth1_rt,'Aggradation rate', dpth1_rt_list, 'New list appended: ', 0)
-
-                        # Averaged over cross-section --------------------------------------------------------------
-
-                        if x == index1[-1]:  # Conditional statement. Executes lines after last point calculation.
-
-                            if srvy_yr2 == '1850s':
-
-                                dpth1_list=list(filter(lambda y : y > 0, dpth1_list))
+                        # Save data
+                        if x == index1[0]:  # Conditional statement. Executes on first calculation only.
+                            dpth1_lst=[]  # Defines list. Empty for looped population.
+                            dpth_rt1_lst=[]  # Defines list. Empty for looped population.
 
 
+                        dpth1_list = create_appended_list(dpth1, 'Sediment thickness', dpth1_lst,
+                                                          'New list appended: ', 0)  # Redefines list. Calls function.
+                        # Populates list.
+                        dpth_rt1_lst=create_appended_list(dpth_rt1, 'Aggradation rate', dpth_rt1_lst,
+                                                          'New list appended: ', 0)  # Redefines list. Calls function.
+                        # Populates list.
 
-                            dpth_avg = np.sum(dpth1_list) / x  # Defines variable. Calculates average sediment
-                            # thickness.
+                        # Over cross-section ---------------------------------------------------------------------------
 
-                            dpth_rt_avg = np.sum(dpth1_rt_list) / x
+                        if x == index1[-1]:  # Conditional statement. Executes on last calculation only.
+                            if srvy_yr2 == '1850s':  # Conditional statement. Corrects values in list.
+                                dpth1_lst = list(filter(lambda y : y > 0, dpth1_lst))  # Redefines list. Removes
+                                # erroneous erosion values from list.
 
-                            dpth_max = max(dpth1_list)  # Defines variable. Retrieves max value from list.
-                            dpth_min = min(dpth1_list)  # Defines variable. Retrieves min value from list.
+                            dpth_avg = np.sum(dpth1_lst) / x  # Defines variable. Calculates average sediment
+                            # thickness on transect.
 
-                        # PREPARE DATA FOR EXPORT ------------------------------------------------------------------
+                            dpth_rt_avg = np.sum(dpth_rt1_lst) / x  # Defines variable. Calculates average
+                            # sedimentation rate on transect.
 
-                        # Lists ------------------------------------------------------------------------------------
+                            dpth_rt_avg = dpth_rt_avg * in_to_ft  # Defines variable. Converts units to inches.
 
-                        # # Create empty lists
+                            dpth_max = max(dpth1_lst)  # Defines variable. Retrieves max value from list.
+                            dpth_min = min(dpth1_lst)  # Defines variable. Retrieves min value from list.
+
+                        # Save data
                         if i == rng_strt:  # Conditional statement. Executes for first range only.
-                            if j == srvy_nums[0]:  # Conditional statement. Executes for first survey only.
-                                if x == index1[0]:
-                                    df_sed_thck = pd.DataFrame()
-                                    rng_name1_list = []  # Defines list. Empty for looped population.
-                                    rng_num_list=[]
-                                    srvy_yr1_list = []  # Defines list. Empty for looped population.
-                                    srvy_yr2_list = []  # Defines list. Empty for looped population.
-                                    srvy_intrvl_list=[]
-                                    strm_stat_list = []  # Defines list. Empty for looped population.
-                                    dpth_avg_list = []  # Defines list. Empty for looped population.
-                                    dpth_max_list = []  # Defines list. Empty for looped population.
-                                    dpth_min_list = []  # Defines list. Empty for looped population.
-                                    dpth_rt_avg_list =[]
+                            if j == srvy_nums1[0]:  # Conditional statement. Executes for first survey only.
+                                if x == index1[0]:  # Conditional statement. Executes for first calculation only.
+                                    df_sed_thck = pd.DataFrame()  # Defines DataFrame. Creates new DataFrame.
 
-                        dtfrm_pop_lists = [rng_name1_list, rng_num_list, srvy_yr1_list, srvy_yr2_list,srvy_intrvl_list, strm_stat_list,
-                                           dpth_avg_list, dpth_max_list, dpth_min_list, dpth_rt_avg_list ]  # Defines list.
-                        # Nested to enable looped population.
+                                    rng_name1_lst = []  # Defines list. Empty for looped population.
+                                    rng_num_lst = []  # Defines list. Empty for looped population.
+                                    srvy_yr1_lst = []  # Defines list. Empty for looped population.
+                                    srvy_yr2_lst = []  # Defines list. Empty for looped population.
+                                    tm_intrvl_lst = []  # Defines list. Empty for looped population.
+                                    strm_stat_lst = []  # Defines list. Empty for looped population.
+                                    dpth_avg_lst = []  # Defines list. Empty for looped population.
+                                    dpth_rt_avg_lst = []  # Defines list. Empty for looped population.
+                                    dpth_max_lst = []  # Defines list. Empty for looped population.
+                                    dpth_min_lst = []  # Defines list. Empty for looped population.
 
-                        # Populate lists
+
+                        dtfrm_pop_lists = [rng_name1_lst, rng_num_lst, srvy_yr1_lst, srvy_yr2_lst, tm_intrvl_lst,
+                                           strm_stat_lst, dpth_avg_lst, dpth_max_lst, dpth_min_lst, dpth_rt_avg_lst]
+                        # Defines list. Nested to enable looped population.
+
                         if x == index1[-1]:  # Conditional statement. Executes lines after last point calculation.
-                            dtfrm_pop_values = [str(rng_name1), int(i), srvy_yr1, srvy_yr2, str(srvy_intrvl), strm_stat1, dpth_avg, dpth_max, dpth_min, dpth_rt_avg] #pulate lists.
+                            dtfrm_pop_values = [str(rng_name1), int(i), srvy_yr1, srvy_yr2, str(tm_intrvl), strm_stat1,
+                                                dpth_avg, dpth_max, dpth_min, dpth_rt_avg]  # Defines list. Values to
+                            # populate lists for export.
 
-                            for y in dtfrm_pop_values:  # Begins loop through list. Loops through values to populate lists.
-                                index = dtfrm_pop_values.index(y)  # Defines variable. Retrieves index of list
-                                # element.
+                            for y in dtfrm_pop_values:  # Begins loop through list. Loops through values to populate
+                                # lists.
+                                index = dtfrm_pop_values.index(y)  # Defines variable. Retrieves index of list element.
 
-                                y = create_appended_list(y, 'Populated values', dtfrm_pop_lists[index], 'New list appended: ', 0)  # Redefines list. Calls function.
+                                y = create_appended_list(y, 'Populated values', dtfrm_pop_lists[index],
+                                                         'New list appended: ', 0)  # Redefines list. Calls function.
 
-                            if k == srvy_nums[-1]:
-                                dtfrm_pop_clm_lbl = ['Srvy_range', 'Range_num', 'Srvy_year1', 'Srvy_year2', 'Srvy_intvl', 'Strm_stat', 'D_avg_ft',
-                                                     'D_max_ft', 'D_min_ft', 'D_avg_ft/y']  # Defines list. Sets column labels for DataFrame.
-                                dtfrm_pop_lists = [rng_name1_list, rng_num_list, srvy_yr1_list, srvy_yr2_list,
-                                                   srvy_intrvl_list, strm_stat_list,
-                                                   dpth_avg_list, dpth_max_list, dpth_min_list,
-                                                   dpth_rt_avg_list]  # Redefines list. With
-                                # populated lists.
-                                # DataFrame ----------------------------------------------------------------------------
+                            if k == srvy_nums1[-1]:  # Conditional statement. Executes on last survey.
+                                dtfrm_pop_clm_lbl = ['Srvy_range', 'Range_num', 'Srvy_year1', 'Srvy_year2', 'Tm_intvl',
+                                                     'Strm_stat', 'D_avg_ft', 'D_avg_in/y', 'D_max_ft', 'D_min_ft']
+                                # Defines list. Sets column labels for DataFrame.
 
-                                dtfrm_pop_arry = np.array(dtfrm_pop_lists)  # Defines array. Converts list to array
-                                # for operation.
+                                dtfrm_pop_lists = [rng_name1_lst, rng_num_lst, srvy_yr1_lst, srvy_yr2_lst,
+                                                   tm_intrvl_lst, strm_stat_lst, dpth_avg_lst, dpth_rt_avg_lst,
+                                                   dpth_max_lst, dpth_min_lst]  # Redefines list. With populated lists.
 
-                                dtfrm_pop_arry = dtfrm_pop_arry.transpose()  # Redefines array. Transposes array
-                                # for DataFrame dimensional compatibility.
+                                dtfrm_pop_arry = np.array(dtfrm_pop_lists)  # Defines array. Converts list to array for
+                                # operation.
 
-                                df_sed_thck_rng = create_DataFrame(dtfrm_pop_arry, dtfrm_pop_clm_lbl, 'SEDIMENT THICKNESS', 0)  # Defines DataFrame. Calls function. Creates
-                                # DataFrame of average sediment thickness results.
+                                dtfrm_pop_arry = dtfrm_pop_arry.transpose()  # Redefines array. Transposes array for
+                                # DataFrame dimensional compatibility.
 
-                                dtfrm_pop_values=[]
-                                rng_name1_list = []  # Defines list. Empty for looped population.
-                                rng_num_list = []
-                                srvy_yr1_list = []  # Defines list. Empty for looped population.
-                                srvy_yr2_list = []  # Defines list. Empty for looped population.
-                                srvy_intrvl_list = []
-                                strm_stat_list = []  # Defines list. Empty for looped population.
-                                dpth_avg_list = []  # Defines list. Empty for looped population.
-                                dpth_max_list = []  # Defines list. Empty for looped population.
-                                dpth_min_list = []  # Defines list. Empty for looped population.
-                                dpth_rt_avg_list = []
-                                dpth_rt_chng_list=[]
+                                df_sed_thck_rng = create_DataFrame(dtfrm_pop_arry, dtfrm_pop_clm_lbl,
+                                                                   'SEDIMENT THICKNESS', 1)  # Defines DataFrame. Calls
+                                # function. Creates DataFrame of sediment thickness results for single transect.
 
-                                index1 = df_sed_thck_rng.index
-                                rt0 = slice_DataFrame_cell(df_sed_thck_rng, index1[-1], 'D_avg_ft/y', 'Average aggradation rate', 0)  # Defines variable. Calls function. Slices DataFrame to yield suvey year of present dataset.
-                                rt0 = float(rt0)
-                                for x in index1:
-                                    rtx = slice_DataFrame_cell(df_sed_thck_rng, index1[x], 'D_avg_ft/y', 'Average aggradation rate', 0)
-                                    rtx =float(rtx)
-                                    rt_chngx=rtx/rt0
-                                    dpth_rt_chng_list=create_appended_list(rt_chngx, 'Aggradation rate change', dpth_rt_chng_list, 'New list appended: ', 0)
-                                del rt0, rtx, rt_chngx
-                                dtfrm_pop_clm_lbl=['D_chng_ft/y']
-                                df_sed_chng = create_DataFrame(dpth_rt_chng_list,dtfrm_pop_clm_lbl, 'AGGRADATION CHANGE', 0)
-                                df_sed_thck_rng = pd.concat([df_sed_thck_rng, df_sed_chng], axis=1)
-                                del df_sed_chng
-                                df_sed_thck = pd.concat([df_sed_thck, df_sed_thck_rng], axis=0)
+                                # CALCULATE SEDIMENTATION RATE CHANGE --------------------------------------------------
 
-                                del df_sed_thck_rng
+                                dpth_rt_chng_lst = []  # Defines list. Empty for looped population.
+
+                                index1 = df_sed_thck_rng.index  # Defines array. Retrieves index of DataFrame.
+
+                                rt_0 = slice_DataFrame_cell('Float', 0, None, df_sed_thck_rng, index1[-1],
+                                                            'D_avg_in/y', 'Average sedimentation rate', 0)  # Defines
+                                # variable. Calls function. Slices DataFrame to yield first sedimentation rate.
+
+                                for x in index1:  # Begins loop through array.
+                                    rt_x = slice_DataFrame_cell('Float', 0, None, df_sed_thck_rng, index1[x],
+                                                                'D_avg_in/y', 'Average aggradation rate', 0)  # Defines
+                                    # variable. Calls function. Slices DataFrame to yield sedimentation rate for
+                                    # comparison.
+                                    rt_chng_x = rt_x / rt_0  # Defines variable. Calculates change in sedimentation
+                                    # rate.
+
+                                    # Save data
+                                    dpth_rt_chng_lst = create_appended_list(rt_chng_x, 'Aggradation rate change',
+                                                                            dpth_rt_chng_lst, 'New list appended: ', 0)
+                                    # Redefines list. Calls function.
+
+                                dtfrm_pop_clm_lbl = ['D_chng_in/y']  # Defines list. Sets column labels for DataFrame.
+
+                                df_sed_chng = create_DataFrame(dpth_rt_chng_lst, dtfrm_pop_clm_lbl,
+                                                               'SEDIMENTATION CHANGE', 0)  # Defines DataFrame. Calls
+                                # function. Creates DataFrame of sedimentation change results for single transect.
+
+                                df_sed_thck_rng = pd.concat([df_sed_thck_rng, df_sed_chng], axis=1)  # Redefines
+                                # DataFrame. Concatenates two together.
+
+                                df_sed_thck = pd.concat([df_sed_thck, df_sed_thck_rng], axis=0)  # Redefines DataFrame.
+                                # Concatenates two together.
+                                
+                                del rt_0, rt_x, rt_chng_x, df_sed_chng, df_sed_thck_rng  # Deletes variables. For
+                                # reuse.
 
                             if i == rng_end:  # Conditional statement. Executes for last range only.
                                 if k == srvy_nums[-1]:  # Conditional statement. Executes for last survey only.
