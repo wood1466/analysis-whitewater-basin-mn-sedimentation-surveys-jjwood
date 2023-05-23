@@ -446,6 +446,53 @@ def interpolate_cross_section(type, x, y, start, end, interpolation_type, step, 
               + str(nmbr_smpls))  # Displays objects.
     return x_intrpltd, y_intrpltd, x_rng_intrpltd  # Ends function execution.
 
+def get_coordinate_pairs(type, value1, value2, x_list, y1_list, y2_list, display):  # Defines function. For retrieving
+    # coordinate pairs from interpolated datasets for looped calculations.
+    if type == 'Depth':  # Conditional statement. Selects two coordinates on one x value.
+        x1 = x_list[value1]  # Defines variable. Selects list element by index.
+        y1_top = y1_list[value1]  # Defines variable. Selects list element by index.
+        y1_btm = y2_list[value1]  # Defines variable. Selects list element by index.
+        if display == 1:  # Conditional statement. For display.
+            print('Coordinates' + '\n  Top: ' + '(' + str(x1) + ', ' + str('%.2f' % y1_top) + ')' + '\n  Bottom: ' +
+                  '(' + str(x1) + ', ' + str('%.2f' % y1_btm) + ')')  # Displays objects.
+        return x1, y1_top, y1_btm  # Ends function execution.
+    if type == 'Area':  # Conditional statement. Selects two coordinates on two x values.
+        x1 = x_list[value1]  # Defines variable. Selects list element by index.
+        x2 = x_list[value2]  # Defines variable. Selects list element by index.
+        y1_top = y1_list[value1]  # Defines variable. Selects list element by index.
+        y1_btm = y2_list[value1]  # Defines variable. Selects list element by index.
+        y2_top = y1_list[value2]  # Defines variable. Selects list element by index.
+        y2_btm = y2_list[value2]  # Defines variable. Selects list element by index.
+        if display == 1:  # Conditional statement. For display.
+            print('Coordinates' + '\n  Top: ' + '(' + str(x1) + ', ' + str('%.2f' % y1_top) + ')' + ' & ' + '(' +
+                  str(x2) + ', ' + str('%.2f' % y2_top) + ')' + '\n  Bottom: ' + '(' + str(x1) + ', ' +
+                  str('%.2f' % y1_btm) + ')' + ' & ' + '(' + str(x2) + ', ' + str('%.2f' % y2_btm) + ')')  # Displays
+            # objects.
+        return x1, x2, y1_top, y1_btm, y2_top, y2_btm  # Ends function execution.
+
+def sediment_thickness(y1_top, y1_btm, yr1, yr2, display_label, display):  # Defines function. For
+    # calculating sediment thickness between cross-sections.
+    dpth1 = y1_top - y1_btm  # Defines variable. Calculates depth at a point.
+    if dpth1 > 0:  # Conditional statement. Characterizes depth measurement by surface process.
+        prcs1 = 'Deposition'  # Defines variable as string. Identifies depth measurement as depositional.
+        prcs_rt1 = 'Aggradation'  # Defines variable as string. Identifies depth rate measurement as aggradational.
+    elif dpth1 < 0:  # Conditional statement.
+        prcs1 = 'Erosion'  # Defines variable as string. Identifies depth measurement as erosional.
+        prcs_rt1 = 'Denudation'  # Defines variable as string. Identifies depth rate measurement as denudational.
+    else:  # Conditional statement.
+        prcs1 = 'No net change'  # Defines variable as string.
+        prcs_rt1 = 'No net change'  # Defines variable as string.
+    if yr2 == '1850s':  # Conditional statement. Prepares calculation of time step.
+        yr2 = 1854  # Defines variable.
+    else:  # Conditional statement. Prepares calculation of time step.
+        pass  # Pass command. Moves on to next line.
+    tm_intrvl = yr1 - yr2  # Defines variable. Calculates sedimentation time step.
+    dpth_rt1 = dpth1 / tm_intrvl  # Defines variable. Calculates sedimentation rate.
+    if display == 1:  # Conditional statement. For display.
+        print(display_label + str(tm_intrvl) + ' years' + '\n ' + prcs1 + ': ' + str('%.5f' % dpth1) + '\n ' +
+              prcs_rt1 + ': ' + str('%.5f' % dpth_rt1))  # Displays objects.
+    return dpth1, prcs1, dpth_rt1, prcs_rt1, tm_intrvl  # Ends function execution.
+
 # ======================================================================================================================
 # END ------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
@@ -475,7 +522,46 @@ def interpolate_cross_section(type, x, y, start, end, interpolation_type, step, 
 # lin_styls = ['solid', 'dotted', 'dashed', 'dashdot']
 # TEMPORARY FUNCTION HOUSING ===========================================================================================
 
-
+def sedimentation(type, y1_top, y1_btm, yr1, yr2, y2_top, y2_btm, display_label, display):  # Defines function. For calculating sediment thickness between cross-sections.
+    if type == 'Depth':  # Conditional statement. Calculates 1D sedimentation.
+        dpth1 = y1_top - y1_btm  # Defines variable. Calculates depth at a point.
+        if dpth1 > 0:  # Conditional statement. Characterizes depth measurement by surface process.
+            prcs1 = 'Deposition'  # Defines variable as string. Identifies depth measurement as depositional.
+            prcs_rt1 = 'Aggradation'  # Defines variable as string. Identifies depth rate measurement as aggradational.
+        elif dpth1 < 0:  # Conditional statement.
+            prcs1 = 'Erosion'  # Defines variable as string. Identifies depth measurement as erosional.
+            prcs_rt1 = 'Denudation'  # Defines variable as string. Identifies depth rate measurement as denudational.
+        else:  # Conditional statement.
+            prcs1 = 'No net change'  # Defines variable as string.
+            prcs_rt1 = 'No net change'  # Defines variable as string.
+        if survey_year2 == '1850s':  # Conditional statement. Prepares calculation of time step.
+            yr2 = 1854  # Defines variable.
+        else:  # Conditional statement. Prepares calculation of time step.
+            pass  # Pass command. Moves on to next line.
+        tm_intrvl = yr1 - yr2  # Defines variable. Calculates sedimentation time step.
+        dpth_rt1 = dpth1 / tm_intrvl  # Defines variable. Calculates sedimentation rate.
+        if display == 1:  # Conditional statement. For display.
+            print(display_label + str(srvy_intrvl) + ' years' + '\n ' + prcs1 + ': ' + str('%.5f' % dpth1) + '\n ' +
+                  prcs_rt1 + ': ' + str('%.5f' % dpth_rt1))  # Displays objects.
+        return dpth1, prcs1, dpth_rt1, prcs_rt1, tm_intrvl  # Ends function execution.
+    if type == 'Area':  # Conditional statement.
+        dpth1 = y1_top - y1_btm  # Defines variable. Calculates depth at a point.
+        if dpth1 > 0:  # Conditional statement. Characterizes depth measurement by surface process.
+            prcs1 = 'Deposition'  # Defines variable as string. Identifies depth measurement as depositional.
+        elif dpth1 < 0:  # Conditional statement.
+            prcs1 = 'Erosion'  # Defines variable as string.
+        elif dpth1 == 0:  # Conditional statement.
+            prcs1 = 'No net change'  # Defines variable as string.
+        dpth2 = y2_top - y2_btm  # Defines variable. Calculates depth at a point.
+        if dpth2 > 0:  # Conditional statement.
+            prcs2 = 'Deposition'  # Defines variable as string.
+        elif dpth2 < 0:  # Conditional statement.
+            prcs2 = 'Erosion'  # Defines variable as string.
+        elif dpth2 == 0:  # Conditional statement.
+            prcs2 = 'No net change'  # Defines variable as string.
+        if display == 1:  # Conditional Statement. For display.
+            print(display_label1 + '\n  x1: ' + str('%.5f' % dpth1) + ' (' + prcs1 + ')' + '\n  x2: ' + str('%.5f' % dpth2) + ' (' + prcs2 + ')')  # Displays objects.
+        return dpth1, dpth2, prcs1, prcs2  # Ends function execution.
 
 
 
@@ -614,70 +700,7 @@ def select_coincident_x_range(type, x1, x2, units,
             start) + '–' + str(end) + ' (' + str('%.2f' % coincident_range) + units + ')')  # Displays objects.
     return start, end, coincident_range  # Ends function execution.
 
-def get_coordinate_pairs(type, value1, value2, x_list, y1_list, y2_list,
-                         display):  # Defines function. For retrieving coordinate pairs from interpolated datasets for looped calculations.
-    if type == 'depth':  # Conditional statement. Executes lines below if depth is to be calculated.
-        x1 = x_list[value1]  # Defines variable. Selects list element by index.
-        y1_top = y1_list[value1]  # Defines variable. Selects list element by index.
-        y1_btm = y2_list[value1]  # Defines variable. Selects list element by index.
-        if display == 1:  # Conditional statement. For display.
-            print('Coordinates' + '\n  Top: ' + '(' + str(x1) + ', ' + str('%.2f' % y1_top) + ')' + '\n  Bottom: ' + '(' + str(
-                x1) + ', ' + str('%.2f' % y1_btm) + ')')  # Displays objects.
-        return x1, y1_top, y1_btm  # Ends function execution.
-    if type == 'area':  # Conditional statement. Executes lines below if depth is to be calculated.
-        x1 = x_list[value1]  # Defines variable. Selects list element by index.
-        x2 = x_list[value2]  # Defines variable. Selects list element by index.
-        y1_top = y1_list[value1]  # Defines variable. Selects list element by index.
-        y1_btm = y2_list[value1]  # Defines variable. Selects list element by index.
-        y2_top = y1_list[value2]  # Defines variable. Selects list element by index.
-        y2_btm = y2_list[value2]  # Defines variable. Selects list element by index.
-        if display == 1:  # Conditional statement. For display.
-            print('Coordinates' + '\n  Top: ' + '(' + str(x1) + ', ' + str('%.2f' % y1_top) + ')' + ' & ' + '(' + str(
-                x2) + ', ' + str('%.2f' % y2_top) + ')'
-                  + '\n  Bottom: ' + '(' + str(x1) + ', ' + str('%.2f' % y1_btm) + ')' + ' & ' + '(' + str(x2) + ', ' + str(
-                '%.2f' % y2_btm) + ')')  # Displays objects.
-        return x1, x2, y1_top, y1_btm, y2_top, y2_btm  # Ends function execution.
 
-def sediment_thickness(type, y1_top, y1_btm, survey_year1, survey_year2, y2_top, y2_btm, display_label1, display):  # Defines function. For calculating sediment thickness between cross-sections.
-    if type == 'depth':  # Conditional statement.
-        dpth1 = y1_top - y1_btm  # Defines variable. Calculates depth at a point.
-        if dpth1 > 0:  # Conditional statement. Characterizes depth measurement by surface process.
-            prcs1 = 'Deposition'  # Defines variable as string. Identifies depth measurement as depositional.
-            prcs1_rt = 'Aggradation'
-        elif dpth1 < 0:  # Conditional statement.
-            prcs1 = 'Erosion'  # Defines variable as string.
-            prcs1_rt = 'Degradation'
-        else:  # Conditional statement.
-            prcs1 = 'No net change'  # Defines variable as string.
-            prcs1_rt = 'No net change'
-        srvy_yr1_int = int(survey_year1)
-        if survey_year2 == '1850s':
-            srvy_yr2_int = 1854
-        elif survey_year2 != '1850s':
-            srvy_yr2_int = int(survey_year2)
-        srvy_intrvl = srvy_yr1_int - srvy_yr2_int
-        dpth1_rt = dpth1 / srvy_intrvl
-        if display == 1:  # Conditional statement. For display.
-            print(display_label1 + str(srvy_intrvl) + ' years' + '\n ' + prcs1 + ': ' + str('%.5f' % dpth1) + '\n ' + prcs1_rt + ': ' + str('%.5f' % dpth1_rt))  # Displays objects.
-        return dpth1, prcs1, dpth1_rt, prcs1_rt, srvy_intrvl  # Ends function execution.
-    if type == 'area':  # Conditional statement.
-        dpth1 = y1_top - y1_btm  # Defines variable. Calculates depth at a point.
-        if dpth1 > 0:  # Conditional statement. Characterizes depth measurement by surface process.
-            prcs1 = 'Deposition'  # Defines variable as string. Identifies depth measurement as depositional.
-        elif dpth1 < 0:  # Conditional statement.
-            prcs1 = 'Erosion'  # Defines variable as string.
-        elif dpth1 == 0:  # Conditional statement.
-            prcs1 = 'No net change'  # Defines variable as string.
-        dpth2 = y2_top - y2_btm  # Defines variable. Calculates depth at a point.
-        if dpth2 > 0:  # Conditional statement.
-            prcs2 = 'Deposition'  # Defines variable as string.
-        elif dpth2 < 0:  # Conditional statement.
-            prcs2 = 'Erosion'  # Defines variable as string.
-        elif dpth2 == 0:  # Conditional statement.
-            prcs2 = 'No net change'  # Defines variable as string.
-        if display == 1:  # Conditional Statement. For display.
-            print(display_label1 + '\n  x1: ' + str('%.5f' % dpth1) + ' (' + prcs1 + ')' + '\n  x2: ' + str('%.5f' % dpth2) + ' (' + prcs2 + ')')  # Displays objects.
-        return dpth1, dpth2, prcs1, prcs2  # Ends function execution.
 
 def plot_fill(number, zones, x, y1, y2, label, face_color, alpha, location, marker_scale, frame_alpha, label_spacing, pause, pause_length):
     plt.figure(number)  # Calls figure. Makes it the active plot.
