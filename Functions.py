@@ -493,6 +493,25 @@ def sediment_thickness(y1_top, y1_btm, yr1, yr2, display_label, display):  # Def
               prcs_rt1 + ': ' + str('%.5f' % dpth_rt1))  # Displays objects.
     return dpth1, prcs1, dpth_rt1, prcs_rt1, tm_intrvl  # Ends function execution.
 
+def create_appended_list(value, display_label1, new_list, display_label2, display):  # Defines function. For post
+    # calculation list collection.
+    try:  # Checks program for object. Takes action based off existence.
+        value  # Defines object to be searched for.
+    except NameError:  # Executed if object does not exist.
+        sys.exit('Error: ' + display_label1 + 'value undefined')  # Exits code and displays string.
+    else:  # Executed if object does exist.
+        new_list.append(value)  # Appends list.
+    if display == 1:  # Conditional statement. For display.
+        print(display_label2 + str(new_list))  # Displays objects.
+    return new_list  # Ends function execution.
+
+def create_DataFrame(array1, array2, display_label, display):  # Defines function. For creating DataFrame from arrays
+    # or lists.
+    df_new = pd.DataFrame(data=array1, columns=array2)  # Defines function format.
+    if display == 1:  # Conditional statement. For display.
+        print('\033[1m' + display_label + ' DATA' + '\033[0m', '\n...\n', df_new, '\n')  # Displays objects.
+    return df_new  # Ends function execution.
+
 # ======================================================================================================================
 # END ------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
@@ -645,23 +664,6 @@ def hydraulic_geometry(dataframe, column1, display_label1, display_label2, displ
     if display == 1:  # Conditional statement. For display.
         print('  ' + display_label8 + '%.2f' % hydro_rad)  # Displays objects.
     return wdth, dpth, hydro_rad  # Ends function execution.
-
-def create_appended_list(value, display_label1, new_list, display_label2, display):  # Defines function. For post calculation list collection.
-    try:  # Checks program for object. Takes action based off existence.
-        value  # Defines object to be searched for.
-    except NameError:  # Executed if object does not exist.
-        sys.exit('Error: ' + display_label1 + 'value undefined')  # Exits code and displays string.
-    else:  # Executed if object does exist.
-        new_list.append(value)  # Appends list.
-    if display == 1:  # Conditional statement. For display.
-        print(display_label2, new_list)  # Displays objects.
-    return new_list  # Ends function execution.
-
-def create_DataFrame(array1, array2, display_label, display):  # Defines function. For creating DataFrame from arrays or lists.
-    df_new = pd.DataFrame(data=array1, columns=array2)  # Defines function format.
-    if display == 1:  # Conditional statement. For display.
-        print('\033[1m' + display_label + ' DATA' + '\033[0m', '\n...\n', df_new, '\n')  # Displays objects.
-    return df_new  # Ends function execution.
 
 def select_coincident_x_range(type, x1, x2, units,
                               display):  # Defines function. For selecting coincident x values for reinpterpolation.
