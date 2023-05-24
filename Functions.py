@@ -99,17 +99,16 @@ def slice_DataFrame_rows(search_type, dataframe, column, value, display_label, d
 def slice_DataFrame_cell(data_type, convert, conversion_factor, dataframe, position, column, display_label, display):
     # Defines function. For DataFrame slicing by row value and index.
     index = dataframe.index  # Defines object. Retrieves DataFrame index.
-    if column != None:  # Conditional statement. Allows slicing style on column DataFrames.
-        slc_cl = dataframe.loc[index[position], column]  # Defines function format.
-    else:  # Conditional statement.
-        slc_cl = dataframe.loc[index[position]]  # Defines function format.
+    slc_cl = dataframe.loc[index[position], column]  # Defines function format.
     typ = type(slc_cl)  # Defines variable. Checks data type.
+    # print('This', slc_cl)
+    # print(type(slc_cl))
     if slc_cl == '1850s':  # Conditional statement. Ensures desired data type retrieved by function.
         if typ == data_type:  # Conditional statement.
             pass
         else:  # Conditional statement.
             slc_cl = str(slc_cl)  # Redefines variable. Converts to string.
-    else:
+    else:  # Conditional statement.
         if typ == data_type:  # Conditional statement. Ensures desired data type retrieved by function.
             pass  # Pass command. Moves on to next line.
         else:  # Conditional statement.
@@ -331,12 +330,12 @@ def transect_orientation(x1, x2, y1, y2, bearing_reference_direction, bearing_an
             qdrnt_clc = 4  # Defines variable. Establishes azimuthal quadrant of transect.
             rad_max = 2 * np.pi  # Defines variable. Establishes relevant azimuth limit for transformation.
             azmth_rad_cor = rad_max + azmth_rad_clc  # Defines variable. Transforms azimuth.
-    if delta_x < 1:  # Conditional statement. Transforms transect azimuth based on components.
+    else:
         if delta_y > 1:  # Conditional statement.
             qdrnt_clc = 2  # Defines variable. Establishes azimuthal quadrant of transect.
             rad_max = np.pi  # Defines variable. Establishes relevant azimuth limit for transformation.
             azmth_rad_cor = rad_max + azmth_rad_clc  # Defines variable. Transforms azimuth.
-        if delta_y < 1:  # Conditional statement.
+        else:
             qdrnt_clc = 3  # Defines variable. Establishes azimuthal quadrant of transect.
             rad_min = np.pi  # Defines variable. Establishes relevant azimuth limit for transformation.
             azmth_rad_cor = rad_min + azmth_rad_clc  # Defines variable. Transforms azimuth.
@@ -344,7 +343,6 @@ def transect_orientation(x1, x2, y1, y2, bearing_reference_direction, bearing_an
     azmth_rad_dff = azmth_rad_cor - azmth_rad_meas  # Defines variable. Calculates difference in calculated and measured
     # azimuths.
     azmth_deg_dff = azmth_rad_dff * (180 / np.pi)  # Defines variable. Converts radians to degrees.
-
     if qdrnt_clc != qdrnt_meas:  # Conditional statement. Sets error contingency.
         sys.exit('Quadrants misaligned - error in transformation')  # Exits code and displays string.
     sin = math.sin(azmth_rad_cor)  # Calculates sine of azimuth.
