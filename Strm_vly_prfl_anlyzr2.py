@@ -30,22 +30,22 @@ from Functions import *  # Imports all functions from outside program.
 
 # Single cross-section analysis ----------------------------------------------------------------------------------------
 
-Sngl = 1  # Defines variable as integer. Sets binary toggle.
+Sngl = 0  # Defines variable as integer. Sets binary toggle.
 
 # Plot single cross-section
-Plt_sngl = 1  # Defines variable as integer. Sets binary toggle.
+Plt_sngl = 0  # Defines variable as integer. Sets binary toggle.
 # Plot all cross-sections
-Plt_all = 1 # Defines variable as integer. Sets binary toggle.
+Plt_all = 0 # Defines variable as integer. Sets binary toggle.
 
 # Calculate coordinate geometry
-Crdnts = 0  # Defines variable as integer. Sets binary toggle.
+Crdnts = 1  # Defines variable as integer. Sets binary toggle.
 
 # Plot measurement coordinates
 Plt_crdnts = 1  # Defines variable as integer. Sets binary toggle.
 
 # Dual cross-sections analysis -----------------------------------------------------------------------------------------
 
-Dbl = 0  # Defines variable as integer. Sets binary toggle.
+Dbl = 1  # Defines variable as integer. Sets binary toggle.
 
 # Plot dual cross-sections
 Plt_dbl = 0  # Defines variable as integer. Sets binary toggle.
@@ -60,7 +60,7 @@ Dpth = 1  # Defines variable as integer. Sets binary toggle.
 # Plot sediment thickness
 Plt_dpth = 1  # Defines variable as integer. Sets binary toggle.
 # Plot sedimentation rate
-Plt_dpth_rt = 0  # Defines variable as integer. Sets binary toggle.
+Plt_dpth_rt = 1  # Defines variable as integer. Sets binary toggle.
 # Plot sedimentation rate change
 Plt_rt_chng=0  # Defines variable as integer. Sets binary toggle.
 
@@ -72,7 +72,7 @@ rvr_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data fo
 rng_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one survey range only.
 xtra_srvys = 0  # Defines variable as integer. Sets binary toggle. Analyzes extra survey data for range 11B (13).
 rng_strt = 1  # Defines variable as integer. Sets start survey range number for analysis loop.
-rng_end = 94  # Defines variable as integer. Sets end survey range number for analysis loop.
+rng_end = 26  # Defines variable as integer. Sets end survey range number for analysis loop.
 
 # Conversion factors ---------------------------------------------------------------------------------------------------
 
@@ -216,57 +216,59 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
             # Cross-section --------------------------------------------------------------------------------------------
 
             if Plt_sngl == 1:  # Conditional statement. Plots single cross-section.
-                clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color ', 1)  # Defines variable. Calls function.
-                # Sets plot color.
-                mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker ', 1)  # Defines variable. Calls function.
-                # Sets plot marker type.
+                if j != 0:  # Conditional statement.
+                    clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color ', 1)  # Defines variable. Calls
+                    # function. Sets plot color.
+                    mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker ', 1)  # Defines variable. Calls
+                    # function. Sets plot marker type.
 
-                title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')' + ' ' + str(srvy_yr1) + ' survey '  # Defines
-                # string. Sets plot title.
+                    title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')' + ' ' + str(srvy_yr1) + ' survey '
+                    # Defines string. Sets plot title.
 
-                plot_lines(1, 1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, fn.mrkr_sz[0], fn.lin_wdth[0],
-                           fn.lin_styl[0], fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1], fn.lbl_spcng, 0,
-                           fn.fntsz[1], 'Survey offset (ft)', fn.fntsz[0], fn.lbl_pd, 'Surface elevation (ft)', title,
-                           1, 1)  # Creates plot. Calls function.
+                    plot_lines(1, 1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, fn.mrkr_sz[0],
+                               fn.lin_wdth[0], fn.lin_styl[0], fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1],
+                               fn.lbl_spcng, 0, fn.fntsz[1], 'Survey offset (ft)', fn.fntsz[0], fn.lbl_pd,
+                               'Surface elevation (ft)', title, 1, 1)  # Creates plot. Calls function.
 
-                # Export data
-                fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/Single', '/' + chnl_name]
-                # Defines list. Sets folder labels for directory to be made.
+                    # Export data
+                    fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/Single', '/' + chnl_name]
+                    # Defines list. Sets folder labels for directory to be made.
 
-                fig_name = '/' + str(rng_name1) + '_s' + str(j) + '_' + str(srvy_yr1) + '.pdf'  # Defines variable as
-                # strIng. Sets name of figure for export.
+                    fig_name = '/' + str(rng_name1) + '_s' + str(j) + '_' + str(srvy_yr1) + '.pdf'  # Defines variable
+                    # as strIng. Sets name of figure for export.
 
-                export_file_to_directory(1, 'Figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name, 1,
-                                         'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)  # Creates
-                # directory and exports figure. Calls function.
+                    export_file_to_directory(1, 'Figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name, 1,
+                                             'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)  # Creates
+                    # directory and exports figure. Calls function.
 
             # All cross-sections ---------------------------------------------------------------------------------------
 
             if Plt_all == 1:  # Conditional statement. Plots all cross-sections on transect.
-                clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color ', 0)  # Defines variable. Calls function.
-                # Sets plot color.
-                mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker ', 0)  # Defines variable. Calls function.
-                # Sets plot marker type.
+                if j != 0:  # Conditional statement.
+                    clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color ', 0)  # Defines variable. Calls
+                    # function. Sets plot color.
+                    mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker ', 0)  # Defines variable. Calls
+                    # function. Sets plot marker type.
 
-                title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')'  # Defines string. Sets plot title.
+                    title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')'  # Defines string. Sets plot title.
 
-                plot_lines(1, 2, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, fn.mrkr_sz[0], fn.lin_wdth[0],
-                           fn.lin_styl[0], fn.alpha[0], 1, fn.lctn, fn.mrkr_scl, fn.frm_alpha, fn.lbl_spcng, 0,
-                           fn.fntsz[-1], 'Survey offset (ft)', fn.fntsz[0], fn.lbl_pd, 'Surface elevation (ft)', title,
-                           1, 1)  # Creates plot. Calls function.
+                    plot_lines(1, 2, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, fn.mrkr_sz[0],
+                               fn.lin_wdth[0], fn.lin_styl[0], fn.alpha[0], 1, fn.lctn, fn.mrkr_scl, fn.frm_alpha,
+                               fn.lbl_spcng, 0, fn.fntsz[-1], 'Survey offset (ft)', fn.fntsz[0], fn.lbl_pd,
+                               'Surface elevation (ft)', title, 1, 1)  # Creates plot. Calls function.
 
-                # Export data
-                if j == srvy_nums1[-1]:  # Conditional statement. Exports only when final cross-section has been
-                    # plotted.
-                    fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/All', '/' + chnl_name]
-                    # Defines list. Sets folder labels for directory to be made.
+                    # Export data
+                    if j == srvy_nums1[-1]:  # Conditional statement. Exports only when final cross-section has been
+                        # plotted.
+                        fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/All', '/' + chnl_name]
+                        # Defines list. Sets folder labels for directory to be made.
 
-                    fig_name = '/' + str(rng_name1) + '.pdf'  # Defines variable as strIng. Sets name of figure for
-                    # export.
+                        fig_name = '/' + str(rng_name1) + '.pdf'  # Defines variable as strIng. Sets name of figure for
+                        # export.
 
-                    export_file_to_directory(1, 'Figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name, 2,
-                                             'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)  # Creates
-                    # directory and exports figure. Calls function.
+                        export_file_to_directory(1, 'Figure', 5, fldr_lbls, opt_fldr, 'Directories named: ', fig_name,
+                                                 2, 'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)
+                        # Creates directory and exports figure. Calls function.
 
             # ==========================================================================================================
             # DIGITIZE SURVEY MEASUREMENTS -----------------------------------------------------------------------------
@@ -333,7 +335,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                     # CALCULATE ERROR ----------------------------------------------------------------------------------
 
-                    crd1_e = slice_DataFrame_cell('Float', 0, None, df_e, 0, None, 'Measurement 1 Easting (m): ', 0)
+                    crd1_e = slice_DataFrame_cell('Float', 0, None, df_e, 0, None, 'Measurement 1 Easting (m): ', 1)
                     # Defines variable. Calls function. Slices DataFrame to yield easting coordinate of first
                     # measurement of present dataset.
                     crd1_n = slice_DataFrame_cell('Float', 0, None, df_n, 0, None, 'Measurement 1 Northing (m): ', 0)
@@ -488,7 +490,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                     plot_lines(2, 3, fn.fig_sz, [df_offst2, df_offst1], [df_elvtn2, df_elvtn1], [srvy_yr2, srvy_yr1],
                                [clr2, clr1], [mrkr2, mrkr1], fn.mrkr_sz[0], fn.lin_wdth[0],
-                               [fn.lin_styl[0], fn.lin_styl[0]], fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1],
+                               [fn.lin_styl[0], fn.lin_styl[0]], fn.alpha[0], fn.lctn, fn.mrkr_scl, fn.alpha[1],
                                fn.lbl_spcng, 0, fn.fntsz[-1], 'Survey offset (ft)', fntsz[0], fn.lbl_pd,
                                'Surface elevation (ft)', title, 1, 1)  # Creates plot. Calls function.
 
@@ -533,7 +535,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                     plot_lines(2, 4, fn.fig_sz, [df_off_i2, df_off_i1], [df_elv_i2, df_elv_i1], [srvy_yr2, srvy_yr1],
                                [clr2, clr1], [mrkr2, mrkr1], fn.mrkr_sz[0], fn.lin_wdth[0], [lin_styl[0], lin_styl[0]],
-                               fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1], fn.lbl_spcng, 0, fn.fntsz[1],
+                               fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1], fn.lbl_spcng, fn.fntsz[1],
                                'Survey offset (ft)', fn.fntsz[0], fn.lbl_pd, 'Surface elevation (ft)', title, 1, 4)
                     # Creates plot. Calls function.
 
@@ -586,7 +588,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     plot_lines(2, 5, fn.fig_sz, [df_off_i2, df_off_i1], [df_elv_i2, df_elv_i1], [srvy_yr2, srvy_yr1],
                                [clr2, clr1], [mrkr2, mrkr1], mrkr_sz[0], lin_wdth[0],
                                [lin_styl[0], lin_styl[0]], alpha[0], 0, lctn, mrkr_scl, alpha[1],
-                               lbl_spcng, 0, fntsz[1], 'Survey offset (ft)', fntsz[0], lbl_pd,
+                               lbl_spcng, fntsz[1], 'Survey offset (ft)', fntsz[0], lbl_pd,
                                'Surface elevation (ft)', title, 0, 1)  # Creates plot. Calls function.
 
                     # Export data
@@ -789,7 +791,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                         for x in srvy_yrs_lst:  # Begins loop through list elements. Loops through
                                             # survey years.
                                             df_sed_thck_x = slice_DataFrame_rows('equals', df_sed_thck, 'Srvy_year1',
-                                                                                 x, 'SEDIMENT THICKNESS', 1)  # Defines
+                                                                                 x, 'SEDIMENT THICKNESS', 0)  # Defines
                                             # DataFrame. Calls function. Slices DataFrame to yield sediment thickness
                                             # data by first survey year.
 
@@ -805,12 +807,12 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                                                                      'STREAM STATION', 1)  # Defines
                                             # DataFrame. Calls function. Slices DataFrame to yield stream station data.
 
-                                            df_strm_stat_x = df_strm_stat_x.iloc[::-1]  # Redefines DataFrame. Inverts
+                                            # df_strm_stat_x = df_strm_stat_x.iloc[::-1]  # Redefines DataFrame. Inverts
                                             # values. For plotting sedimentation in the downstream direction.
                                             df_strm_stat_x = df_strm_stat_x.divide(1000)  # Redefines DataFrame.
                                             # Modifies values to be displayed in scientific notation.
 
-                                            df_dpth_x = df_dpth_x.iloc[::-1]  # Redefines DataFrame. Inverts values.
+                                            # df_dpth_x = df_dpth_x.iloc[::-1]  # Redefines DataFrame. Inverts values.
                                             # For plotting sedimentation in the downstream direction.
 
                                             srvy_yr1 = slice_DataFrame_cell('String', 0, None, df_sed_thck_x, 0,
@@ -835,10 +837,14 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                                             plot_lines(1, 6, fig_sz, df_strm_stat_x, df_dpth_x, lbl, clr1, mrkr1,
                                                        mrkr_sz[0], lin_wdth[0], lin_styl[0], alpha[0], 1, lctn,
-                                                       mrkr_scl, alpha[1], lbl_spcng, 0, fntsz[1],
+                                                       mrkr_scl, alpha[1], lbl_spcng, fntsz[1],
                                                        'River station (1 x 10^3 ft)', fntsz[0], lbl_pd,
-                                                       'Average sediment thickness (ft)', title, 1, 4)  # Creates plot.
+                                                       'Average sediment thickness (ft)', title, 1, 1)  # Creates plot.
                                             # Calls function.
+
+                                        plt.figure(6)  # Creates plot window. Sets figure size.
+                                        ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
+                                        ax.invert_xaxis()  # Inverts x-axis.
 
                                         # Export data
                                         fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Sediment_thickness']
@@ -860,155 +866,99 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                                                  None, None, 0)  # Creates directory and exports
                                         # figure. Calls function.
 
-                                    # if Plt_dpth_rt == 1:
-                                    #     df_srvy_yrs = slice_DataFrame_columns(df_sed_thck, 'Srvy_year1', 1,
-                                    #                                           'Survey years',
-                                    #                                           0)  # Defines DataFrame. Calls function. Slices DataFrame to yield survey years of present dataset.
-                                    #     srvy_yrs = df_srvy_yrs.tolist()  # Defines list. Converts DataFrame to list.
-                                    #
-                                    #     for x in srvy_yrs:  # Begins loop through list elements. Loops through survey years.
-                                    #         df_sed_thck_x = slice_DataFrame_rows('equals', df_sed_thck, 'Srvy_year1', x,
-                                    #                                              'SEDIMENT THICKNESS',
-                                    #                                              0)  # Defines DataFrame. Calls function. Slices DataFrame to yield sediment thickness data by year.
-                                    #
-                                    #         df_dpth_rt_x = slice_DataFrame_columns(df_sed_thck_x, 'D_avg_ft/y', 0,
-                                    #                                                'SEDIMENT THICKNESS',
-                                    #                                                0)  # Defines DataFrame. Calls function. Slices DataFrame to yield sediment thickness data by year.
-                                    #
-                                    #         df_strm_stat_x = slice_DataFrame_columns(df_sed_thck_x, 'Strm_stat', 0,
-                                    #                                                  'STREAM STATION',
-                                    #                                                  0)  # Defines DataFrame. Calls function. Slices DataFrame to yield stream station data.
-                                    #         df_strm_stat_x = df_strm_stat_x.iloc[::-1]
-                                    #         df_strm_stat_x = df_strm_stat_x.astype(int)
-                                    #         df_strm_stat_x = df_strm_stat_x.divide(1000)
-                                    #
-                                    #         # strm_stat_x = df_strm_stat_x.to_numpy()
-                                    #         # strm_stat_x=strm_stat_x.astype(int)
-                                    #
-                                    #         # strm_stat_x = np.divide(strm_stat_x, 1000)
-                                    #
-                                    #         df_dpth_rt_x = df_dpth_rt_x.astype(
-                                    #             float)  # Redefines DataFrame. Converts values to float.
-                                    #         df_dpth_rt_x = df_dpth_rt_x.iloc[::-1]
-                                    #         srvy_yr1 = slice_DataFrame_cell(df_sed_thck_x, 0, 'Srvy_year1',
-                                    #                                         'Survey year',
-                                    #                                         0)  # Defines variable. Calls function. Slices DataFrame to yield suvey year of present dataset.
-                                    #         srvy_yr2 = slice_DataFrame_cell(df_sed_thck_x, 0, 'Srvy_year2',
-                                    #                                         'Survey year',
-                                    #                                         0)  # Defines variable. Calls function. Slices DataFrame to yield suvey year of present dataset.
-                                    #         if type(srvy_yr1) == str:
-                                    #             pass
-                                    #         else:
-                                    #             srvy_yr1 = srvy_yr1.values[0]
-                                    #         if type(srvy_yr2) == str:
-                                    #             pass
-                                    #         else:
-                                    #             srvy_yr2 = srvy_yr2.values[0]
-                                    #         clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd,
-                                    #                                         0)  # Defines variable. Calls function. Sets plot color.
-                                    #         mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs,
-                                    #                                          1)  # Defines variable. Calls function. Sets plot marker type.
-                                    #
-                                    #         title = 'Average aggradation rate'  # Defines string. Sets plot title.
-                                    #         lbl = str(srvy_yr2) + '–' + str(srvy_yr1)
-                                    #         plot_lines(1, 7, fig_sz, df_strm_stat_x, df_dpth_rt_x, lbl, clr1, mrkr1,
-                                    #                    mrkr_sz, lin_wdth, lin_styl[0], alpha, 1, lctn, mrkr_scl,
-                                    #                    frm_alpha,
-                                    #                    lbl_spcng, 1, fntsz_tcks, 'River station (1 x 10^3 ft)',
-                                    #                    fntsz_ax, lbl_pd,
-                                    #                    'Average aggradation rate (ft/y)', title, 1,
-                                    #                    1)  # Creates plot. Calls function.
-                                    #
-                                    #     # EXPORT FIGURE --------------------------------------------------------------------
-                                    #
-                                    #     fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Sediment_thickness']
-                                    #     # Defines list. Sets folder labels for directory to be made.
-                                    #     df_srvy_yrs2 = slice_DataFrame_columns(df_sed_thck, 'Srvy_year2', 1,
-                                    #                                            'Survey years',
-                                    #                                            0)  # Defines DataFrame. Calls function. Slices DataFrame to yield survey years of present dataset.
-                                    #     srvy_yrs2 = df_srvy_yrs2.tolist()  # Defines list. Converts DataFrame to list.
-                                    #     if rng_nly == 1:
-                                    #         fig_name = '/D_rt_' + str(rng_name1) + '_' + str(srvy_yrs2[-1]) + '–' + str(srvy_yrs[0]) + '.pdf'
-                                    #     elif rng_nly == 0:
-                                    #         fig_name = '/D_rt_' + str(srvy_yrs2[-1]) + '–' + str(
-                                    #             srvy_yrs[0]) + '.pdf'  # Defines
-                                    #     # variable as strIng. Sets name of figure for export.
-                                    #     if rvr_nly == 1:
-                                    #         fig_name = '/D_rt_' + str(chnl_name) + '_' + str(srvy_yrs2[-1]) + '–' + str(srvy_yrs[0]) + '.pdf'
-                                    #     elif rvr_nly == 0:
-                                    #         fig_name = '/D_rt_' + str(srvy_yrs2[-1]) + '–' + str(srvy_yrs[0]) + '.pdf'  # Defines
-                                    #     export_file_to_directory(1, 'figure', 3, fldr_lbls, opt_fldr,
-                                    #                              'Directories named: ', fig_name, 7, 'pdf', None, None,
-                                    #                              'Average sediment thickness plot',
-                                    #                              0)  # Creates directory
-                                    # if Plt_dpth_rt_chng==1:
-                                    #     df_srvy_yrs = slice_DataFrame_columns(df_sed_thck, 'Srvy_year1', 1,'Survey years',0)  # Defines DataFrame. Calls function. Slices DataFrame to yield survey years of present dataset.
-                                    #     srvy_yrs = df_srvy_yrs.tolist()  # Defines list. Converts DataFrame to list.
-                                    #
-                                    #     for x in srvy_yrs:  # Begins loop through list elements. Loops through survey years.
-                                    #         df_sed_thck_x = slice_DataFrame_rows('equals', df_sed_thck, 'Srvy_year1', x,'SEDIMENT THICKNESS',0)  # Defines DataFrame. Calls function. Slices DataFrame to yield sediment thickness data by year.
-                                    #
-                                    #         df_dpth_rt_chng_x = slice_DataFrame_columns(df_sed_thck_x, 'D_chng_ft/y', 0,
-                                    #                                                     'SEDIMENT THICKNESS',
-                                    #                                                     0)  # Defines DataFrame. Calls function. Slices DataFrame to yield sediment thickness data by year.
-                                    #
-                                    #         df_srvy_yr1_x = slice_DataFrame_columns(df_sed_thck_x, 'Srvy_year1', 0,
-                                    #                                                 'STREAM STATION',
-                                    #                                                 0)  # Defines DataFrame. Calls function. Slices DataFrame to yield stream station data.
-                                    #         df_srvy_yr1_x=df_srvy_yr1_x.astype(int)
-                                    #
-                                    #         df_dpth_rt_chng_x = df_dpth_rt_chng_x.astype(float)  # Redefines DataFrame. Converts values to float.
-                                    #         # df_dpth_rt_chng_x = df_dpth_rt_chng_x.iloc[::-1]
-                                    #         srvy_yr1 = slice_DataFrame_cell(df_sed_thck_x, 0, 'Srvy_year1','Survey year',0)  # Defines variable. Calls function. Slices DataFrame to yield suvey year of present dataset.
-                                    #         srvy_yr2 = slice_DataFrame_cell(df_sed_thck_x, 0, 'Srvy_year2','Survey year',0)  # Defines variable. Calls function. Slices DataFrame to yield suvey year of present dataset.
-                                    #         if type(srvy_yr1) == str:
-                                    #             pass
-                                    #         else:
-                                    #             srvy_yr1 = srvy_yr1.values[0]
-                                    #         if type(srvy_yr2) == str:
-                                    #             pass
-                                    #         else:
-                                    #             srvy_yr2 = srvy_yr2.values[0]
-                                    #         clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd,0)  # Defines variable. Calls function. Sets plot color.
-                                    #         mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs,1)  # Defines variable. Calls function. Sets plot marker type.
-                                    #
-                                    #         title = 'Average aggradation rate'  # Defines string. Sets plot title.
-                                    #         lbl = str(srvy_yr2) + '–' + str(srvy_yr1)
-                                    #         plt.figure(1, figsize=fig_sz)
-                                    #         ax = plt.gca()
-                                    #         ax.scatter(df_srvy_yr1_x, df_dpth_rt_chng_x, c=clr1, marker=mrkr1, alpha=alpha,edgecolors=None, label=lbl)
-                                    #         plt.xlabel('Survey year', fontsize=fntsz_ax, labelpad=lbl_pd)  # Creates x-axis label. Sets format.
-                                    #         plt.ylabel('Aggradation rate change',fontsize=fntsz_ax)  # Creates y-axis label. Sets format.
-                                    #         plt.yticks(fontsize=fntsz_tcks)  # Sets y-axis ticks. Sets format.
-                                    #         plt.pause(1)
-                                    #         # plot_lines(1, 7, fig_sz, df_srvy_yr1_x, df_dpth_rt_chng_x, lbl, clr1, mrkr1,
-                                    #         #            mrkr_sz, lin_wdth, lin_styl[0], alpha, 1, lctn, mrkr_scl,
-                                    #         #            frm_alpha,
-                                    #         #            lbl_spcng, 1, fntsz_tcks, 'Survey year',
-                                    #         #            fntsz_ax, lbl_pd,
-                                    #         #            'Average aggradation rate change', title, 1,
-                                    #         #            5)  # Creates plot. Calls function.
-                                    #
-                                    #     # EXPORT FIGURE --------------------------------------------------------------------
-                                    #
-                                    #     fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Sediment_thickness']
-                                    #     # Defines list. Sets folder labels for directory to be made.
-                                    #     df_srvy_yrs2 = slice_DataFrame_columns(df_sed_thck, 'Srvy_year2', 1,
-                                    #                                            'Survey years',
-                                    #                                            0)  # Defines DataFrame. Calls function. Slices DataFrame to yield survey years of present dataset.
-                                    #     srvy_yrs2 = df_srvy_yrs2.tolist()  # Defines list. Converts DataFrame to list.
-                                    #     if rng_nly == 1:
-                                    #         fig_name = '/D_rt_chng_' + str(rng_name1) + '_' + str(srvy_yrs2[-1]) + '–' + str(
-                                    #             srvy_yrs[0]) + '.pdf'
-                                    #     elif rng_nly == 0:
-                                    #         fig_name = '/D_rt_chng_' + str(srvy_yrs2[-1]) + '–' + str(
-                                    #             srvy_yrs[0]) + '.pdf'  # Defines
-                                    #     # variable as strIng. Sets name of figure for export.
-                                    #     if rvr_nly == 1:
-                                    #         fig_name = '/D_rt_chng_' + str(chnl_name) + '_' + str(srvy_yrs2[-1]) + '–' + str(srvy_yrs[0]) + '.pdf'
-                                    #     elif rvr_nly == 0:
-                                    #         fig_name = '/D_rt_chng_' + str(srvy_yrs2[-1]) + '–' + str(srvy_yrs[0]) + '.pdf'  # Defines
-                                    #     export_file_to_directory(1, 'figure', 3, fldr_lbls, opt_fldr,
-                                    #                              'Directories named: ', fig_name, 1, 'pdf', None, None,
-                                    #                              'Average sediment thickness plot',0)
-                                    #
+                                    # Sedimentation rate ---------------------------------------------------------------
+
+                                    if Plt_dpth_rt == 1:  # Conditional statement. Plots sedimentation rate by time
+                                        # interval against of distance upstream.
+                                        srvy_yrs_lst = slice_DataFrame_columns('List', 'String', df_sed_thck,
+                                                                               'Srvy_year1', 1, 'Survey years', 0)
+                                        # Defines DataFrame. Calls function. Slices DataFrame to yield survey years of
+                                        # present dataset.
+
+                                        srvy_yrs2_lst = slice_DataFrame_columns('List', 'String', df_sed_thck,
+                                                                                'Srvy_year2', 1, 'Survey years', 0)
+                                        # Defines DataFrame. Calls function. Slices DataFrame to yield survey years of
+                                        # present dataset.
+
+                                        for x in srvy_yrs_lst:  # Begins loop through list elements. Loops through
+                                            # survey years.
+                                            df_sed_thck_x = slice_DataFrame_rows('equals', df_sed_thck, 'Srvy_year1',
+                                                                                 x, 'SEDIMENT THICKNESS', 0)  # Defines
+                                            # DataFrame. Calls function. Slices DataFrame to yield sediment thickness
+                                            # data by first survey year.
+
+                                            df_sed_thck_x = df_sed_thck_x.reset_index(drop=True)  # Redefines
+                                            # DataFrame. Resets indices to begin at 0.
+
+                                            df_dpth_rt_x = slice_DataFrame_columns('DataFrame', 'Float', df_sed_thck_x,
+                                                                                'D_avg_in/y', 0, 'SEDIMENT THICKNESS',
+                                                                                   1)  # Defines DataFrame. Calls
+                                            # function. Slices DataFrame to yield sediment thickness data.
+
+                                            df_strm_stat_x = slice_DataFrame_columns('DataFrame', 'Integer',
+                                                                                     df_sed_thck_x, 'Strm_stat', 0,
+                                                                                     'STREAM STATION', 1)  # Defines
+                                            # DataFrame. Calls function. Slices DataFrame to yield stream station data.
+
+                                            df_strm_stat_x = df_strm_stat_x.iloc[::-1]  # Redefines DataFrame. Inverts
+                                            # values. For plotting sedimentation in the downstream direction.
+                                            df_strm_stat_x = df_strm_stat_x.divide(1000)  # Redefines DataFrame.
+                                            # Modifies values to be displayed in scientific notation.
+
+                                            df_dpth_rt_x = df_dpth_rt_x.iloc[::-1]  # Redefines DataFrame. Inverts
+                                            # values.  For plotting sedimentation in the downstream direction.
+
+                                            srvy_yr1 = slice_DataFrame_cell('String', 0, None, df_sed_thck_x, 0,
+                                                                            'Srvy_year1', 'Survey year', 0)  # Defines
+                                            # variable. Calls function. Slices DataFrame to yield survey year of
+                                            # present dataset.
+
+                                            srvy_yr2 = slice_DataFrame_cell('String', 0, None, df_sed_thck_x, 0,
+                                                                            'Srvy_year2', 'Survey year', 0)  # Defines
+                                            # variable. Calls function. Slices DataFrame to yield survey year of
+                                            # present dataset.
+
+                                            clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color : ', 0)
+                                            # Defines variable. Calls function. Sets plot color.
+                                            mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker: ', 0)  # Defines
+                                            # variable. Calls function. Sets plot marker type.
+
+                                            title = 'Average sedimentation rate'  # Defines string. Sets plot title.
+
+                                            lbl = str(srvy_yr2) + '–' + str(srvy_yr1)  # Defines string. Sets plot
+                                            # object labels.
+
+                                            plot_lines(1, 7, fig_sz, df_strm_stat_x, df_dpth_rt_x, lbl, clr1, mrkr1,
+                                                       mrkr_sz[0], lin_wdth[0], lin_styl[0], alpha[0], 1, lctn,
+                                                       mrkr_scl, alpha[1], lbl_spcng, fntsz[1],
+                                                       'River station (1 x 10^3 ft)', fntsz[0], lbl_pd,
+                                                       'Average sedimentation rate (in/y)', title, 1, 1)  # Creates
+                                            # plot. Calls function.
+
+                                        plt.figure(7)  # Creates plot window. Sets figure size.
+                                        ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
+                                        ax.invert_xaxis()  # Inverts x-axis.
+
+                                        # Export data
+                                        fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Sedimentation_rate']
+                                        # Defines list. Sets folder labels for directory to be made.
+
+                                        if rvr_nly == 1:  # Conditional statement. Sets name of file for export.
+                                            fig_name = '/D_rt_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) + '_' \
+                                                       + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
+                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
+                                            fig_name = '/D_rt_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) + '_' \
+                                                       + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
+                                        else:  # Conditional statement.
+                                            fig_name = '/D_rt_' + str(srvy_yrs2_lst[-1]) + '_' + str(srvy_yrs_lst[0]) \
+                                                       + '.pdf'  # Defines variable as string.
+
+                                        export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
+                                                                 'Directories named: ', fig_name, 7, 'pdf', None,
+                                                                 None, 'Average sediment thickness plot', None,
+                                                                 None, None, 0)  # Creates directory and exports
+                                        # figure. Calls function.
+
+# ======================================================================================================================
+# END ------------------------------------------------------------------------------------------------------------------
+# ======================================================================================================================
