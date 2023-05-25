@@ -77,17 +77,17 @@ def forward_range(start, end, step, display_label, display):  # Defines function
 
 def slice_DataFrame_rows(search_type, dataframe, column, value, display_label, display):  # Defines function. For
     # DataFrame slicing by row value.
-    if search_type == 'equals':  # Conditional statement. Sets function format.
+    if search_type == 'Equals':  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] == value]  # Defines function format.
-    elif search_type == 'less than':  # Conditional statement. Sets function format.
+    elif search_type == 'Less than':  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] < value]  # Defines function format.
-    elif search_type == 'less than/equal':  # Conditional statement. Sets function format.
+    elif search_type == 'Less than/Equal':  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] <= value]  # Defines function format.
-    elif search_type == 'more than':  # Conditional statement. Sets function format.
+    elif search_type == 'More than':  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] > value]  # Defines function format.
-    elif search_type == 'more than/equal':  # Conditional statement. Sets function format.
+    elif search_type == 'More than/Equal':  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] >= value]  # Defines function format.
-    elif search_type == 'does not equal':  # Conditional statement. Sets function format.
+    else:  # Conditional statement. Sets function format.
         df_slc_r = dataframe[dataframe[column] != value]  # Defines function format.
     df_slc_r = df_slc_r.loc[:, ~df_slc_r.columns.str.match('Unnamed')]  # Redefines DataFrame. Searches for empty
     # columns and deletes them.
@@ -401,7 +401,7 @@ def plot_scatter(plot_number, figure_size, x, y, label, color, edge_color, marke
     if show_legend == 1:  # Conditional statement. Shows legend if desired for single line plotting.
         ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha, labelspacing=label_spacing)
         # Creates legend. Through automatic label detection.
-    ax.set_aspect(aspect, adjustible)  # Sets aspect of axis scaling.
+    # ax.set_aspect(aspect, adjustible)  # Sets aspect of axis scaling.
     plt.xticks(fontsize=fontsize_ticks)  # Sets x-axis ticks. Sets format.
     plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets format.
     plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates y-axis label. Sets format.
@@ -413,6 +413,43 @@ def plot_scatter(plot_number, figure_size, x, y, label, color, edge_color, marke
         plt.show()  # Displays plot. Indefinite and cleared upon close.
     else:  # Conditional statement. For display format
         pass  # Pass command. Moves on to next line.
+
+def select_coincident_x_range(type, x1, x2, units, display):  # Defines function. For selecting coincident x values for
+    # reinpterpolation.
+    if type == 'dataframe':  # Conditional statement. Executes lines below when input object is DataFrame.
+        x1_list = x1.tolist()  # Defines list. Converts DataFrame to list.
+        x2_list = x2.tolist()  # Defines list. Converts DataFrame to list.
+    elif type == 'list':  # Conditional statement. Executes lines below when input object is list.
+        x1_list = x1  # Defines list.
+        x2_list = x2  # Defines list.
+    x_min1 = x1_list[0]  # Defines variable. Selects lowest x value in list.
+    x_max1 = x1_list[-1]  # Defines variable. Selects largest x value in list.
+    x_min2 = x2_list[0]  # Defines variable. Selects lowest x value in list.
+    x_max2 = x2_list[-1]  # Defines variable. Selects largest x value in list.
+    if x_min1 == x_min2:  # Conditional statement. Selects limits shared between datasets.
+        start = x_min1  # Defines variable. Sets first shared x value.
+        if x_max1 == x_max2 or x_max1 < x_max2:  # Conditional statement.  Selects limits shared between datasets.
+            end = x_max1  # Defines variable. Sets last shared x value.
+        elif x_max1 > x_max2:  # Conditional statement.  Selects limits shared between datasets.
+            end = x_max2  # Defines variable. Sets last shared x value.
+    elif x_min1 < x_min2:  # Conditional statement.  Selects limits shared between datasets.
+        start = x_min2  # Defines variable. Sets first shared x value.
+        if x_max1 == x_max2 or x_max1 < x_max2:  # Conditional statement.  Selects limits shared between datasets.
+            end = x_max1  # Defines variable. Sets last shared x value.
+        elif x_max1 > x_max2:  # Conditional statement.  Selects limits shared between datasets.
+            end = x_max2  # Defines variable. Sets last shared x value.
+    elif x_min1 > x_min2:  # Conditional statement.  Selects limits shared between datasets.
+        start = x_min1  # Defines variable. Sets first shared x value.
+        if x_max1 == x_max2 or x_max1 < x_max2:  # Conditional statement.  Selects limits shared between datasets.
+            end = x_max1  # Defines variable. Sets last shared x value.
+        elif x_max1 > x_max2:  # Conditional statement.  Selects limits shared between datasets.
+            end = x_max2  # Defines variable. Sets last shared x value.
+    coincident_range = end - start  # Defines variable. Calculates coincident range between datasets.
+    if display == 1:  # Conditional statement. For display.
+        print('Coincident x values ' + '\n  X min: ' + str(x_min1) + ' & ' + str(x_min2) +
+              '\n  X max: ' + str(x_max1) + ' & ' + str(x_max2) + '\n  Range: ' + str(
+            start) + '–' + str(end) + ' (' + str('%.2f' % coincident_range) + units + ')')  # Displays objects.
+    return start, end, coincident_range  # Ends function execution.
 
 def interpolate_cross_section(type, x, y, start, end, interpolation_type, step, decimal_place, display):  # Defines
     # function. For interpolating cross-sections for comparison.
@@ -556,8 +593,6 @@ def sedimentation(type, y1_top, y1_btm, yr1, yr2, y2_top, y2_btm, display_label,
             print(display_label1 + '\n  x1: ' + str('%.5f' % dpth1) + ' (' + prcs1 + ')' + '\n  x2: ' + str('%.5f' % dpth2) + ' (' + prcs2 + ')')  # Displays objects.
         return dpth1, dpth2, prcs1, prcs2  # Ends function execution.
 
-
-
 def reverse_range(start, end, step, display_label, display):  # Defines function. For generating reverse array between two numbers.
     end = end - 1  # Defines variable. Resets end of range so array includes final input value.
     end_label = end + 1  # Defines variable. For display.
@@ -565,17 +600,6 @@ def reverse_range(start, end, step, display_label, display):  # Defines function
     if display == 1:  # Conditional statement. For display.
         print(display_label + '\n  Limits: ' + str(start) + ' & ' + str(end_label) + ' --> List:', rev_rng)  # Displays objects.
     return rev_rng  # Ends function execution.
-
-
-
-
-
-
-
-
-
-
-
 
 def name_levels(directory_levels, folder_labels, output_folder, display_label,
                 display):  # Defines function. For defining list of directory levels for looped creation.
@@ -591,12 +615,6 @@ def name_levels(directory_levels, folder_labels, output_folder, display_label,
         if display == 1:  # Conditional statement. For display.
             print(display_label, levels)  # Display objects.
     return levels  # Ends function execution.
-
-
-
-
-
-
 
 def hydraulic_geometry(dataframe, column1, display_label1, display_label2, display_label3, units,
                        display_label4, column2, display_label5, display_label6, display_label7,
@@ -639,45 +657,6 @@ def hydraulic_geometry(dataframe, column1, display_label1, display_label2, displ
         print('  ' + display_label8 + '%.2f' % hydro_rad)  # Displays objects.
     return wdth, dpth, hydro_rad  # Ends function execution.
 
-def select_coincident_x_range(type, x1, x2, units,
-                              display):  # Defines function. For selecting coincident x values for reinpterpolation.
-    if type == 'dataframe':  # Conditional statement. Executes lines below when input object is DataFrame.
-        x1_list = x1.tolist()  # Defines list. Converts DataFrame to list.
-        x2_list = x2.tolist()  # Defines list. Converts DataFrame to list.
-    elif type == 'list':  # Conditional statement. Executes lines below when input object is list.
-        x1_list = x1  # Defines list.
-        x2_list = x2  # Defines list.
-    x_min1 = x1_list[0]  # Defines variable. Selects lowest x value in list.
-    x_max1 = x1_list[-1]  # Defines variable. Selects largest x value in list.
-    x_min2 = x2_list[0]  # Defines variable. Selects lowest x value in list.
-    x_max2 = x2_list[-1]  # Defines variable. Selects largest x value in list.
-    if x_min1 == x_min2:  # Conditional statement. Selects limits shared between datasets.
-        start = x_min1  # Defines variable. Sets first shared x value.
-        if x_max1 == x_max2 or x_max1 < x_max2:  # Conditional statement.  Selects limits shared between datasets.
-            end = x_max1  # Defines variable. Sets last shared x value.
-        elif x_max1 > x_max2:  # Conditional statement.  Selects limits shared between datasets.
-            end = x_max2  # Defines variable. Sets last shared x value.
-    elif x_min1 < x_min2:  # Conditional statement.  Selects limits shared between datasets.
-        start = x_min2  # Defines variable. Sets first shared x value.
-        if x_max1 == x_max2 or x_max1 < x_max2:  # Conditional statement.  Selects limits shared between datasets.
-            end = x_max1  # Defines variable. Sets last shared x value.
-        elif x_max1 > x_max2:  # Conditional statement.  Selects limits shared between datasets.
-            end = x_max2  # Defines variable. Sets last shared x value.
-    elif x_min1 > x_min2:  # Conditional statement.  Selects limits shared between datasets.
-        start = x_min1  # Defines variable. Sets first shared x value.
-        if x_max1 == x_max2 or x_max1 < x_max2:  # Conditional statement.  Selects limits shared between datasets.
-            end = x_max1  # Defines variable. Sets last shared x value.
-        elif x_max1 > x_max2:  # Conditional statement.  Selects limits shared between datasets.
-            end = x_max2  # Defines variable. Sets last shared x value.
-    coincident_range = end - start  # Defines variable. Calculates coincident range between datasets.
-    if display == 1:  # Conditional statement. For display.
-        print('Coincident x values ' + '\n  X min: ' + str(x_min1) + ' & ' + str(x_min2) +
-              '\n  X max: ' + str(x_max1) + ' & ' + str(x_max2) + '\n  Range: ' + str(
-            start) + '–' + str(end) + ' (' + str('%.2f' % coincident_range) + units + ')')  # Displays objects.
-    return start, end, coincident_range  # Ends function execution.
-
-
-
 def plot_fill(number, zones, x, y1, y2, label, face_color, alpha, location, marker_scale, frame_alpha, label_spacing, pause, pause_length):
     plt.figure(number)  # Calls figure. Makes it the active plot.
     ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
@@ -697,7 +676,6 @@ def plot_fill(number, zones, x, y1, y2, label, face_color, alpha, location, mark
         plt.show()  # Displays plot. Indefinite and cleared upon close.
 
 #*****************************************************************************************************************************
-
 
 def sediment_area_trpz(x1, x2, height_R, height_L, display_label, display):
     if x1 > x2:
@@ -724,7 +702,6 @@ def check_for_empties(dataframe, display):
     if display == 1:
         print('Empty = ', result)
     return result
-
 
 def mean_plus_stdv(array, display_label1, display):
     avg = np.mean(array)
@@ -794,29 +771,3 @@ def sediment_volume(type, area1, area2, area_prime, area_quad, separation, width
         print(display_label + str('%.2f' % V) + ' (' + prcs + ')')
     return V, prcs
 #%%%%%%%%%%%%%%
-
-# ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']
-#
-# # convert hex to rgb
-#
-# x = np.arange(0, np.pi, 0.1)
-# y = np.arange(0, 2 * np.pi, 0.1)
-# X, Y = np.meshgrid(x, y)
-# Z = np.cos(X) * np.sin(Y) * 10
-#
-# clr1=matplotlib.colors.to_rgb('#648FFF')
-# clr1=matplotlib.colors.to_rgb('#785EF0')
-# clr2=matplotlib.colors.to_rgb('#FFB000')
-# colors=[clr1,clr2]
-# n_bins = [3, 6, 10, 100]
-# cmap_name = 'my_list'
-# fig, axs = plt.subplots(2, 2, figsize=(6, 9))
-# fig.subplots_adjust(left=0.02, bottom=0.06, right=0.95, top=0.94, wspace=0.05)
-# for n_bin, ax in zip(n_bins, axs.ravel()):
-#
-#     cm = LinearSegmentedColormap.from_list(
-#         cmap_name, colors, N=n_bin)
-#     im = ax.imshow(Z, interpolation='nearest', origin='lower', cmap=cm)
-#     ax.set_title("N bins: %s" % n_bin)
-#     fig.colorbar(im, ax=ax)
-
