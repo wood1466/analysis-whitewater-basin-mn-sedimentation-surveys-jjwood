@@ -38,7 +38,7 @@ Plt_sngl = 0  # Defines variable as integer. Sets binary toggle.
 Plt_all = 0 # Defines variable as integer. Sets binary toggle.
 
 # Calculate coordinate geometry
-Crdnts = 1  # Defines variable as integer. Sets binary toggle.
+Crdnts = 0  # Defines variable as integer. Sets binary toggle.
 
 # Plot measurement coordinates
 Plt_crdnts = 1  # Defines variable as integer. Sets binary toggle.
@@ -58,11 +58,13 @@ Plt_reintrp = 0  # Defines variable as integer. Sets binary toggle.
 Dpth = 1  # Defines variable as integer. Sets binary toggle.
 
 # Plot sediment thickness
-Plt_dpth = 1  # Defines variable as integer. Sets binary toggle.
+Plt_dpth = 0  # Defines variable as integer. Sets binary toggle.
 # Plot sedimentation rate
-Plt_dpth_rt = 1  # Defines variable as integer. Sets binary toggle.
-# Plot sedimentation rate change
-Plt_rt_chng=0  # Defines variable as integer. Sets binary toggle.
+Plt_dpth_rt = 0  # Defines variable as integer. Sets binary toggle.
+# Plot sediment thickness vs. drainage area
+Plt_dpth_vs_wshd = 1  # Defines variable as integer. Sets binary toggle.
+# Plot sediment thickness vs. transect width.
+Plt_dpth_vs_vlly = 1  # Defines variable as integer. Sets binary toggle.
 
 # SELECT INPUT PARAMETERS ----------------------------------------------------------------------------------------------
 
@@ -79,6 +81,7 @@ rng_end = 26  # Defines variable as integer. Sets end survey range number for an
 deg_to_rad = math.pi / 180  # Defines variable as float. Converts between degrees and radians.
 ft_to_m = 3.281  # Defines variable as float. Converts between international feet meters.
 in_to_ft = 12  # Defines variable as integer. Converts between inches and feet.
+mi_to_km = 1.609  # Defines variable as float. Converts between miles and kilometers.
 
 # SET UP DIRECTORY -----------------------------------------------------------------------------------------------------
 
@@ -101,11 +104,16 @@ for i in lvl1_fldrs:  # Begins loop through elements of list. Loops through path
 # ======================================================================================================================
 # SELECT DATA ----------------------------------------------------------------------------------------------------------
 
-# Input file -----------------------------------------------------------------------------------------------------------
+# Input file(s) --------------------------------------------------------------------------------------------------------
 
-inpt_fl = inpt_fldr + '/Test_data.csv'  # Defines string. Sets file path to input file.
+inpt_fl1 = inpt_fldr + '/Test_data.csv'  # Defines string. Sets file path to input file.
 
-df_srvy_dt = csv_to_DataFrame(inpt_fl, 'TEST DATA', 0)  # Defines DataFrame. Calls function. Uploads survey data.
+df_srvy_dt = csv_to_DataFrame(inpt_fl1, 'TEST DATA', 0)  # Defines DataFrame. Calls function. Uploads survey data.
+
+inpt_fl2 = inpt_fldr + '/Drainage_areas.csv'  # Defines string. Sets file path to input file.
+
+df_wshd_A_dt = csv_to_DataFrame(inpt_fl2, 'WATERSHED AREA DATA', 0)  # Defines DataFrame. Calls function. Uploads
+# transect drainage area data.
 
 # Establish spatial selection framework
 if rng_nly == 1:  # Conditional statement. Executes lines if condition satisfied.
@@ -117,7 +125,9 @@ elif rng_nly == 0:  # Conditional statement. Executes lines if condition satisfi
 
 # Select transect dataset
 for i in rng_nums:  # Establishes loop through array elements. Loops through transect numbers.
-    df_rng = slice_DataFrame_rows('equals', df_srvy_dt, 'Range_num', i, 'TRANSECT NUMBER', 0)  # Defines DataFrame.
+    df_rng = slice_DataFrame_rows('Equals', df_srvy_dt, 'Range_num', i, 'TRANSECT NUMBER', 0)  # Defines DataFrame.
+    # Calls function. Slices DataFrame to yield singular range data.
+    df_wshd_A = slice_DataFrame_rows('Equals', df_wshd_A_dt, 'Range_num', i, 'TRANSECT NUMBER', 0)  # Defines DataFrame.
     # Calls function. Slices DataFrame to yield singular range data.
 
     # Retrieve metadata
@@ -134,8 +144,12 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                                     0)  # Defines variable. Calls function. Slices DataFrame to yield
     # survey station of transect on reach.
 
-    srvy_nums1 = slice_DataFrame_columns('List', 'Integer', df_rng, 'Srvy_num', 1, 'SURVEY NUMBERS', 0)  # Defines list.
-    # Calls function. Slices DataFrame to yield survey numbers of present dataset.
+    wshd_A, wshd_A_mi = slice_DataFrame_cell('Float', 1, (1/mi_to_km)**2, df_wshd_A, 0, 'Wshd_A_sqkm',
+                                             'Transect drainage area', 0)  # Defines variable. Calls function. Slices
+    # DataFrame to yield drainage area of transect on reach.
+
+    srvy_nums1 = slice_DataFrame_columns('List', 'Integer', df_rng, 'Srvy_num', 1, 'SURVEY NUMBERS', 0)  # Defines
+    # list. Calls function. Slices DataFrame to yield survey numbers of present dataset.
 
     if xtra_srvys == 1:  # Conditional statement. Modifies survey years under analysis. For transect 11B (13) with
         # extra survey years compared to all other ranges.
@@ -149,7 +163,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
     # Select survey dataset
     for j in srvy_nums1:  # Establishes loop through array elements. Loops through survey numbers.
-        df_srvy1 = slice_DataFrame_rows('equals', df_rng, 'Srvy_num', j, 'SURVEY NUMBER', 0)  # Defines DataFrame.
+        df_srvy1 = slice_DataFrame_rows('Equals', df_rng, 'Srvy_num', j, 'SURVEY NUMBER', 0)  # Defines DataFrame.
         # Calls function. Slices DataFrame to yield singular survey data.
 
         # Retrieve metadata
@@ -202,6 +216,8 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                   ' (' +str(brng_fnctl) +')')  # Displays objects.
             print('\033[1m' + 'Stream station: ' + '\033[0m' + str(strm_stat1) + ' ft' +
                   ' (' + str('%.0f' % strm_stat1_m) + ' m)')  # Displays objects.
+            print('\033[1m' + 'Drainage area: ' + '\033[0m' + str('%.0f' % wshd_A_mi) + ' sqmi' +
+                  ' (' + str('%.0f' % wshd_A) + ' sqkm)')  # Displays objects.
             print('\033[1m' + 'Transect survey: ' + '\033[0m' + str(srvy_yr1) + ' (' + str(j) + ' of ' +
                   str(srvy_nums_max) + ')')  # Displays objects.
             print('\033[1m' + 'Survey type: ' + '\033[0m' + str(srvy_typ1))  # Displays objects.
@@ -212,7 +228,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                   ' (' + str('%.0f' % srvy_rlf1_m) + ' m)')  # Displays objects.
             print('\033[1m' + 'Number of samples: ' + '\033[0m' + str(num_smpls1))  # Displays objects.
             print('--------------------------------------------------')  # Displays objects.
-
+            breakpoint()
             # Cross-section --------------------------------------------------------------------------------------------
 
             if Plt_sngl == 1:  # Conditional statement. Plots single cross-section.
@@ -413,7 +429,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                 k = srvy_nums1[index1]  # Defines variable as integer. Allows for selection of second dataset.
 
                 # Select second survey dataset
-                df_srvy2 = slice_DataFrame_rows('equals', df_rng, 'Srvy_num', k, 'SURVEY NUMBER', 0)  # Defines
+                df_srvy2 = slice_DataFrame_rows('Equals', df_rng, 'Srvy_num', k, 'SURVEY NUMBER', 0)  # Defines
                 # DataFrame. Calls function. Slices DataFrame to yield singular survey data.
 
                 # Retrieve metadata
@@ -456,6 +472,8 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     ' (' + str(brng_fnctl) + ')')  # Displays objects.
                 print('\033[1m' + 'Stream station: ' + '\033[0m' + str(strm_stat1) + ' ft' +
                       ' (' + str('%.0f' % strm_stat1_m) + ' m)')  # Displays objects.
+                print('\033[1m' + 'Drainage area: ' + '\033[0m' + str('%.0f' % wshd_A_mi) + ' sqmi' +
+                      ' (' + str('%.0f' % wshd_A) + ' sqkm)')  # Displays objects.
                 print('\033[1m' + 'Transect survey: ' + '\033[0m' + str(srvy_yr1) + '–' + str(srvy_yr2) + ' (' +
                       str(j) + '–' + str(k) + ' of ' + str(srvy_nums_max) + ')')  # Displays objects.
                 print('\033[1m' + 'Survey types: ' + '\033[0m' + str(srvy_typ1) + ' & ' + str(srvy_typ2))  # Displays
@@ -556,6 +574,8 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                 start, end, shrd_rng = select_coincident_x_range('dataframe', df_offst1, df_offst2, ' ft', 0)
                 # Defines variables. Calls function. Identifies shared x values of individual datasets.
 
+                shrd_rng_m = shrd_rng / ft_to_m  # Defines variable. Converts feet to meters.
+
                 # REINTERPOLATE DATA -----------------------------------------------------------------------------------
 
                 df_off_i1, df_elv_i1, x_rng_i1 = interpolate_cross_section('Limits', df_offst1, df_elvtn1, start, end,
@@ -631,7 +651,6 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                             dpth1_lst=[]  # Defines list. Empty for looped population.
                             dpth_rt1_lst=[]  # Defines list. Empty for looped population.
 
-
                         dpth1_list = create_appended_list(dpth1, 'Sediment thickness', dpth1_lst,
                                                           'New list appended: ', 0)  # Redefines list. Calls function.
                         # Populates list.
@@ -648,6 +667,11 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                             dpth_avg = np.sum(dpth1_lst) / x  # Defines variable. Calculates average sediment
                             # thickness on transect.
+
+                            dpth_avg_m = dpth_avg / ft_to_m  # Defines variable. Converts units to meters.
+
+                            dpth_mdn = np.median(dpth1_lst)  # Defines variable. Calculates median sediment thickness
+                            # of transect.
 
                             dpth_rt_avg = np.sum(dpth_rt1_lst) / x  # Defines variable. Calculates average
                             # sedimentation rate on transect.
@@ -671,18 +695,24 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                 tm_intrvl_lst = []  # Defines list. Empty for looped population.
                                 strm_stat_lst = []  # Defines list. Empty for looped population.
                                 dpth_avg_lst = []  # Defines list. Empty for looped population.
+                                dpth_avg_m_lst = []  # Defines list. Empty for looped population.
+                                dpth_mdn_lst = []  # Defines list. Empty for looped population.
                                 dpth_rt_avg_lst = []  # Defines list. Empty for looped population.
                                 dpth_max_lst = []  # Defines list. Empty for looped population.
                                 dpth_min_lst = []  # Defines list. Empty for looped population.
+                                wshd_A_lst = []  # Defines list. Empty for looped population.
+                                vlly_W_lst = []  # Defines list. Empty for looped population.
 
                         dtfrm_pop_lists = [rng_name1_lst, rng_num_lst, srvy_yr1_lst, srvy_yr2_lst, tm_intrvl_lst,
-                                           strm_stat_lst, dpth_avg_lst, dpth_max_lst, dpth_min_lst, dpth_rt_avg_lst]
-                        # Defines list. Nested to enable looped population.
+                                           strm_stat_lst, dpth_avg_lst, dpth_avg_m_lst, dpth_mdn_lst, dpth_max_lst,
+                                           dpth_min_lst, dpth_rt_avg_lst, wshd_A_lst, vlly_W_lst]  # Defines list.
+                        # Nested to enable looped population.
 
                         if x == index1[-1]:  # Conditional statement. Executes lines after last point calculation.
                             dtfrm_pop_values = [str(rng_name1), int(i), srvy_yr1, srvy_yr2, str(tm_intrvl), strm_stat1,
-                                                dpth_avg, dpth_max, dpth_min, dpth_rt_avg]  # Defines list. Values to
-                            # populate lists for export.
+                                                dpth_avg, dpth_avg_m, dpth_mdn, dpth_max, dpth_min, dpth_rt_avg,
+                                                wshd_A, shrd_rng_m]  # Defines list. Values to populate lists for
+                            # export.
 
                             for y in dtfrm_pop_values:  # Begins loop through list. Loops through values to populate
                                 # lists.
@@ -693,12 +723,14 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                             if k == srvy_nums1[-1]:  # Conditional statement. Executes on last survey.
                                 dtfrm_pop_clm_lbl = ['Srvy_range', 'Range_num', 'Srvy_year1', 'Srvy_year2', 'Tm_intvl',
-                                                     'Strm_stat', 'D_avg_ft', 'D_avg_in/y', 'D_max_ft', 'D_min_ft']
-                                # Defines list. Sets column labels for DataFrame.
+                                                     'Strm_stat', 'D_avg_ft', 'D_avg_m', 'D_mdn_ft', 'D_avg_in/y',
+                                                     'D_max_ft', 'D_min_ft', 'Wshd_A_sqkm', 'Vlly_W_m']  # Defines
+                                # list. Sets column labels for DataFrame.
 
                                 dtfrm_pop_lists = [rng_name1_lst, rng_num_lst, srvy_yr1_lst, srvy_yr2_lst,
-                                                   tm_intrvl_lst, strm_stat_lst, dpth_avg_lst, dpth_rt_avg_lst,
-                                                   dpth_max_lst, dpth_min_lst]  # Redefines list. With populated lists.
+                                                   tm_intrvl_lst, strm_stat_lst, dpth_avg_lst, dpth_avg_m_lst,
+                                                   dpth_mdn_lst, dpth_rt_avg_lst, dpth_max_lst, dpth_min_lst,
+                                                   wshd_A_lst, vlly_W_lst]  # Redefines list. With populated lists.
 
                                 dtfrm_pop_arry = np.array(dtfrm_pop_lists)  # Defines array. Converts list to array for
                                 # operation.
@@ -707,7 +739,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                 # DataFrame dimensional compatibility.
 
                                 df_sed_thck_rng = create_DataFrame(dtfrm_pop_arry, dtfrm_pop_clm_lbl,
-                                                                   'SEDIMENT THICKNESS', 0)  # Defines DataFrame. Calls
+                                                                   'SEDIMENT THICKNESS', 1)  # Defines DataFrame. Calls
                                 # function. Creates DataFrame of sediment thickness results for single transect.
 
                                 # CALCULATE SEDIMENTATION RATE CHANGE --------------------------------------------------
@@ -790,7 +822,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                                         for x in srvy_yrs_lst:  # Begins loop through list elements. Loops through
                                             # survey years.
-                                            df_sed_thck_x = slice_DataFrame_rows('equals', df_sed_thck, 'Srvy_year1',
+                                            df_sed_thck_x = slice_DataFrame_rows('Equals', df_sed_thck, 'Srvy_year1',
                                                                                  x, 'SEDIMENT THICKNESS', 0)  # Defines
                                             # DataFrame. Calls function. Slices DataFrame to yield sediment thickness
                                             # data by first survey year.
@@ -882,7 +914,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                                         for x in srvy_yrs_lst:  # Begins loop through list elements. Loops through
                                             # survey years.
-                                            df_sed_thck_x = slice_DataFrame_rows('equals', df_sed_thck, 'Srvy_year1',
+                                            df_sed_thck_x = slice_DataFrame_rows('Equals', df_sed_thck, 'Srvy_year1',
                                                                                  x, 'SEDIMENT THICKNESS', 0)  # Defines
                                             # DataFrame. Calls function. Slices DataFrame to yield sediment thickness
                                             # data by first survey year.
@@ -957,6 +989,175 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                                                  'Directories named: ', fig_name, 7, 'pdf', None,
                                                                  None, 'Average sediment thickness plot', None,
                                                                  None, None, 0)  # Creates directory and exports
+                                        # figure. Calls function.
+
+                                    # Sediment thickness vs. drainage area ---------------------------------------------
+
+                                    if Plt_dpth_vs_wshd == 1:  # Conditional statement. Plots sediment thickness
+                                        # against drainage area.
+                                        srvy_yrs_lst = slice_DataFrame_columns('List', 'String', df_sed_thck,
+                                                                               'Srvy_year1', 1, 'Survey years', 0)
+                                        # Defines DataFrame. Calls function. Slices DataFrame to yield survey years of
+                                        # present dataset.
+
+                                        srvy_yrs2_lst = slice_DataFrame_columns('List', 'String', df_sed_thck,
+                                                                                'Srvy_year2', 1, 'Survey years', 0)
+                                        # Defines DataFrame. Calls function. Slices DataFrame to yield survey years of
+                                        # present dataset.
+
+                                        for x in srvy_yrs_lst:  # Begins loop through list elements. Loops through
+                                            # survey years.
+                                            df_sed_thck_x = slice_DataFrame_rows('Equals', df_sed_thck, 'Srvy_year1',
+                                                                                 x, 'SEDIMENT THICKNESS', 0)  # Defines
+                                            # DataFrame. Calls function. Slices DataFrame to yield sediment thickness
+                                            # data by first survey year.
+
+                                            df_sed_thck_x = df_sed_thck_x.reset_index(drop=True)  # Redefines
+                                            # DataFrame. Resets indices to begin at 0.
+
+                                            df_dpth_x = slice_DataFrame_columns('DataFrame', 'Float', df_sed_thck_x,
+                                                                                   'D_avg_m', 0, 'SEDIMENT THICKNESS',
+                                                                                   0)  # Defines DataFrame. Calls
+                                            # function. Slices DataFrame to yield sediment thickness data.
+
+                                            df_wshd_A_x = slice_DataFrame_columns('DataFrame', 'Float',
+                                                                                     df_sed_thck_x, 'Wshd_A_sqkm', 0,
+                                                                                     'DRAINAGE AREA', 0)  # Defines
+                                            # DataFrame. Calls function. Slices DataFrame to yield drainage area data.
+
+                                            srvy_yr1 = slice_DataFrame_cell('String', 0, None, df_sed_thck_x, 0,
+                                                                            'Srvy_year1', 'Survey year', 0)  # Defines
+                                            # variable. Calls function. Slices DataFrame to yield survey year of
+                                            # present dataset.
+
+                                            srvy_yr2 = slice_DataFrame_cell('String', 0, None, df_sed_thck_x, 0,
+                                                                            'Srvy_year2', 'Survey year', 0)  # Defines
+                                            # variable. Calls function. Slices DataFrame to yield survey year of
+                                            # present dataset.
+
+                                            clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color : ', 0)
+                                            # Defines variable. Calls function. Sets plot color.
+                                            mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker: ', 0)  # Defines
+                                            # variable. Calls function. Sets plot marker type.
+
+                                            # title = 'Average sediment thickness vs. drainage area'  # Defines string.
+                                            # Sets plot title.
+
+                                            lbl = str(srvy_yr2) + '–' + str(srvy_yr1)  # Defines string. Sets plot
+                                            # object labels.
+
+                                            plot_scatter(8, fig_sz, df_wshd_A_x, df_dpth_x, lbl, clr1, clr1, mrkr1,
+                                                        mrkr_sz[0], lin_wdth[1], alpha[0], 1, lctn, mrkr_scl, alpha[1],
+                                                        lbl_spcng, None, None, fntsz[1], fntsz[0], lbl_pd,
+                                                         'Drainage area (sqkm)', 'Average sediment thickness (m)',
+                                                         None, 1, 1)  # Creates plot. Calls function.
+
+                                        # Export data
+                                        fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Sediment_thickness']
+                                        # Defines list. Sets folder labels for directory to be made.
+
+                                        if rvr_nly == 1:  # Conditional statement. Sets name of file for export.
+                                            fig_name = '/D_vs_wshd_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) \
+                                                       + '_' + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as
+                                            # string.
+                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
+                                            fig_name = '/D_vs_wshd_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) \
+                                                       + '_' + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as
+                                            # string.
+                                        else:  # Conditional statement.
+                                            fig_name = '/D_vs_wshd_' + str(srvy_yrs2_lst[-1]) + '_' + \
+                                                       str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
+
+                                        export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
+                                                                 'Directories named: ', fig_name, 8, 'pdf', None,
+                                                                 None,
+                                                                 'Average sediment thickness vs. drainage area plot',
+                                                                 None, None, None, 0)  # Creates directory and exports
+                                        # figure. Calls function.
+
+                                    # Sediment thickness vs. valley width ----------------------------------------------
+
+                                    if Plt_dpth_vs_vlly == 1:  # Conditional statement. Plots sediment thickness
+                                        # against valley width.
+                                        srvy_yrs_lst = slice_DataFrame_columns('List', 'String', df_sed_thck,
+                                                                               'Srvy_year1', 1, 'Survey years', 0)
+                                        # Defines DataFrame. Calls function. Slices DataFrame to yield survey years of
+                                        # present dataset.
+
+                                        srvy_yrs2_lst = slice_DataFrame_columns('List', 'String', df_sed_thck,
+                                                                                'Srvy_year2', 1, 'Survey years', 0)
+                                        # Defines DataFrame. Calls function. Slices DataFrame to yield survey years of
+                                        # present dataset.
+
+                                        for x in srvy_yrs_lst:  # Begins loop through list elements. Loops through
+                                            # survey years.
+                                            df_sed_thck_x = slice_DataFrame_rows('Equals', df_sed_thck, 'Srvy_year1',
+                                                                                 x, 'SEDIMENT THICKNESS', 0)  # Defines
+                                            # DataFrame. Calls function. Slices DataFrame to yield sediment thickness
+                                            # data by first survey year.
+
+                                            df_sed_thck_x = df_sed_thck_x.reset_index(drop=True)  # Redefines
+                                            # DataFrame. Resets indices to begin at 0.
+
+                                            df_dpth_x = slice_DataFrame_columns('DataFrame', 'Float', df_sed_thck_x,
+                                                                                   'D_avg_m', 0, 'SEDIMENT THICKNESS',
+                                                                                   0)  # Defines DataFrame. Calls
+                                            # function. Slices DataFrame to yield sediment thickness data.
+
+                                            df_vlly_W_x = slice_DataFrame_columns('DataFrame', 'Float',
+                                                                                     df_sed_thck_x, 'Vlly_W_m', 0,
+                                                                                     'VALLEY WIDTH', 0)  # Defines
+                                            # DataFrame. Calls function. Slices DataFrame to yield valley width data.
+
+                                            srvy_yr1 = slice_DataFrame_cell('String', 0, None, df_sed_thck_x, 0,
+                                                                            'Srvy_year1', 'Survey year', 0)  # Defines
+                                            # variable. Calls function. Slices DataFrame to yield survey year of
+                                            # present dataset.
+
+                                            srvy_yr2 = slice_DataFrame_cell('String', 0, None, df_sed_thck_x, 0,
+                                                                            'Srvy_year2', 'Survey year', 0)  # Defines
+                                            # variable. Calls function. Slices DataFrame to yield survey year of
+                                            # present dataset.
+
+                                            clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color : ', 0)
+                                            # Defines variable. Calls function. Sets plot color.
+                                            mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker: ', 0)  # Defines
+                                            # variable. Calls function. Sets plot marker type.
+
+                                            # title = 'Average sediment thickness vs. drainage area'  # Defines string.
+                                            # Sets plot title.
+
+                                            lbl = str(srvy_yr2) + '–' + str(srvy_yr1)  # Defines string. Sets plot
+                                            # object labels.
+
+                                            plot_scatter(8, fig_sz, df_vlly_W_x, df_dpth_x, lbl, clr1, clr1, mrkr1,
+                                                        mrkr_sz[0], lin_wdth[1], alpha[0], 1, lctn, mrkr_scl, alpha[1],
+                                                        lbl_spcng, None, None, fntsz[1], fntsz[0], lbl_pd,
+                                                         'Transect width (m)', 'Average sediment thickness (m)',
+                                                         None, 1, 1)  # Creates plot. Calls function.
+
+                                        # Export data
+                                        fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Sediment_thickness']
+                                        # Defines list. Sets folder labels for directory to be made.
+
+                                        if rvr_nly == 1:  # Conditional statement. Sets name of file for export.
+                                            fig_name = '/D_vs_vlly_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) \
+                                                       + '_' + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as
+                                            # string.
+                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
+                                            fig_name = '/D_vs_vlly_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) \
+                                                       + '_' + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as
+                                            # string.
+                                        else:  # Conditional statement.
+                                            fig_name = '/D_vs_vlly_' + str(srvy_yrs2_lst[-1]) + '_' + \
+                                                       str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
+
+                                        export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
+                                                                 'Directories named: ', fig_name, 8, 'pdf', None,
+                                                                 None,
+                                                                 'Average sediment thickness vs. valley width plot',
+                                                                 None, None, None,
+                                                                 0)  # Creates directory and exports
                                         # figure. Calls function.
 
 # ======================================================================================================================
