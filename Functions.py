@@ -99,10 +99,11 @@ def slice_DataFrame_rows(search_type, dataframe, column, value, display_label, d
 def slice_DataFrame_cell(data_type, convert, conversion_factor, dataframe, position, column, display_label, display):
     # Defines function. For DataFrame slicing by row value and index.
     index = dataframe.index  # Defines object. Retrieves DataFrame index.
-    slc_cl = dataframe.loc[index[position], column]  # Defines function format.
+    if column != None:  # Conditional statement. Selects function format.
+        slc_cl = dataframe.loc[index[position], column]  # Defines function format.
+    else:  # Conditional statement. Selects function format.
+        slc_cl = dataframe.loc[index[position]]  # Defines function format.
     typ = type(slc_cl)  # Defines variable. Checks data type.
-    # print('This', slc_cl)
-    # print(type(slc_cl))
     if slc_cl == '1850s':  # Conditional statement. Ensures desired data type retrieved by function.
         if typ == data_type:  # Conditional statement.
             pass
@@ -212,8 +213,8 @@ def get_plot_feature_by_year(label, list, display_label, display):  # Defines fu
     return feature  # Ends function execution.
 
 def plot_lines(lines, plot_number, figure_size, x, y, label, color, marker, marker_size, line_width, line_style, alpha,
-               show_legend, location, marker_scale, frame_alpha, label_spacing, invert_x, fontsize_ticks, x_label,
-               fontsize_axis, label_pad, y_label, title, pause, pause_length):  # Defines function. For line plotting.
+               show_legend, location, marker_scale, frame_alpha, label_spacing, fontsize_ticks, x_label, fontsize_axis,
+               label_pad, y_label, title, pause, pause_length):  # Defines function. For line plotting.
     plt.figure(plot_number, figsize=figure_size)  # Creates plot window. Sets figure size.
     ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
     if lines == 1:  # Conditional statement. Plots single line.
@@ -236,8 +237,6 @@ def plot_lines(lines, plot_number, figure_size, x, y, label, color, marker, mark
     plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets format.
     plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates y-axis label. Sets format.
     plt.yticks(fontsize=fontsize_ticks)  # Sets y-axis ticks. Sets format.
-    if invert_x == 1:  # Conditional statement. Inverts x-axis order.
-        ax.invert_xaxis()  # Inverts x-axis.
     plt.title(title)  # Creates plot title.
     if pause == 1:  # Conditional statement. For display format.
         plt.pause(pause_length)  # Displays plot. For set interval of seconds and closes without clearing.
@@ -514,29 +513,6 @@ def create_DataFrame(array1, array2, display_label, display):  # Defines functio
 # END ------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
 
-# if abs(offst_dff) >= 1:
-        #     print(' Coordinate offset' + '\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' + str('%.2f'%delta_y) +'\n  Measured: ' + str('%.1f' % offst_meas) + '\n  Calculated: ' + str('%.1f' % offst_clc) + '\n  Difference: ' + '\033[0;31m' + str('%.1f' % offst_dff) + '\033[0m')
-        # else:
-        #     print(' Coordinate offset' +'\n  X: ' + str('%.2f'%delta_x) + '\n  Y: ' + str('%.2f'%delta_y) +'\n  Measured: ' + str('%.1f' % offst_meas) + '\n  Calculated: ' + str('%.1f' % offst_clc) + '\n  Difference: ' + '\033[0;36m' + str('%.1f' % offst_dff) + '\033[0m')
-# offst_dff = offst_clc - offst_meas  # Defines variable. Calculates difference in calculated and measured transect
-    # lengths.
-# offst_meas = c2 - c1  # Defines variable. Calculates transect offset between benchmark positions.
-    # offst_meas = offst_meas * 1 / 3.281  # Redefines variable. Converts to meters.
-
-# location = ['upper left', 'upper right', 'lower left', 'lower right', 'upper center', 'lower center', 'center left', 'center right', 'center', 'best']  # Defines list. Complete list of matplotlib legend placements.
-# ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
-# ibm_clr_hx = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']  # Defines list. Sets IBM colorblind friendly palette in color hex color codes for ultramarine, indigo, magenta, orange, and gold.
-# ibm_clr_rgb = [(100, 143, 255), (120, 94, 240), (220, 38, 127), (254, 97, 0), (255, 176, 0)]
-# Sets muted Tol colorblind friendly palette in color hex color codes for indigo, cyan, teal, green, olive, sand, rose, wine, purple, and pale grey.
-# 2008 = 0, 1994 = 3, 1978 = 2, 1975 = 4, 1964 = 5, 1939 = 6, 1850S = 7.
-# tol_vibrant = ['#0077BB', '#33BBEE', '#009988', '#EE7733', '#CC3311', '#EE3377', '#BBBBBB']  # Defines list. Sets
-# vibrant Tol colorblind friendly palette in color hex color codes for blue, cyan, teal, orange, red, magenta, grey.
-# marker_mpltlib = ['.', ',', 'o', 'v', '^', '<', '>',
-#                           '1', '2', '3', '4', '8',
-#                           's', 'p', 'P', '*', 'h', 'H', '+', 'x', 'X', 'D', 'd',
-#                           '|', '_', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ' ']  # Defines list. Complete list of matplotlib plot markers.
-# tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDD']  # Defines list. Sets Paul Tol muted colorblind friendly palette via hex color codes.
-# lin_styls = ['solid', 'dotted', 'dashed', 'dashdot']
 # TEMPORARY FUNCTION HOUSING ===========================================================================================
 
 def sedimentation(type, y1_top, y1_btm, yr1, yr2, y2_top, y2_btm, display_label, display):  # Defines function. For calculating sediment thickness between cross-sections.
