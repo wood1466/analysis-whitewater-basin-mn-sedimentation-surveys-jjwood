@@ -33,9 +33,9 @@ from Functions import *  # Imports all functions from outside program.
 Sngl = 0  # Defines variable as integer. Sets binary toggle.
 
 # Plot single cross-section
-Plt_sngl = 0  # Defines variable as integer. Sets binary toggle.
+Plt_sngl = 1  # Defines variable as integer. Sets binary toggle.
 # Plot all cross-sections
-Plt_all = 0 # Defines variable as integer. Sets binary toggle.
+Plt_all = 1 # Defines variable as integer. Sets binary toggle.
 
 # Calculate coordinate geometry
 Crdnts = 0  # Defines variable as integer. Sets binary toggle.
@@ -58,9 +58,9 @@ Plt_reintrp = 0  # Defines variable as integer. Sets binary toggle.
 Dpth = 1  # Defines variable as integer. Sets binary toggle.
 
 # Plot sediment thickness
-Plt_dpth = 0  # Defines variable as integer. Sets binary toggle.
+Plt_dpth = 1  # Defines variable as integer. Sets binary toggle.
 # Plot sedimentation rate
-Plt_dpth_rt = 0  # Defines variable as integer. Sets binary toggle.
+Plt_dpth_rt = 1  # Defines variable as integer. Sets binary toggle.
 # Plot sediment thickness vs. drainage area
 Plt_dpth_vs_wshd = 1  # Defines variable as integer. Sets binary toggle.
 # Plot sediment thickness vs. transect width.
@@ -74,7 +74,9 @@ rvr_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data fo
 rng_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one survey range only.
 xtra_srvys = 0  # Defines variable as integer. Sets binary toggle. Analyzes extra survey data for range 11B (13).
 rng_strt = 1  # Defines variable as integer. Sets start survey range number for analysis loop.
-rng_end = 26  # Defines variable as integer. Sets end survey range number for analysis loop.
+rng_end = 94  # Defines variable as integer. Sets end survey range number for analysis loop.
+cmltv = 1  # Defines variable as integer. Sets binary toggle. Calculates cumulative sedimentation between survey
+# limits.
 
 # Conversion factors ---------------------------------------------------------------------------------------------------
 
@@ -151,13 +153,18 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
     srvy_nums1 = slice_DataFrame_columns('List', 'Integer', df_rng, 'Srvy_num', 1, 'SURVEY NUMBERS', 0)  # Defines
     # list. Calls function. Slices DataFrame to yield survey numbers of present dataset.
 
-    if xtra_srvys == 1:  # Conditional statement. Modifies survey years under analysis. For transect 11B (13) with
-        # extra survey years compared to all other ranges.
-        pass  # Pass command. Moves on to next line.
-    elif xtra_srvys == 0:  # Conditional statement. Modifies survey years under analysis.
-        if i == 13:  # Conditional statement.
-            srvy_nums1.remove(5)  # Redefines list. Removes survey inconsistent survey year.
-            srvy_nums1.remove(4)  # Redefines list. Removes survey inconsistent survey year.
+    if cmltv == 1:  # Conditional statement. Analyzes cumulative sedimentation instead of step.
+        if len(srvy_nums1) > 2:  # Conditional statement. Slices if condition satisfied.
+            del srvy_nums1[1:-1]  # Redefines list. Removes all but first and last elements. Takes all but first and
+            # last surveys out of analysis.
+    else:  # Conditional statement.
+        if xtra_srvys == 1:  # Conditional statement. Modifies survey years under analysis. For transect 11B (13) with
+            # extra survey years compared to all other ranges.
+            pass  # Pass command. Moves on to next line.
+        elif xtra_srvys == 0:  # Conditional statement. Modifies survey years under analysis.
+            if i == 13:  # Conditional statement.
+                srvy_nums1.remove(5)  # Redefines list. Removes survey inconsistent survey year.
+                srvy_nums1.remove(4)  # Redefines list. Removes survey inconsistent survey year.
 
     srvy_nums_max = max(srvy_nums1)  # Defines variable. Selects maximum survey number.
 
@@ -228,23 +235,23 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                   ' (' + str('%.0f' % srvy_rlf1_m) + ' m)')  # Displays objects.
             print('\033[1m' + 'Number of samples: ' + '\033[0m' + str(num_smpls1))  # Displays objects.
             print('--------------------------------------------------')  # Displays objects.
-            breakpoint()
+
             # Cross-section --------------------------------------------------------------------------------------------
 
             if Plt_sngl == 1:  # Conditional statement. Plots single cross-section.
                 if j != 0:  # Conditional statement.
-                    clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color ', 1)  # Defines variable. Calls
+                    clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color ', 0)  # Defines variable. Calls
                     # function. Sets plot color.
-                    mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker ', 1)  # Defines variable. Calls
+                    mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker ', 0)  # Defines variable. Calls
                     # function. Sets plot marker type.
 
                     title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')' + ' ' + str(srvy_yr1) + ' survey '
                     # Defines string. Sets plot title.
 
-                    plot_lines(1, 1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, fn.mrkr_sz[0],
-                               fn.lin_wdth[0], fn.lin_styl[0], fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1],
-                               fn.lbl_spcng, 0, fn.fntsz[1], 'Survey offset (ft)', fn.fntsz[0], fn.lbl_pd,
-                               'Surface elevation (ft)', title, 1, 1)  # Creates plot. Calls function.
+                    plot_lines(1, 1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz[0], lin_wdth[0],
+                               lin_styl[0], alpha[0], 0, lctn, mrkr_scl, alpha[1], lbl_spcng, fntsz[1],
+                               'Survey offset (ft)', fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 2, 1)
+                    # Creates plot. Calls function.
 
                     # Export data
                     fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/Single', '/' + chnl_name]
@@ -268,10 +275,10 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                     title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')'  # Defines string. Sets plot title.
 
-                    plot_lines(1, 2, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, fn.mrkr_sz[0],
-                               fn.lin_wdth[0], fn.lin_styl[0], fn.alpha[0], 1, fn.lctn, fn.mrkr_scl, fn.frm_alpha,
-                               fn.lbl_spcng, 0, fn.fntsz[-1], 'Survey offset (ft)', fn.fntsz[0], fn.lbl_pd,
-                               'Surface elevation (ft)', title, 1, 1)  # Creates plot. Calls function.
+                    plot_lines(1, 2, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz[0], lin_wdth[0],
+                               lin_styl[0], alpha[0], 1, lctn, mrkr_scl, frm_alpha, lbl_spcng, fntsz[-1],
+                               'Survey offset (ft)', fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 1, 1)
+                    # Creates plot. Calls function.
 
                     # Export data
                     if j == srvy_nums1[-1]:  # Conditional statement. Exports only when final cross-section has been
@@ -506,11 +513,11 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     title = 'Range ' + str(rng_name1) + ' (' + str(i) + ') ' + str(srvy_yr1) + '–' + str(srvy_yr2) + \
                             ' surveys'  # Defines string. Sets title of plot.
 
-                    plot_lines(2, 3, fn.fig_sz, [df_offst2, df_offst1], [df_elvtn2, df_elvtn1], [srvy_yr2, srvy_yr1],
-                               [clr2, clr1], [mrkr2, mrkr1], fn.mrkr_sz[0], fn.lin_wdth[0],
-                               [fn.lin_styl[0], fn.lin_styl[0]], fn.alpha[0], fn.lctn, fn.mrkr_scl, fn.alpha[1],
-                               fn.lbl_spcng, 0, fn.fntsz[-1], 'Survey offset (ft)', fntsz[0], fn.lbl_pd,
-                               'Surface elevation (ft)', title, 1, 1)  # Creates plot. Calls function.
+                    plot_lines(2, 4, fn.fig_sz, [df_offst2, df_offst1], [df_elvtn2, df_elvtn1], [srvy_yr2, srvy_yr1],
+                               [clr2, clr1], [mrkr2, mrkr1], mrkr_sz[0], lin_wdth[0], [lin_styl[0], lin_styl[0]],
+                               alpha[0], 1, lctn, mrkr_scl, alpha[1], lbl_spcng, fntsz[-1], 'Survey offset (ft)',
+                               fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 1, 1)  # Creates plot. Calls
+                    # function.
 
                     # Export data
                     fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/Double', '/' + chnl_name,
@@ -519,8 +526,8 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     fig_name = '/' + str(rng_name1) + '_s' + str(j) + '–' + str(k) + '_' + str(srvy_yr1) + '–' + \
                                str(srvy_yr2) + '.pdf'  # Defines variable as strIng. Sets name of figure for export.
 
-                    export_file_to_directory(1, 'figure', 6, fldr_lbls, opt_fldr, 'Directories named: ', fig_name,
-                                             3, 'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)
+                    export_file_to_directory(1, 'Figure', 6, fldr_lbls, opt_fldr, 'Directories named: ', fig_name,
+                                             4, 'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)
                     # Creates directory and exports figure. Calls function.
 
                 # INTERPOLATE DATA -------------------------------------------------------------------------------------
@@ -551,10 +558,10 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                             ' interpolated surveys'  # Defines string. Sets title of plot.  # Defines string. Sets
                     # plot title.
 
-                    plot_lines(2, 4, fn.fig_sz, [df_off_i2, df_off_i1], [df_elv_i2, df_elv_i1], [srvy_yr2, srvy_yr1],
-                               [clr2, clr1], [mrkr2, mrkr1], fn.mrkr_sz[0], fn.lin_wdth[0], [lin_styl[0], lin_styl[0]],
-                               fn.alpha[0], 0, fn.lctn, fn.mrkr_scl, fn.alpha[1], fn.lbl_spcng, fn.fntsz[1],
-                               'Survey offset (ft)', fn.fntsz[0], fn.lbl_pd, 'Surface elevation (ft)', title, 1, 4)
+                    plot_lines(2, 5, fn.fig_sz, [df_off_i2, df_off_i1], [df_elv_i2, df_elv_i1], [srvy_yr2, srvy_yr1],
+                               [clr2, clr1], [mrkr2, mrkr1], mrkr_sz[0], lin_wdth[0], [lin_styl[0], lin_styl[0]],
+                               alpha[0], 0, lctn, mrkr_scl, alpha[1], lbl_spcng, fntsz[1], 'Survey offset (ft)',
+                               fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 2, 1)
                     # Creates plot. Calls function.
 
                     # Export data
@@ -565,8 +572,8 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                str(srvy_yr2) + '_Interp' + '.pdf'  # Defines variable as strIng. Sets name of figure
                     # for export.
 
-                    export_file_to_directory(1, 'figure', 6, fldr_lbls, opt_fldr, 'Directories named: ', fig_name,
-                                             4, 'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)
+                    export_file_to_directory(1, 'Figure', 6, fldr_lbls, opt_fldr, 'Directories named: ', fig_name,
+                                             5, 'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)
                     # Creates directory and exports figure. Calls function.
 
                 # SELECT CALCULATION RANGE -----------------------------------------------------------------------------
@@ -605,11 +612,11 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                             ' reinterpolated surveys'  # Defines string. Sets title of plot.  # Defines string. Sets
                     # plot title.
 
-                    plot_lines(2, 5, fn.fig_sz, [df_off_i2, df_off_i1], [df_elv_i2, df_elv_i1], [srvy_yr2, srvy_yr1],
+                    plot_lines(2, 6, fn.fig_sz, [df_off_i2, df_off_i1], [df_elv_i2, df_elv_i1], [srvy_yr2, srvy_yr1],
                                [clr2, clr1], [mrkr2, mrkr1], mrkr_sz[0], lin_wdth[0],
                                [lin_styl[0], lin_styl[0]], alpha[0], 0, lctn, mrkr_scl, alpha[1],
                                lbl_spcng, fntsz[1], 'Survey offset (ft)', fntsz[0], lbl_pd,
-                               'Surface elevation (ft)', title, 0, 1)  # Creates plot. Calls function.
+                               'Surface elevation (ft)', title, 2, 2)  # Creates plot. Calls function.
 
                     # Export data
                     fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Cross_sections', '/Double', '/' + chnl_name,
@@ -620,7 +627,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     # for export.
 
                     export_file_to_directory(0, 'Figure', 6, fldr_lbls, opt_fldr, 'Directories named: ', fig_name,
-                                             5, 'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)
+                                             6, 'pdf', None, None, 'Cross-sectional plot', None, None, None, 0)
                     # Creates directory and exports figure. Calls function.
 
                 # ======================================================================================================
@@ -790,13 +797,20 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                     # Defines list. Sets folder labels for directory to be made.
 
                                     if rvr_nly == 1:  # Conditional statement. Sets name of file for export.
-                                        fl_name = '/Sediment_thickness_' + str(chnl_name) + '.csv'  # Defines variable
+                                        fl_name = 'Sediment_thickness_' + str(chnl_name) + '.csv'  # Defines variable
                                         # as string.
-                                    if rng_nly == 1:  # Conditional statement. Sets name of file for export.
-                                        fl_name = '/Sediment_thickness_' + str(rng_name1) + '.csv'  # Defines variable
-                                        # as string.
+                                        if cmltv == 1:  # Conditional statement.
+                                            fl_name = 'Sediment_thickness_cmltv' + str(chnl_name) + '.csv'
+                                            # Defines variable as string.
                                     else:  # Conditional statement.
-                                        fl_name = '/Sediment_thickness.csv'  # Defines variable as string.
+                                        fl_name = 'Sediment_thickness.csv'  # Defines variable as string.
+                                    if rng_nly == 1:  # Conditional statement. Sets name of file for export.
+                                        fl_name = 'Sediment_thickness_' + str(rng_name1) + '.csv'  # Defines variable
+                                        # as string.
+                                    if cmltv == 1:  # Conditional statement.
+                                        fl_name = '/cmltv_' + fl_name  # Redefines string.
+                                    else:  # Conditional statement.
+                                        fl_name = '/' + fl_name  # Redefines string.
 
                                     export_file_to_directory(1, 'Table', 3, fldr_lbls, opt_fldr, 'Directories named: ',
                                                              fl_name, 1, None, df_sed_thck, False,
@@ -867,14 +881,14 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                             lbl = str(srvy_yr2) + '–' + str(srvy_yr1)  # Defines string. Sets plot
                                             # object labels.
 
-                                            plot_lines(1, 6, fig_sz, df_strm_stat_x, df_dpth_x, lbl, clr1, mrkr1,
+                                            plot_lines(1, 7, fig_sz, df_strm_stat_x, df_dpth_x, lbl, clr1, mrkr1,
                                                        mrkr_sz[0], lin_wdth[0], lin_styl[0], alpha[0], 1, lctn,
                                                        mrkr_scl, alpha[1], lbl_spcng, fntsz[1],
                                                        'River station (1 x 10^3 ft)', fntsz[0], lbl_pd,
                                                        'Average sediment thickness (ft)', title, 1, 1)  # Creates plot.
                                             # Calls function.
 
-                                        plt.figure(6)  # Creates plot window. Sets figure size.
+                                        plt.figure(7)  # Creates plot window. Sets figure size.
                                         ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
                                         ax.invert_xaxis()  # Inverts x-axis.
 
@@ -883,17 +897,20 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                         # Defines list. Sets folder labels for directory to be made.
 
                                         if rvr_nly == 1:  # Conditional statement. Sets name of file for export.
-                                            fig_name = '/D_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) + '_' + \
-                                                       str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
-                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
-                                            fig_name = '/D_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) + '_' + \
+                                            fig_name = 'D_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) + '_' + \
                                                        str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
                                         else:  # Conditional statement.
-                                            fig_name = '/D_' + str(srvy_yrs2_lst[-1]) + '_' + str(srvy_yrs_lst[0]) + \
-                                                       '.pdf'  # Defines variable as string.
-
+                                            fig_name = 'D_' + str(srvy_yrs2_lst[-1]) + '_' + str(srvy_yrs_lst[0]) \
+                                                       + '.pdf'  # Defines variable as string.
+                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
+                                            fig_name = 'D_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) + '_' + \
+                                                       str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
+                                        if cmltv == 1:  # Conditional statement.
+                                            fig_name = 'cmltv_' + fig_name  # Redefines string.
+                                        else:  # Conditional statement.
+                                            fig_name = '/' + fig_name  # Redefines string.
                                         export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
-                                                                 'Directories named: ', fig_name, 6, 'pdf', None,
+                                                                 'Directories named: ', fig_name, 7, 'pdf', None,
                                                                  None, 'Average sediment thickness plot', None,
                                                                  None, None, 0)  # Creates directory and exports
                                         # figure. Calls function.
@@ -960,14 +977,14 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                             lbl = str(srvy_yr2) + '–' + str(srvy_yr1)  # Defines string. Sets plot
                                             # object labels.
 
-                                            plot_lines(1, 7, fig_sz, df_strm_stat_x, df_dpth_rt_x, lbl, clr1, mrkr1,
+                                            plot_lines(1, 8, fig_sz, df_strm_stat_x, df_dpth_rt_x, lbl, clr1, mrkr1,
                                                        mrkr_sz[0], lin_wdth[0], lin_styl[0], alpha[0], 1, lctn,
                                                        mrkr_scl, alpha[1], lbl_spcng, fntsz[1],
                                                        'River station (1 x 10^3 ft)', fntsz[0], lbl_pd,
                                                        'Average sedimentation rate (in/y)', title, 1, 1)  # Creates
                                             # plot. Calls function.
 
-                                        plt.figure(7)  # Creates plot window. Sets figure size.
+                                        plt.figure(8)  # Creates plot window. Sets figure size.
                                         ax = plt.gca()  # Defines variable. Retrieves plot axes instance.
                                         ax.invert_xaxis()  # Inverts x-axis.
 
@@ -976,17 +993,21 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                         # Defines list. Sets folder labels for directory to be made.
 
                                         if rvr_nly == 1:  # Conditional statement. Sets name of file for export.
-                                            fig_name = '/D_rt_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) + '_' \
-                                                       + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
-                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
-                                            fig_name = '/D_rt_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) + '_' \
+                                            fig_name = 'D_rt_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) + '_' \
                                                        + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
                                         else:  # Conditional statement.
-                                            fig_name = '/D_rt_' + str(srvy_yrs2_lst[-1]) + '_' + str(srvy_yrs_lst[0]) \
+                                            fig_name = 'D_rt_' + str(srvy_yrs2_lst[-1]) + '_' + str(srvy_yrs_lst[0]) \
                                                        + '.pdf'  # Defines variable as string.
+                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
+                                            fig_name = 'D_rt_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) + '_' \
+                                                       + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
+                                        if cmltv == 1:  # Conditional statement.
+                                            fig_name = 'cmltv_' + fig_name  # Redefines string.
+                                        else:  # Conditional statement.
+                                            fig_name = '/' + fig_name  # Redefines string.
 
                                         export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
-                                                                 'Directories named: ', fig_name, 7, 'pdf', None,
+                                                                 'Directories named: ', fig_name, 8, 'pdf', None,
                                                                  None, 'Average sediment thickness plot', None,
                                                                  None, None, 0)  # Creates directory and exports
                                         # figure. Calls function.
@@ -1046,7 +1067,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                             lbl = str(srvy_yr2) + '–' + str(srvy_yr1)  # Defines string. Sets plot
                                             # object labels.
 
-                                            plot_scatter(8, fig_sz, df_wshd_A_x, df_dpth_x, lbl, clr1, clr1, mrkr1,
+                                            plot_scatter(9, fig_sz, df_wshd_A_x, df_dpth_x, lbl, clr1, clr1, mrkr1,
                                                         mrkr_sz[0], lin_wdth[1], alpha[0], 1, lctn, mrkr_scl, alpha[1],
                                                         lbl_spcng, None, None, fntsz[1], fntsz[0], lbl_pd,
                                                          'Drainage area (sqkm)', 'Average sediment thickness (m)',
@@ -1057,19 +1078,23 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                         # Defines list. Sets folder labels for directory to be made.
 
                                         if rvr_nly == 1:  # Conditional statement. Sets name of file for export.
-                                            fig_name = '/D_vs_wshd_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) \
-                                                       + '_' + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as
-                                            # string.
-                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
-                                            fig_name = '/D_vs_wshd_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) \
+                                            fig_name = 'D_vs_wshd_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) \
                                                        + '_' + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as
                                             # string.
                                         else:  # Conditional statement.
-                                            fig_name = '/D_vs_wshd_' + str(srvy_yrs2_lst[-1]) + '_' + \
+                                            fig_name = 'D_vs_wshd_' + str(srvy_yrs2_lst[-1]) + '_' + \
                                                        str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
+                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
+                                            fig_name = 'D_vs_wshd_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) \
+                                                       + '_' + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as
+                                            # string.
+                                        if cmltv == 1:  # Conditional statement.
+                                            fig_name = 'cmltv_' + fig_name  # Redefines string.
+                                        else:  # Conditional statement.
+                                            fig_name = '/' + fig_name  # Redefines string.
 
                                         export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
-                                                                 'Directories named: ', fig_name, 8, 'pdf', None,
+                                                                 'Directories named: ', fig_name, 9, 'pdf', None,
                                                                  None,
                                                                  'Average sediment thickness vs. drainage area plot',
                                                                  None, None, None, 0)  # Creates directory and exports
@@ -1130,7 +1155,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                             lbl = str(srvy_yr2) + '–' + str(srvy_yr1)  # Defines string. Sets plot
                                             # object labels.
 
-                                            plot_scatter(8, fig_sz, df_vlly_W_x, df_dpth_x, lbl, clr1, clr1, mrkr1,
+                                            plot_scatter(10, fig_sz, df_vlly_W_x, df_dpth_x, lbl, clr1, clr1, mrkr1,
                                                         mrkr_sz[0], lin_wdth[1], alpha[0], 1, lctn, mrkr_scl, alpha[1],
                                                         lbl_spcng, None, None, fntsz[1], fntsz[0], lbl_pd,
                                                          'Transect width (m)', 'Average sediment thickness (m)',
@@ -1141,19 +1166,23 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                         # Defines list. Sets folder labels for directory to be made.
 
                                         if rvr_nly == 1:  # Conditional statement. Sets name of file for export.
-                                            fig_name = '/D_vs_vlly_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) \
-                                                       + '_' + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as
-                                            # string.
-                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
-                                            fig_name = '/D_vs_vlly_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) \
+                                            fig_name = 'D_vs_vlly_' + str(chnl_name) + '_' + str(srvy_yrs2_lst[-1]) \
                                                        + '_' + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as
                                             # string.
                                         else:  # Conditional statement.
-                                            fig_name = '/D_vs_vlly_' + str(srvy_yrs2_lst[-1]) + '_' + \
+                                            fig_name = 'D_vs_vlly_' + str(srvy_yrs2_lst[-1]) + '_' + \
                                                        str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as string.
+                                        if rng_nly == 1:  # Conditional statement. Sets name of file for export.
+                                            fig_name = 'D_vs_vlly_' + str(rng_name1) + '_' + str(srvy_yrs2_lst[-1]) \
+                                                       + '_' + str(srvy_yrs_lst[0]) + '.pdf'  # Defines variable as
+                                            # string.
+                                        if cmltv == 1:  # Conditional statement.
+                                            fig_name = 'cmltv_' + fig_name  # Redefines string.
+                                        else:  # Conditional statement.
+                                            fig_name = '/' + fig_name  # Redefines string.
 
                                         export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
-                                                                 'Directories named: ', fig_name, 8, 'pdf', None,
+                                                                 'Directories named: ', fig_name, 10, 'pdf', None,
                                                                  None,
                                                                  'Average sediment thickness vs. valley width plot',
                                                                  None, None, None,
