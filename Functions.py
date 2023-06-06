@@ -131,12 +131,14 @@ def slice_DataFrame_cell(data_type, convert, conversion_factor, dataframe, posit
             print(display_label + ': ' + str(slc_cl) + ' (' + data_type + ')' + '\n')  # Displays objects.
         return slc_cl # Ends function execution.
 
-def slice_DataFrame_columns(output, data_type, dataframe, column, check_duplicates, display_label, display):  # Defines function. For
-    # DataFrame slicing by column.
+def slice_DataFrame_columns(output, data_type, dataframe, column, check_duplicates, drop_nan, display_label, display):
+    # Defines function. For DataFrame slicing by column.
     df_slc_c = dataframe[column]  # Defines function format.
     if check_duplicates == 1:  # Conditional statement.
         df_slc_c = df_slc_c.drop_duplicates(keep='first')  # Redefines DataFrame. Drops all duplicate values in
         # column.
+    if drop_nan == 1:  # Conditional statement.
+        df_slc_c = df_slc_c.dropna()  # Redefines DataFrame. Drops all rows with nan value.
     typ = df_slc_c.dtypes  # Defines variable. Retreives data type of column DataFrame.
     if typ == data_type:  # Conditional statement. Ensures desired data type retrieved by function.
         pass  # Pass command. Moves on to next line.
@@ -272,9 +274,8 @@ def export_file(type, number, file_name, end_path, figure_extension, dataframe, 
         print(display_label, ' exported')  # Display objects.
 
 def transect_orientation(x1, x2, y1, y2, bearing_reference_direction, bearing_angle_direction, bearing_deg,
-                       bearing_functional, display_label, display):  # Defines function. For transect orientation
-    # check and component calculation.
-    # From field data.
+                       bearing_functional, display):  # Defines function. For transect orientation check and component
+    # calculation. From field data.
     if bearing_reference_direction =='N':  # Conditional statement. Converts transect bearing to azimuth.
         if bearing_angle_direction =='E':  # Conditional statement.
             if bearing_functional == 'NE':  # Conditional statement.
@@ -342,8 +343,8 @@ def transect_orientation(x1, x2, y1, y2, bearing_reference_direction, bearing_an
     azmth_rad_dff = azmth_rad_cor - azmth_rad_meas  # Defines variable. Calculates difference in calculated and measured
     # azimuths.
     azmth_deg_dff = azmth_rad_dff * (180 / np.pi)  # Defines variable. Converts radians to degrees.
-    if qdrnt_clc != qdrnt_meas:  # Conditional statement. Sets error contingency.
-        sys.exit('Quadrants misaligned - error in transformation')  # Exits code and displays string.
+    # if qdrnt_clc != qdrnt_meas:  # Conditional statement. Sets error contingency.
+    #     sys.exit('Quadrants misaligned - error in transformation')  # Exits code and displays string.
     sin = math.sin(azmth_rad_cor)  # Calculates sine of azimuth.
     cos = math.cos(azmth_rad_cor)  # Calculates cosine of azimuth.
     if display == 1:  # Conditional statement. For display.
@@ -368,7 +369,7 @@ def transect_orientation(x1, x2, y1, y2, bearing_reference_direction, bearing_an
                   '\n  Difference: ' + '\033[0;36m' + str('%.2f' % azmth_rad_dff) + ' (' + str('%.1f' % azmth_deg_dff)
                   + deg_sign + ')' + '\033[0m' + '\n Trig. components' + '\n  Sine: ' + str('%.4f' % sin) +
                   '\n  Cosine: ' + str('%.4f' % cos))  # Displays objects.
-    return sin, cos  # Ends function execution.
+    return azmth_deg_meas, azmth_deg_cor, azmth_deg_dff, sin, cos  # Ends function execution.
 
 def find_exp(value):  # Defines function. For retrieving exponent of value.
     bs10 = math.log10(value)  # Defines variable. Retrieves base 10 log of value.
@@ -389,6 +390,21 @@ def coordinate_error(x1, x2, y1, y2, transect_length, display):  # Defines funct
               '\n  Percent difference: ' + str('%.2f' % prcnt_dff) + '%' + ' (First nonzero at ' + str(exp) +
               ' decimal place)')  # Displays objects.
     return prcnt_dff  # Ends function execution.
+
+def orientation_error(transect_length, angle, display):  # Defines function. For transect digitization error analysis.
+    # Calculates lateral shift of transect along transect based on difference between calculated and measured azimuths.
+    angl_rad = angle * (np.pi / 180)  # Defines variable. Converts degrees to radians.
+    arc_lngth1 = abs(transect_length * angl_rad)  # Defines variable. Calculates arc length at end of transect.
+    arc_lngth10 = arc_lngth1 / 10  # Defines variable. Calculates shift for every ten feet.
+    arc_lngth2 = abs((transect_length / 2) * angl_rad)  # Defines variable. Calculates arc length at midpoint of
+    # transect.
+    if display == 1:  # Conditional statement. For display.
+        deg_sign = chr(176)  # Defines variable. Creates degree sign object.
+        print('Transect rotational shift over ' + str('%.2f' % angle) + deg_sign +
+              '\n At end (' + str('%.2f' % transect_length) + '): ' + str('%.2f' % arc_lngth1)
+              + '\n At midpoint (' + str('%.2f' % (transect_length / 2)) + '): ' +
+              str('%.2f' % arc_lngth2) + '\n Every tenth ft: ' + str('%.2f' % arc_lngth10))  # Displays objects.
+    return arc_lngth1, arc_lngth10  # Ends function execution.
 
 def plot_scatter(plot_number, figure_size, x, y, label, color, edge_color, marker, marker_size, line_width, alpha,
                 show_legend, location, marker_scale, frame_alpha, label_spacing, aspect, adjustible, fontsize_ticks,
@@ -503,6 +519,25 @@ def get_coordinate_pairs(type, value1, value2, x_list, y1_list, y2_list, display
                   str('%.2f' % y1_btm) + ')' + ' & ' + '(' + str(x2) + ', ' + str('%.2f' % y2_btm) + ')')  # Displays
             # objects.
         return x1, x2, y1_top, y1_btm, y2_top, y2_btm  # Ends function execution.
+
+def check_for_multipart(splt_pnt1, splt_pnt2, zip_pnt1, zip_pnt2, display):  # Defines function. Selects appropriate
+    # split and zip points for multipart transects.
+    if splt_pnt1 == None and splt_pnt2 != None:  # Conditional statement.
+        splt_pnt = splt_pnt2  # Defines variable. Selects non-null value for split point.
+        zip_pnt = zip_pnt2  # Defines variable. Selects non-null value for zip point.
+        del splt_pnt1, zip_pnt1  # Deletes null values.
+    elif splt_pnt1 != None and splt_pnt2 == None:  # Conditional statement.
+        splt_pnt = splt_pnt1  # Defines variable. Selects non-null value for split point.
+        zip_pnt = zip_pnt1  # Defines variable. Selects non-null value for zip point.
+        del splt_pnt2, zip_pnt2  # Deletes null values.
+    elif splt_pnt1 and splt_pnt2 == None:  # Conditional statement.
+        splt_pnt = None  # Defines variable.
+        zip_pnt = None  # Defines variable.
+        del splt_pnt1, zip_pnt1, splt_pnt2, zip_pnt2  # Deletes null values.
+    if display == 1:  # Conditional statement. Displays objects.
+        print('Multipart transect' + '\n Split point: ' + str('%.2f' % splt_pnt) + '\n Zip point: ' +
+              str('%.2f' % zip_pnt))  # Displays objects.
+    return splt_pnt, zip_pnt  # Ends function execution.
 
 def sediment_thickness(y1_top, y1_btm, yr1, yr2, display_label, display):  # Defines function. For
     # calculating sediment thickness between cross-sections.
