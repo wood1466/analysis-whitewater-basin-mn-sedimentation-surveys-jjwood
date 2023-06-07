@@ -153,11 +153,17 @@ def slice_DataFrame_columns(output, data_type, dataframe, column, check_duplicat
         if display == 1:  # Conditional statement. For display.
             print('\033[1m' + display_label + '\033[0m', '\n...\n', df_slc_c, '\n')  # Displays objects.
         return df_slc_c  # Ends function execution.
-    else:  # Conditional statement. For display.
+    elif output == 'List':  # Conditional statement. For display.
         slc_c_lst = df_slc_c.tolist()  # Defines list. Converts DataFrame to list.
         if display == 1:  # Conditional statement. For display.
             print('\033[1m' + display_label + '\033[0m', '\n...\n', slc_c_lst, '\n')  # Displays objects.
         return slc_c_lst  # Ends function execution.
+    else:
+        slc_c_arr = df_slc_c.to_numpy()  # Defines array. Converts DataFrame to array.
+        if display == 1:  # Conditional statement. For display.
+            print('\033[1m' + display_label + '\033[0m', '\n...\n', slc_c_arr, '\n')  # Displays objects.
+        return slc_c_arr  # Ends function execution.
+
 
 def min_value_DataFrame(data_type, dataframe, display_label, display):  # Defines function. For retrieving minimum value from
     # DataFrame column.
@@ -522,21 +528,30 @@ def get_coordinate_pairs(type, value1, value2, x_list, y1_list, y2_list, display
 
 def check_for_multipart(splt_pnt1, splt_pnt2, zip_pnt1, zip_pnt2, display):  # Defines function. Selects appropriate
     # split and zip points for multipart transects.
-    if splt_pnt1 == None and splt_pnt2 != None:  # Conditional statement.
-        splt_pnt = splt_pnt2  # Defines variable. Selects non-null value for split point.
-        zip_pnt = zip_pnt2  # Defines variable. Selects non-null value for zip point.
-        del splt_pnt1, zip_pnt1  # Deletes null values.
-    elif splt_pnt1 != None and splt_pnt2 == None:  # Conditional statement.
-        splt_pnt = splt_pnt1  # Defines variable. Selects non-null value for split point.
-        zip_pnt = zip_pnt1  # Defines variable. Selects non-null value for zip point.
-        del splt_pnt2, zip_pnt2  # Deletes null values.
-    elif splt_pnt1 and splt_pnt2 == None:  # Conditional statement.
-        splt_pnt = None  # Defines variable.
-        zip_pnt = None  # Defines variable.
-        del splt_pnt1, zip_pnt1, splt_pnt2, zip_pnt2  # Deletes null values.
+    if splt_pnt1 == None:  # Conditional statement.
+        if splt_pnt2 != None:  # Conditional statement.
+            splt_pnt = splt_pnt2  # Defines variable. Selects non-null value for split point.
+            zip_pnt = zip_pnt2  # Defines variable. Selects non-null value for zip point.
+            del splt_pnt1, zip_pnt1  # Deletes null values.
+        else:  # Conditional statement.
+            splt_pnt = None  # Defines variable.
+            zip_pnt = None  # Defines variable.
+            del splt_pnt1, zip_pnt1, splt_pnt2, zip_pnt2  # Deletes null values.
+    else:  # Conditional statement.
+        if splt_pnt2 == None:  # Conditional statement.
+            splt_pnt = splt_pnt1  # Defines variable. Selects non-null value for split point.
+            zip_pnt = zip_pnt1  # Defines variable. Selects non-null value for zip point.
+            del splt_pnt2, zip_pnt2  # Deletes null values.
+        else:  # Conditional statement.
+            splt_pnt = None  # Defines variable.
+            zip_pnt = None  # Defines variable.
+            del splt_pnt1, zip_pnt1, splt_pnt2, zip_pnt2  # Deletes null values.
     if display == 1:  # Conditional statement. Displays objects.
-        print('Multipart transect' + '\n Split point: ' + str('%.2f' % splt_pnt) + '\n Zip point: ' +
-              str('%.2f' % zip_pnt))  # Displays objects.
+        if splt_pnt != None:  # Conditional statement.
+            print('Multipart transect' + '\n Split point: ' + str('%.2f' % splt_pnt) + '\n Zip point: ' +
+                  str('%.2f' % zip_pnt))  # Displays objects.
+        else:   # Conditional statement.
+            print('Single part transect')  # Displays objects.
     return splt_pnt, zip_pnt  # Ends function execution.
 
 def sediment_thickness(y1_top, y1_btm, yr1, yr2, display_label, display):  # Defines function. For
