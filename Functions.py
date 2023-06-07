@@ -1,6 +1,6 @@
 # ======================================================================================================================
 # WHITEWATER RIVER VALLEY MINNESOTA, SEDIMENTATION SURVEY DATA ANALYSIS * ----------------------------------------------
-# SECONDARY PROGRAM 1 OF 1 * -------------------------------------------------------------------------------------------
+# SECONDARY PROGRAM * --------------------------------------------------------------------------------------------------
 # ======================================================================================================================
 
 # ======================================================================================================================
@@ -34,6 +34,8 @@ lbl_pd = 10  # Defines variable as integer. Sets plot-axes label spacing.
 # Set data display format
 tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDDD']
 # Defines list. Sets Paul Tol, muted, colorblind friendly palette with hex color codes.
+tl_rmp = ['#003D36', '#005C52', '#007A6D', '#009988', '#33ADA0', '#66C2B8', '#99D6CF']
+
 lin_wdth = [2, 1]  # Defines list. Sets plot line width.
 lin_styl = ['solid', 'dashed', 'dotted', 'dashdot']  # Defines list. Sets line style.
 mrkrs = ['h', 'v', 'P', 'o', 'X', 's', '^', 'D', '<', '>', '8', 'p', 'H', 'd', ' ']  # Defines list. Sets plot markers.
