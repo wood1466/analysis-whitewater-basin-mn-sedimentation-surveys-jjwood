@@ -32,9 +32,9 @@ from Functions import *  # Imports all functions from outside program.
 Sngl = 1  # Defines variable as integer. Sets binary toggle.
 
 # Plot single cross-section
-Plt_sngl = 1  # Defines variable as integer. Sets binary toggle.
+Plt_sngl = 0  # Defines variable as integer. Sets binary toggle.
 # Plot all cross-sections
-Plt_all = 1 # Defines variable as integer. Sets binary toggle.
+Plt_all = 0 # Defines variable as integer. Sets binary toggle.
 
 # Calculate coordinate geometry
 Crdnts = 0  # Defines variable as integer. Sets binary toggle.
@@ -47,7 +47,7 @@ Dpth_brng = 1  # Defines variable as integer. Sets binary toggle.
 
 # Dual cross-sections analysis -----------------------------------------------------------------------------------------
 
-Dbl = 0  # Defines variable as integer. Sets binary toggle.
+Dbl = 1  # Defines variable as integer. Sets binary toggle.
 
 # Plot dual cross-sections
 Plt_dbl = 0  # Defines variable as integer. Sets binary toggle.
@@ -59,6 +59,8 @@ Plt_reintrp = 0  # Defines variable as integer. Sets binary toggle.
 # Calculate sediment thickness from surface profiles
 Dpth_prfl = 1  # Defines variable as integer. Sets binary toggle.
 
+# Plot sediment thickness distribution
+Plt_dpth_dst = 1  # Defines variable as integer. Sets binary toggle.
 # Plot sediment thickness
 Plt_dpth = 0  # Defines variable as integer. Sets binary toggle.
 # Plot sedimentation rate
@@ -74,7 +76,7 @@ Plt_dpth_vs_vlly = 0  # Defines variable as integer. Sets binary toggle.
 
 rvr_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one river channel only.
 rng_nly = 0  # Defines variable as integer. Sets binary toggle. Analyzes data for one survey range only.
-xtra_srvys = 1  # Defines variable as integer. Sets binary toggle. Analyzes extra survey data for range 11B (13).
+xtra_srvys = 0  # Defines variable as integer. Sets binary toggle. Analyzes extra survey data for range 11B (13).
 rng_strt = 1  # Defines variable as integer. Sets start survey range number for analysis loop.
 rng_end = 94  # Defines variable as integer. Sets end survey range number for analysis loop.
 cmltv = 0  # Defines variable as integer. Sets binary toggle. Calculates cumulative sedimentation between survey
@@ -276,7 +278,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                     plot_lines(1, 1, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz[0], lin_wdth[0],
                                lin_styl[0], alpha[0], 0, lctn, mrkr_scl, alpha[1], lbl_spcng, fntsz[1],
-                               'Survey offset (ft)', fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 2, 1)
+                               'Survey offset (ft)', fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 1, 1)
                     # Creates plot. Calls function.
 
                     # Export data
@@ -293,7 +295,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                 # All cross-sections -----------------------------------------------------------------------------------
 
                 if Plt_all == 1:  # Conditional statement. Plots all cross-sections on transect.
-                    clr1 = get_plot_feature_by_year1(srvy_yr1, tol_mtd, 'Color ', 0)  # Defines variable. Calls
+                    clr1 = get_plot_feature_by_year(srvy_yr1, tol_mtd, 'Color ', 0)  # Defines variable. Calls
                     # function. Sets plot color.
                     mrkr1 = get_plot_feature_by_year(srvy_yr1, mrkrs, 'Marker ', 0)  # Defines variable. Calls
                     # function. Sets plot marker type.
@@ -301,7 +303,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                     title = 'Range ' + str(rng_name1) + ' (' + str(i) + ')'  # Defines string. Sets plot title.
 
                     plot_lines(1, 2, fig_sz, df_offst1, df_elvtn1, srvy_yr1, clr1, mrkr1, mrkr_sz[0], lin_wdth[0],
-                               lin_styl[0], 1, 1, lctn, mrkr_scl, frm_alpha, lbl_spcng, fntsz[-1],
+                               lin_styl[0], alpha[0], 1, lctn, mrkr_scl, frm_alpha, lbl_spcng, fntsz[-1],
                                'Survey offset (ft)', fntsz[0], lbl_pd, 'Surface elevation (ft)', title, 1, 0.5)
                     # Creates plot. Calls function.
 
@@ -1001,6 +1003,28 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                                 dpth_max = max(dpth1_lst)  # Defines variable. Retrieves max value from list.
                                 dpth_min = min(dpth1_lst)  # Defines variable. Retrieves min value from list.
+
+                                if Plt_dpth_dst == 1:
+                                    plt.figure(0)  # Creates plot window. Sets figure size.
+                                    plt.boxplot(dpth_rt1_lst,meanline=True, showmeans=True)
+                                    x_lst = []
+                                    for x in dpth_rt1_lst:
+                                        x_lst.append(1)
+                                    plt.scatter(x_lst, dpth_rt1_lst, c=None, edgecolors='Cyan')
+                                    plt.title(str(rng_name1) + ' ' + str(srvy_yr2) + '-' + str(srvy_yr1))
+                                    # plt.pause(1)
+
+                                    # Export data
+                                    fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Thickness_distribution']
+                                    # Defines list. Sets folder labels for directory to be made.
+
+                                    fig_name = '/D_dst_' + str(rng_name1) + '_' + str(srvy_yr1) + '_' + str(srvy_yr1) + '.pdf'  # Defines variable as string.
+
+                                    export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
+                                                             'Directories named: ', fig_name, 0, 'pdf', None,
+                                                             None, 'Sediment thickness box plot', None,
+                                                             None, None, 0)  # Creates directory and exports
+                                    # figure. Calls function.
 
                             # Save data
                             if i == rng_strt:  # Conditional statement. Executes for first range only.
