@@ -544,9 +544,15 @@ def check_for_multipart(splt_pnt1, splt_pnt2, zip_pnt1, zip_pnt2, display):  # D
             splt_pnt = splt_pnt1  # Defines variable. Selects non-null value for split point.
             zip_pnt = zip_pnt1  # Defines variable. Selects non-null value for zip point.
             del splt_pnt2, zip_pnt2  # Deletes null values.
-        else:  # Conditional statement.
-            splt_pnt = None  # Defines variable.
-            zip_pnt = None  # Defines variable.
+        elif splt_pnt2 != None:  # Conditional statement.
+            if splt_pnt1 < splt_pnt2:  # Conditional statement. Selects lowest split point if two exist.
+                splt_pnt = splt_pnt1  # Defines variable.
+            else:  # Conditional statement. Selects lowest split point if two exist.
+                splt_pnt = splt_pnt2  # Defines variable.
+            if zip_pnt1 > zip_pnt2:  # Conditional statement. Selects the highest zip point if two exist.
+                zip_pnt = zip_pnt1  # Defines variable.
+            else:  # Conditional statememnt. Selects the highest zip point if two exist.
+                zip_pnt = zip_pnt2  # Defines variable.
             del splt_pnt1, zip_pnt1, splt_pnt2, zip_pnt2  # Deletes null values.
     if display == 1:  # Conditional statement. Displays objects.
         if splt_pnt != None:  # Conditional statement.
