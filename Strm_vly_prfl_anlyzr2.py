@@ -18,7 +18,7 @@ import time, os, sys, math
 # Imports "Miscellaneous operating system interfaces" & "System specific parameters and functions". Enables operating
 # system dependent functionality.
 # Imports "Mathematical functions".
-import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopandas as gpd
+import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopandas as gpd,statsmodels.api as sm
 # Imports "Python data analysis library" with alias. Enables use of DataFrames.
 # Imports numerical mathematics library and a scientific mathematics library, with alias.
 # Imports a plotting interface with alias.
@@ -60,7 +60,7 @@ Plt_reintrp = 0  # Defines variable as integer. Sets binary toggle.
 Dpth_prfl = 1  # Defines variable as integer. Sets binary toggle.
 
 # Plot sediment thickness distribution
-Plt_dpth_dst = 1  # Defines variable as integer. Sets binary toggle.
+Plt_dpth_dst = 0  # Defines variable as integer. Sets binary toggle.
 # Plot sediment thickness
 Plt_dpth = 0  # Defines variable as integer. Sets binary toggle.
 # Plot sedimentation rate
@@ -596,9 +596,22 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                         yr1 = 1939  # Defines variable. Sets end year.
                         tm_intrvl = yr1 - yr2  # Defines variable. Calculates sedimentation time step.
 
-                    dpth_rt0 = (dpth_avg0 / tm_intrvl)  # Defines variable. Calculates sedimentation rate.
+                    rt_arry = brng_arry / tm_intrvl
+
+                    ks_tst = sc.stats.kstest(rt_arry, 'norm')
+                    print(ks_tst)
+                    if ks_tst.pvalue < 0.05:
+                        dst_typ = 'Non-normal'
+                    else:
+                        dst_typ = 'Normal'
+
+                    dpth_rt0 = np.mean(rt_arry)
+
+                    # dpth_rt0 = (dpth_avg0 / tm_intrvl)  # Defines variable. Calculates sedimentation rate.
 
                     dpth_rt0 = dpth_rt0 * in_to_ft  # Redefines variable.
+
+
 
                     # Save data
                     if j == 0:  # Conditional statement. Executes for first boring survey only.
@@ -613,6 +626,8 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                         dpth_mdn0_lst = []  # Defines list. Empty for looped population.
                         dpth_stdv0_lst = []  # Defines list. Empty for looped population.
                         dpth_rt0_lst = []  # Defines list. Empty for looped population.
+                        dpth_rt0_dst_lst = []
+                        dpth_rt0_p_lst = []
                         dpth_max0_lst = []  # Defines list. Empty for looped population.
                         dpth_min0_lst = []  # Defines list. Empty for looped population.
                         wshd_A_lst = []  # Defines list. Empty for looped population.
@@ -620,18 +635,18 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                     dtfrm_pop_lists = [chnl_name_lst, rng_name1_lst, rng_num_lst, srvy_yr1_lst, srvy_yr2_lst,
                                        tm_intrvl_lst, strm_stat_lst, dpth_avg0_lst, dpth_mdn0_lst, dpth_stdv0_lst,
-                                       dpth_rt0_lst, dpth_max0_lst, dpth_min0_lst, wshd_A_lst, vlly_W_lst]  # Defines list.
+                                       dpth_rt0_lst, dpth_rt0_dst_lst, dpth_rt0_p_lst, dpth_max0_lst, dpth_min0_lst, wshd_A_lst, vlly_W_lst]  # Defines list.
                     # Nested to enable looped population.
 
                     if dpth_mdn0 == dpth_min0 or dpth_max0:
                         dtfrm_pop_values = [chnl_name, str(rng_name1), int(i), str(yr1), str(srvy_yr1), str(tm_intrvl),
                                             strm_stat1,
-                                            dpth_avg0, float(dpth_mdn0), dpth_stdv0, dpth_rt0, str(dpth_max0),
+                                            dpth_avg0, float(dpth_mdn0), dpth_stdv0, dpth_rt0, dst_typ, ks_tst.pvalue, str(dpth_max0),
                                             str(dpth_min0), wshd_A, 0]  # Defines list. Values to populate lists for
                         # export.
                     if dpth_mdn0 == dpth_avg0:
                         dtfrm_pop_values = [chnl_name, str(rng_name1), int(i), str(yr1), str(srvy_yr1), str(tm_intrvl), strm_stat1,
-                                            dpth_avg0, str(dpth_mdn0), dpth_stdv0, dpth_rt0, dpth_max0, dpth_min0, wshd_A, 0]  # Defines list. Values to populate lists for
+                                            dpth_avg0, str(dpth_mdn0), dpth_stdv0, dpth_rt0, dst_typ, ks_tst.pvalue, dpth_max0, dpth_min0, wshd_A, 0]  # Defines list. Values to populate lists for
                         # export.
 
                     for y in dtfrm_pop_values:  # Begins loop through list. Loops through values to populate
@@ -643,7 +658,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
 
                     if j == -1:  # Conditional statement. Executes on last survey.
                         dtfrm_pop_clm_lbl = ['Chnnl_name', 'Srvy_range', 'Range_num', 'Srvy_year1', 'Srvy_year2',
-                                             'Tm_intvl', 'Strm_stat', 'D_avg_ft', 'D_mdn_ft', 'D_std_ft', 'D_avg_in/y',
+                                             'Tm_intvl', 'Strm_stat', 'D_avg_ft', 'D_mdn_ft', 'D_std_ft', 'D_avg_in/y', 'Rt_dst_typ', 'P_vl',
                                              'D_max_ft', 'D_min_ft', 'Wshd_A_sqkm', 'Vlly_W_m']  # Defines
                         # list. Sets column labels for DataFrame.
 
@@ -965,6 +980,11 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                     # Defines variables. Calls function.
 
                                     # Save data
+                                    # Save data
+                                    if x == index1[0]:  # Conditional statement. Executes on first calculation only.
+                                        dpth1_lst = []  # Defines list. Empty for looped population.
+                                        dpth_rt1_lst = []  # Defines list. Empty for looped population.
+
                                     dpth1_list = create_appended_list(dpth1, 'Sediment thickness', dpth1_lst,
                                                                       'New list appended: ',
                                                                       0)  # Redefines list. Calls function.
@@ -1004,6 +1024,13 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                 dpth_max = max(dpth1_lst)  # Defines variable. Retrieves max value from list.
                                 dpth_min = min(dpth1_lst)  # Defines variable. Retrieves min value from list.
 
+                                ks_tst = sc.stats.kstest(dpth_rt1_lst, 'norm')
+                                print(ks_tst)
+                                if ks_tst.pvalue < 0.05:
+                                    dst_typ = 'Non-normal'
+                                else:
+                                    dst_typ = 'Normal'
+
                                 if Plt_dpth_dst == 1:
                                     plt.figure(0)  # Creates plot window. Sets figure size.
                                     plt.boxplot(dpth_rt1_lst,meanline=True, showmeans=True)
@@ -1012,7 +1039,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                         x_lst.append(1)
                                     plt.scatter(x_lst, dpth_rt1_lst, c=None, edgecolors='Cyan')
                                     plt.title(str(rng_name1) + ' ' + str(srvy_yr2) + '-' + str(srvy_yr1))
-                                    # plt.pause(1)
+                                    plt.pause(1)
 
                                     # Export data
                                     fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Thickness_distribution']
@@ -1023,6 +1050,43 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                     export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
                                                              'Directories named: ', fig_name, 0, 'pdf', None,
                                                              None, 'Sediment thickness box plot', None,
+                                                             None, None, 0)  # Creates directory and exports
+                                    # figure. Calls function.
+
+                                    plt.figure(0)
+                                    plt.hist(dpth_rt1_lst, facecolor='cyan', edgecolor='black', bins=10)
+                                    plt.title(str(rng_name1) + ' ' + str(srvy_yr2) + '-' + str(srvy_yr1))
+                                    plt.pause(1)
+
+                                    # Export data
+                                    fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Thickness_distribution']
+                                    # Defines list. Sets folder labels for directory to be made.
+
+                                    fig_name = '/D_dst_hst' + str(rng_name1) + '_' + str(srvy_yr1) + '_' + str(
+                                        srvy_yr1) + '.pdf'  # Defines variable as string.
+
+                                    export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
+                                                             'Directories named: ', fig_name, 0, 'pdf', None,
+                                                             None, 'Sediment thickness histogram', None,
+                                                             None, None, 0)  # Creates directory and exports
+                                    # figure. Calls function.
+
+                                    plt.figure(0)
+                                    dpth_rt1_arry = np.array(dpth_rt1_lst)
+                                    sm.qqplot(dpth_rt1_arry, line='45')
+                                    plt.title(str(rng_name1) + ' ' + str(srvy_yr2) + '-' + str(srvy_yr1))
+                                    plt.pause(1)
+
+                                    # Export data
+                                    fldr_lbls = ['/Cross_sectional_analysis', '/Plots', '/Thickness_distribution']
+                                    # Defines list. Sets folder labels for directory to be made.
+
+                                    fig_name = '/D_dst_qq' + str(rng_name1) + '_' + str(srvy_yr1) + '_' + str(
+                                        srvy_yr1) + '.pdf'  # Defines variable as string.
+
+                                    export_file_to_directory(1, 'Figure', 3, fldr_lbls, opt_fldr,
+                                                             'Directories named: ', fig_name, 0, 'pdf', None,
+                                                             None, 'Sediment thickness histogram', None,
                                                              None, None, 0)  # Creates directory and exports
                                     # figure. Calls function.
 
@@ -1045,19 +1109,21 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                     dpth_mdn_lst = []  # Defines list. Empty for looped population.
                                     dpth_stdv_lst  = []  # Defines list. Empty for looped population.
                                     dpth_rt_avg_lst = []  # Defines list. Empty for looped population.
+                                    dpth_rt_avg_dst_lst = []
+                                    dpth_rt_avg_p_list = []
                                     dpth_max_lst = []  # Defines list. Empty for looped population.
                                     dpth_min_lst = []  # Defines list. Empty for looped population.
                                     wshd_A_lst = []  # Defines list. Empty for looped population.
                                     vlly_W_lst = []  # Defines list. Empty for looped population.
 
                             dtfrm_pop_lists = [chnl_name_lst, rng_name1_lst, rng_num_lst, srvy_yr1_lst, srvy_yr2_lst, tm_intrvl_lst,
-                                               strm_stat_lst, dpth_avg_lst, dpth_mdn_lst, dpth_stdv_lst, dpth_rt_avg_lst, dpth_max_lst,
+                                               strm_stat_lst, dpth_avg_lst, dpth_mdn_lst, dpth_stdv_lst, dpth_rt_avg_lst, dpth_rt_avg_dst_lst, dpth_rt_avg_p_list, dpth_max_lst,
                                                dpth_min_lst, wshd_A_lst, vlly_W_lst]  # Defines list.
                             # Nested to enable looped population.
 
                             if x == index1[-1]:  # Conditional statement. Executes lines after last point calculation.
                                 dtfrm_pop_values = [chnl_name, str(rng_name1), int(i), srvy_yr1, srvy_yr2, str(tm_intrvl), strm_stat1,
-                                                    dpth_avg, dpth_mdn, dpth_stdv, dpth_rt_avg, dpth_max, dpth_min,
+                                                    dpth_avg, dpth_mdn, dpth_stdv, dpth_rt_avg, dst_typ, ks_tst.pvalue, dpth_max, dpth_min,
                                                     wshd_A, shrd_rng_m]  # Defines list. Values to populate lists for
                                 # export.
 
@@ -1066,17 +1132,18 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                     index = dtfrm_pop_values.index(y)  # Defines variable. Retrieves index of list element.
 
                                     y = create_appended_list(y, 'Populated values', dtfrm_pop_lists[index],
-                                                             'New list appended: ', 0)  # Redefines list. Calls function.
+                                                             'New list appended: ', 1)  # Redefines list. Calls function.
 
-                                if k == 1 :  # Conditional statement. Executes on last survey.
+                            if k == 1 :  # Conditional statement. Executes on last survey.
+                                if x == index1[-1]:  # Conditional statement. Executes lines after last point calculation.
                                     dtfrm_pop_clm_lbl = ['Chnnl_name', 'Srvy_range', 'Range_num', 'Srvy_year1', 'Srvy_year2', 'Tm_intvl',
-                                                         'Strm_stat', 'D_avg_ft', 'D_mdn_ft', 'D_std_ft', 'D_avg_in/y',
+                                                         'Strm_stat', 'D_avg_ft', 'D_mdn_ft', 'D_std_ft', 'D_avg_in/y', 'Rt_dst_typ', 'P_vl',
                                                          'D_max_ft', 'D_min_ft', 'Wshd_A_sqkm', 'Vlly_W_m']  # Defines
                                     # list. Sets column labels for DataFrame.
 
                                     dtfrm_pop_lists = [chnl_name_lst, rng_name1_lst, rng_num_lst, srvy_yr1_lst, srvy_yr2_lst,
                                                        tm_intrvl_lst, strm_stat_lst, dpth_avg_lst,
-                                                       dpth_mdn_lst, dpth_stdv_lst, dpth_rt_avg_lst, dpth_max_lst, dpth_min_lst,
+                                                       dpth_mdn_lst, dpth_stdv_lst, dpth_rt_avg_lst, dpth_rt_avg_dst_lst, dpth_rt_avg_p_list, dpth_max_lst, dpth_min_lst,
                                                        wshd_A_lst, vlly_W_lst]  # Redefines list. With populated lists.
 
                                     dtfrm_pop_arry = np.array(dtfrm_pop_lists)  # Defines array. Converts list to array for
@@ -1086,7 +1153,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                     # DataFrame dimensional compatibility.
 
                                     df_sed_thck_rng = create_DataFrame(dtfrm_pop_arry, dtfrm_pop_clm_lbl,
-                                                                       'SEDIMENT THICKNESS', 0)  # Defines DataFrame. Calls
+                                                                       'SEDIMENT THICKNESS', 1)  # Defines DataFrame. Calls
                                     # function. Creates DataFrame of sediment thickness results for single transect.
 
                     if srvy_nums1[-1] == -1:
@@ -1285,7 +1352,7 @@ for i in rng_nums:  # Establishes loop through array elements. Loops through tra
                                     for x in srvy_yrs_lst:  # Begins loop through list elements. Loops through
                                         # survey years.
                                         df_sed_thck_x = slice_DataFrame_rows('Equals', df_sed_thck, 'Srvy_year1',
-                                                                             x, 'SEDIMENT THICKNESS', 0)  # Defines
+                                                                             x, 'SEDIMENT THICKNESS', 1)  # Defines
                                         # DataFrame. Calls function. Slices DataFrame to yield sediment thickness
                                         # data by first survey year.
 
