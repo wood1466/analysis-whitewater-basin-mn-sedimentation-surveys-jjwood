@@ -1,6 +1,6 @@
 # ======================================================================================================================
 # WHITEWATER RIVER VALLEY MINNESOTA, SEDIMENTATION SURVEY DATA ANALYSIS * ----------------------------------------------
-# SECONDARY PROGRAM * --------------------------------------------------------------------------------------------------
+# METHODS PROGRAM * ----------------------------------------------------------------------------------------------------
 # ======================================================================================================================
 
 # ======================================================================================================================
@@ -14,11 +14,12 @@ import time, os, sys, math
 # Imports "Miscellaneous operating system interfaces" & "System specific parameters and functions". Enables operating
 # system dependent functionality.
 # Imports "Mathematical functions".
-import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopandas as gpd
+import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopandas as gpd, statsmodels.api as sm
 # Imports "Python data analysis library" with alias. Enables use of DataFrames.
 # Imports numerical mathematics library and a scientific mathematics library, with alias.
 # Imports a plotting interface with alias.
 # Imports a geographic data libray with alias. Enables spatial operations.
+# Imports statistical models, hypothesis tests, and data exploration with alias. Enables statistical analyses.
 
 # SELECT INPUT PARAMETERS ----------------------------------------------------------------------------------------------
 
@@ -574,10 +575,10 @@ def sediment_thickness(y1_top, y1_btm, yr1, yr2, display_label, display):  # Def
     else:  # Conditional statement.
         prcs1 = 'No net change'  # Defines variable as string.
         prcs_rt1 = 'No net change'  # Defines variable as string.
-    if yr2 == '1850s':  # Conditional statement. Prepares calculation of time step.
-        yr2 = 1854  # Defines variable.
-    else:  # Conditional statement. Prepares calculation of time step.
-        pass  # Pass command. Moves on to next line.
+    # if yr2 == '1850s':  # Conditional statement. Prepares calculation of time step.
+    #     yr2 = 1854  # Defines variable.
+    # else:  # Conditional statement. Prepares calculation of time step.
+    #     pass  # Pass command. Moves on to next line.
     tm_intrvl = yr1 - yr2  # Defines variable. Calculates sedimentation time step.
     dpth_rt1 = dpth1 / tm_intrvl  # Defines variable. Calculates sedimentation rate.
     if display == 1:  # Conditional statement. For display.
@@ -604,6 +605,45 @@ def create_DataFrame(array1, array2, display_label, display):  # Defines functio
         print('\033[1m' + display_label + ' DATA' + '\033[0m', '\n...\n', df_new, '\n')  # Displays objects.
     return df_new  # Ends function execution.
 
+def plot_box(plot_number, y, mean_line, show_means, color, edge_color, title, pause, pause_length):
+    plt.figure(plot_number)  # Creates plot window. Sets figure size.
+    plt.boxplot(y, meanline=mean_line, showmeans=show_means)
+    x_lst = []
+    for x in y:
+        x_lst.append(1)
+    plt.scatter(x_lst, y, c=color, edgecolors=edge_color)
+    plt.title(title)
+    if pause == 1:  # Conditional statement. For display format.
+        plt.pause(pause_length)  # Displays plot. For set interval of seconds and closes without clearing.
+    elif pause == 0:  # Conditional statement. For display format.
+        plt.show()  # Displays plot. Indefinite and cleared upon close.
+    else:  # Conditional statement. For display format
+        pass  # Pass command. Moves on to next line.
+
+def plot_histogram(plot_number, y, face_color, edge_color, title, pause, pause_length):
+    plt.figure(plot_number)  # Creates plot window. Sets figure size.
+    bn_nmbr = round(np.sqrt(len(y)))
+    plt.hist(y, facecolor=face_color, edgecolor=edge_color, bins=bn_nmbr)
+    plt.title(title)
+    if pause == 1:  # Conditional statement. For display format.
+        plt.pause(pause_length)  # Displays plot. For set interval of seconds and closes without clearing.
+    elif pause == 0:  # Conditional statement. For display format.
+        plt.show()  # Displays plot. Indefinite and cleared upon close.
+    else:  # Conditional statement. For display format
+        pass  # Pass command. Moves on to next line.
+
+def plot_qq(plot_number, y, reference_line, title, pause, pause_length):
+    plt.figure(plot_number)  # Creates plot window. Sets figure size.
+    y_arry = np.array(y)
+    sm.qqplot(y_arry, line=reference_line)
+    plt.title(title)
+    if pause == 1:  # Conditional statement. For display format.
+        plt.pause(pause_length)  # Displays plot. For set interval of seconds and closes without clearing.
+    elif pause == 0:  # Conditional statement. For display format.
+        plt.show()  # Displays plot. Indefinite and cleared upon close.
+    else:  # Conditional statement. For display format
+        pass  # Pass command. Moves on to next line.
+
 # ======================================================================================================================
 # END ------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
@@ -622,10 +662,10 @@ def sedimentation(type, y1_top, y1_btm, yr1, yr2, y2_top, y2_btm, display_label,
         else:  # Conditional statement.
             prcs1 = 'No net change'  # Defines variable as string.
             prcs_rt1 = 'No net change'  # Defines variable as string.
-        if survey_year2 == '1850s':  # Conditional statement. Prepares calculation of time step.
-            yr2 = 1854  # Defines variable.
-        else:  # Conditional statement. Prepares calculation of time step.
-            pass  # Pass command. Moves on to next line.
+        # if survey_year2 == '1850s':  # Conditional statement. Prepares calculation of time step.
+        #     yr2 = 1854  # Defines variable.
+        # else:  # Conditional statement. Prepares calculation of time step.
+        #     pass  # Pass command. Moves on to next line.
         tm_intrvl = yr1 - yr2  # Defines variable. Calculates sedimentation time step.
         dpth_rt1 = dpth1 / tm_intrvl  # Defines variable. Calculates sedimentation rate.
         if display == 1:  # Conditional statement. For display.
