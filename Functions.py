@@ -14,7 +14,7 @@ import time, os, sys, math
 # Imports "Miscellaneous operating system interfaces" & "System specific parameters and functions". Enables operating
 # system dependent functionality.
 # Imports "Mathematical functions".
-import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopandas as gpd, statsmodels.api as sm
+import pandas as pd, numpy as np, matplotlib.pyplot as plt, scipy as sc, geopandas as gpd, statsmodels as sm, scikit_posthocs as sp
 # Imports "Python data analysis library" with alias. Enables use of DataFrames.
 # Imports numerical mathematics library and a scientific mathematics library, with alias.
 # Imports a plotting interface with alias.
@@ -36,6 +36,7 @@ lbl_pd = 10  # Defines variable as integer. Sets plot-axes label spacing.
 tol_mtd = ['#332288', '#88CCEE', '#44AA99', '#117733', '#999933', '#DDCC77', '#CC6677', '#882255', '#AA4499', '#DDDDDD']
 # Defines list. Sets Paul Tol, muted, colorblind friendly palette with hex color codes.
 tl_rmp = ['#003D36', '#005C52', '#007A6D', '#009988', '#33ADA0', '#66C2B8', '#99D6CF']
+ibm = ['#648FFF', '#785EF0', '#DC267F', '#FE6100', '#FFB000']
 
 lin_wdth = [2, 1]  # Defines list. Sets plot line width.
 lin_styl = ['solid', 'dashed', 'dotted', 'dashdot']  # Defines list. Sets line style.
@@ -605,12 +606,12 @@ def create_DataFrame(array1, array2, display_label, display):  # Defines functio
         print('\033[1m' + display_label + ' DATA' + '\033[0m', '\n...\n', df_new, '\n')  # Displays objects.
     return df_new  # Ends function execution.
 
-def plot_box(plot_number, y, mean_line, show_means, color, edge_color, title, pause, pause_length):
+def plot_box(plot_number, y, position, mean_line, show_means, color, edge_color, title, pause, pause_length):
     plt.figure(plot_number)  # Creates plot window. Sets figure size.
-    plt.boxplot(y, meanline=mean_line, showmeans=show_means)
+    plt.boxplot(y, positions=position, meanline=mean_line, showmeans=show_means)
     x_lst = []
     for x in y:
-        x_lst.append(1)
+        x_lst.append(position)
     plt.scatter(x_lst, y, c=color, edgecolors=edge_color)
     plt.title(title)
     if pause == 1:  # Conditional statement. For display format.
@@ -644,6 +645,41 @@ def plot_qq(plot_number, y, reference_line, title, pause, pause_length):
     else:  # Conditional statement. For display format
         pass  # Pass command. Moves on to next line.
 
+
+def get_plot_feature_ramp(test_value, list, display_label, display):
+    if test_value < 20:
+        feature = list[0]
+        lbl = '< 20%'
+    elif 20 <= test_value < 40:
+        feature = list[1]
+        lbl = '20–39%'
+    elif 40 <= test_value < 60:
+        feature = list[2]
+        lbl = '40–59%'
+    elif 60 <= test_value < 80:
+        feature = list[3]
+        lbl = '60–79%'
+    else:
+        feature = list[4]
+        lbl = '80–100%'
+    if display == 1:  # Conditonal statement. For display.
+        print('Plot feature selected: ' + display_label + str(feature))  # Displays objects.
+    return feature, lbl  # Ends function execution.
+
+
+def shaprio_wilk_test(sample, null_hypothesis, alt_hypothesis, alpha, display):
+    if len(sample) >= 3:
+        rslt = sc.stats.shapiro(sample)
+        if display == 1:
+            print(f'Shaprio-Wilk test: s = {rslt.statistic}, p = {rslt.pvalue}')
+            if rslt.pvalue < alpha:
+                outcm = 'Reject'
+                print(f'{outcm} H_0: {alt_hypothesis}')
+            elif rslt.pvalue > alpha:
+                outcm = 'Accept'
+                print(f'{outcm} H_0: {null_hypothesis}')
+    else:
+        print('Sample size too small for Shapiro-Wilk test')
 # ======================================================================================================================
 # END ------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
