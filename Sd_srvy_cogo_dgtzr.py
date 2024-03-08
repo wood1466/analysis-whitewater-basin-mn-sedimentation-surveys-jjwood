@@ -24,12 +24,12 @@ otpt_fldr = 'Output'  # Defines variable. Sets name of output folder where all d
 gis_fldr = 'GIS'  # Defines variable. Sets name of output folder where all geospatial data products will be exported.
 
 # Data
-inpt_fl1 = inpt_fldr + '/Survey data new.csv'  # Defines variable. Sets file path to input file.
+inpt_fl1 = inpt_fldr + '/Survey data new MS.csv'  # Defines variable. Sets file path to input file.
 inpt_fl2 = inpt_fldr + '/Monument metadata original.csv'  # Defines variable. Sets file path to input file.
 
 # Limits of analysis
 rng_strt = 1  # Defines variable. Sets start survey range number for operation loop.
-rng_end = 2  # Defines variable. Sets end survey range number for operation loop.
+rng_end = 13  # Defines variable. Sets end survey range number for operation loop.
 
 # Data slicing criteria
 crdnt_srvy_yr = 2011  # Defines variable. Sets survey year of field coordinate survey.
@@ -66,6 +66,7 @@ rng_nmbrs = forward_range(rng_strt, rng_end, 1, 0)  # Defines array. Calls funct
 
 for i in rng_nmbrs:  # Begins loop. Loops through array elements. Loops through transect numbers. Calculates coordinates
     # for each range in sequence.
+
     df_rng_dt = slice_DataFrame_rows('Equals', df_srvy_dt, 'Range_num', i, 0)  # Defines DataFrame. Calls function.
     # Slices DataFrame to yield single range data.
 
@@ -118,14 +119,20 @@ for i in rng_nmbrs:  # Begins loop. Loops through array elements. Loops through 
         # reference monument.
 
         # Survey azimuth
-        thta = range_orientation_calculator(mnt1_e, mnt2_e, mnt1_n, mnt2_n, 0)  # Defines variable. Calls function.
-        # Calculates azimuth angle of range.
+        thta, trg_slctr = range_orientation_calculator(mnt1_e, mnt2_e, mnt1_n, mnt2_n, 0)  # Defines variable. Calls
+        # function. Calculates azimuth angle of range.
 
         # Station separations projected East and North
-        df_dlt_e = df_dlt_r * np.sin(thta)  # Defines DataFrame. Calculates station separation components projected in
-        # the East directions.
-        df_dlt_n = df_dlt_r * np.cos(thta)  # Defines DataFrame. Calculates station separation components projected in
-        # the North directions.
+        if trg_slctr == 1:  # Begins conditional statement. Checks equality. Eecutes code when condition satisfied.
+            df_dlt_e = df_dlt_r * np.cos(thta)  # Defines DataFrame. Calculates station separation components projected
+            # in the East directions.
+            df_dlt_n = df_dlt_r * np.sin(thta)  # Defines DataFrame. Calculates station separation components projected
+            # in the North directions.
+        else:  # Begins conditional statement. Checks equality. Eecutes code when condition satisfied.
+            df_dlt_e = df_dlt_r * np.sin(thta)  # Defines DataFrame. Calculates station separation components projected
+            # in the East directions.
+            df_dlt_n = df_dlt_r * np.cos(thta)  # Defines DataFrame. Calculates station separation components projected
+            # in the North directions.
 
         # Station coordinates
         df_e = (df_dlt_e / ft_to_m) + mnt1_e  # Defines DataFrame. Calculates Easting coordinate for all stations.
@@ -135,18 +142,17 @@ for i in rng_nmbrs:  # Begins loop. Loops through array elements. Loops through 
         df_n = df_n.rename('Northing')  # Redefines DataFrame. Renames column.
 
         # Plot
-        # plt.scatter(df_e, df_n, c='Cyan', alpha=0.1)  # Creates scatter plot. Plots station coordinates. Enable for
+        plt.scatter(df_e, df_n, c='Cyan', alpha=0.1)  # Creates scatter plot. Plots station coordinates. Enable for
         # check.
-        # plt.scatter([mnt1_e, mnt2_e], [mnt1_n, mnt2_n], c='Orange')  # Creates scatter plot. Plots monument coordinates.
+        plt.scatter([mnt1_e, mnt2_e], [mnt1_n, mnt2_n], c='Orange')  # Creates scatter plot. Plots monument coordinates.
         # Enable for check.
-        # plt.pause(1)  # Plot pause command. Enables continuous plotting on same figure at interval of 1 second.
+        plt.pause(1)  # Plot pause command. Enables continuous plotting on same figure at interval of 1 second.
 
         # PREPARE DATA FOR DIGITIZATION --------------------------------------------------------------------------------
 
         # Compile calculations -----------------------------------------------------------------------------------------
 
         try:  # Begins try-except statement. Checks object existence. Executes code when existence satisfied.
-            df_e_all  # Declares object. Checks object existence.
             df_e_all = pd.concat([df_e_all, df_e], axis=0)  # Redefines DataFrame. Concatenates DataFrames if it exists.
             # Compiles coordinate data avoiding overwrite.
         except NameError:  # Continues try-except statement. Checks object existence. Executes code when existence
@@ -154,7 +160,6 @@ for i in rng_nmbrs:  # Begins loop. Loops through array elements. Loops through 
             df_e_all = df_e  # Defines DataFrame. Creates new DataFrame avoiding overwrite.
 
         try:  # Begins try-except statement. Checks object existence. Executes code when existence satisfied.
-            df_n_all  # Declares object. Checks object existence.
             df_n_all = pd.concat([df_n_all, df_n], axis=0)  # Redefines DataFrame. Concatenates DataFrames if it exists.
             # Compiles coordinate data avoiding overwrite.
         except NameError:  # Continues try-except statement. Checks object existence. Executes code when existence
