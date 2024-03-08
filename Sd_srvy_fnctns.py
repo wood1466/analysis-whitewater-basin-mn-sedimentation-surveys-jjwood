@@ -1,6 +1,6 @@
 # ======================================================================================================================
 # WHITEWATER RIVER VALLEY SEDIMENTATION SURVEYS * ----------------------------------------------------------------------
-# SURVEY DATA FUNCTIONS * ----------------------------------------------------------------------------------------------
+# SURVEY DATA ANALYSIS, DIGITIZATION, AND VISUALIZATION FUNCTIONS * ----------------------------------------------------
 # PYTHON SCRIPTS * -----------------------------------------------------------------------------------------------------
 # ======================================================================================================================
 
@@ -10,14 +10,15 @@
 
 # IMPORT MODULES -------------------------------------------------------------------------------------------------------
 
-import os
-# Imports "Miscellaneous operating system interfaces". Enables operating system dependent functionality.
+import os # Imports os (miscellaneous operating system interfaces). Enables operating system dependent functionality.
 
-import pandas as pd, numpy as np
+import pandas as pd, numpy as np, matplotlib.pyplot as plt, geopandas as gpd
 
-# Imports "Python data analysis library" with alias. Enables use of DataFrames.
-# Imports "The fundamental package for scientific computing with Python" with alias. Enables use of advanced
+# Imports pandas (Python data analysis library) with alias. Enables use of DataFrames.
+# Imports NumPy (the fundamental package for scientific computing with Python) with alias. Enables use of advanced
 # mathematics.
+# Imports Matplotlib (visualization with Python) with alias. Enables figure creation.
+# Imports GeoPandas with alias. Enables geospatial functionality.
 
 # ======================================================================================================================
 # PART 2: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
@@ -120,7 +121,7 @@ def slice_DataFrame_cell(data_type, dataframe, position, column, display):  # De
         else:  # Continues conditional statement. Checks equality. Enforces desired data type.
             slc_cl = str(slc_cl)  # Redefines variable. Converts value to string.
     if display == 1:  # Begins conditional statement. Checks equality. For display.
-        print('\033[1mRETRIEVED VALUE:\033[0m' + str(slc_cl) + '\n')  # Displays objects.
+        print('\033[1mRETRIEVED VALUE:\033[0m ' + str(slc_cl) + '\n')  # Displays objects.
     return slc_cl # Ends function execution.
 
 def retrieve_metadata(dataframe, display):  # Defines function. For metadata retrieval for display and data slicing.
@@ -148,9 +149,46 @@ def retrieve_metadata(dataframe, display):  # Defines function. For metadata ret
         print('\033[1mTransect:\033[0m ' + str(rng_nm))  # Displays objects.
         print('\033[1mSurvey:\033[0m ' + str(srvy_era))  # Displays objects.
         print('\033[1mDate:\033[0m ' + str(srvy_mnth) + '/' + str(srvy_dy) + '/' + str(srvy_yr))  # Displays objects.
-        print('\033[1mBearing:\033[0m ' + str(brng_r_dr) + str(brng_angl) + str(brng_a_dr))  # Displays
-        # objects.
+        print('\033[1mBearing:\033[0m ' + str(brng_r_dr) + str(brng_angl) + str(brng_a_dr))  # Displays objects.
         print('--------------------------------------------------')  # Displays objects.
+
+def range_orientation_calculator(x1, x2, y1, y2, display):  # Defines function. For range azimuth calculation from
+    # cartesian coordinates for coordinate geometry digitization.
+    dlt_x = x2 - x1  # Defines variable. Calculates difference in x monument coordinates.
+    dlt_y = y2 - y1  # Defines variable. Calculates difference in y monument coordinates.
+    if dlt_x > 0:  # Begins conditional statement. Checks relation. Executes code when condition satisfied. Assigns
+        # cartesian quadrant for proper reference azimuth selection.
+        if dlt_y >= 0:  # Begins conditional statement. Checks relation. Executes code when condition satisfied.
+            qdrnt = 1  # Defines variable. Assigns quadrant.
+        else:  # Begins conditional statement. Checks relation. Executes code when condition satisfied.
+            qdrnt = 4  # Defines variable. Assigns quadrant.
+    elif dlt_x < 0:  # Begins conditional statement. Checks relation. Executes code when condition satisfied.
+        if dlt_y > 0:  # Begins conditional statement. Checks relation. Executes code when condition satisfied.
+            qdrnt = 2  # Defines variable. Assigns quadrant.
+        else:  # Begins conditional statement. Checks relation. Executes code when condition satisfied.
+            qdrnt = 3  # Defines variable. Assigns quadrant.
+    else:  # Begins conditional statement. Checks relation. Executes code when condition satisfied.
+        if dlt_y > 0:  # Begins conditional statement. Checks relation. Executes code when condition satisfied.
+            qdrnt = 2  # Defines variable. Assigns quadrant.
+        else:  # Begins conditional statement. Checks relation. Executes code when condition satisfied.
+            qdrnt = 4  # Defines variable. Assigns quadrant.
+    if qdrnt == 1:  # Begins conditional statement. Checks equality. Executes code when condition satisfied.
+        angl = abs(np.arctan(dlt_x / dlt_y))  # Defines variable. Calculates range azimuth.
+    elif qdrnt == 2:  # Begins conditional statement. Checks equality. Executes code when condition satisfied.
+        rf_angl = 2 * np.pi  # Defines variable. Sets reference angle for correction of calculated orientation to
+        # azimuth.
+        angl = rf_angl - abs(np.arctan(dlt_x / dlt_y))  # Defines variable. Calculates range azimuth.
+    elif qdrnt == 3:  # Begins conditional statement. Checks equality. Executes code when condition satisfied.
+        rf_angl = (3/2) * np.pi  # Defines variable. Sets reference angle for correction of calculated orientation to
+        # azimuth.
+        angl = rf_angl - abs(np.arctan(dlt_x / dlt_y))  # Defines variable. Calculates range azimuth.
+    else:  # Begins conditional statement. Checks equality. Executes code when condition satisfied.
+        rf_angl = (3/2) * np.pi  # Defines variable. Sets reference angle for correction of calculated orientation to
+        # azimuth.
+        angl = rf_angl + abs(np.arctan(dlt_x / dlt_y))  # Defines variable. Calculates range azimuth.
+    if display == 1:  # Begins conditional statement. Checks equality. For display.
+        print('\033[1mCALCULATED RANGE ORIENTATION:\033[0m ' + str(angl) + '\n')  # Displays objects.
+    return angl  # Ends function execution.
 
 # ======================================================================================================================
 # * --------------------------------------------------------------------------------------------------------------------
