@@ -173,30 +173,25 @@ def range_orientation_calculator(x1, x2, y1, y2, display):  # Defines function. 
         else:  # Begins conditional statement. Checks relation. Executes code when condition satisfied.
             qdrnt = 4  # Defines variable. Assigns quadrant.
     if qdrnt == 1:  # Begins conditional statement. Checks equality. Executes code when condition satisfied.
-        angl = abs(np.arctan(dlt_x / dlt_y))  # Defines variable. Calculates range azimuth.
-        trg = 1  # Defines variable. Sets binary toggle. For selection of correct trigonometric operation for
-        # change in x: 1 = cosine, 0 = sine.
-    elif qdrnt == 2:  # Begins conditional statement. Checks equality. Executes code when condition satisfied.
-        rf_angl = 2 * np.pi  # Defines variable. Sets reference angle for correction of calculated orientation to
+        rf_angl = (1/2) * np.pi  # Defines variable. Sets reference angle for correction of calculated orientation to
         # azimuth.
         angl = rf_angl - abs(np.arctan(dlt_x / dlt_y))  # Defines variable. Calculates range azimuth.
-        trg = 0  # Defines variable. Sets binary toggle. For selection of correct trigonometric operation for
-        # change in x: 1 = cosine, 0 = sine.
+    elif qdrnt == 2:  # Begins conditional statement. Checks equality. Executes code when condition satisfied.
+        rf_angl =  (1/2) * np.pi  # Defines variable. Sets reference angle for correction of calculated orientation to
+        # azimuth.
+        angl = rf_angl + abs(np.arctan(dlt_x / dlt_y))  # Defines variable. Calculates range azimuth.
+        # angl -= np.pi
     elif qdrnt == 3:  # Begins conditional statement. Checks equality. Executes code when condition satisfied.
         rf_angl = (3/2) * np.pi  # Defines variable. Sets reference angle for correction of calculated orientation to
         # azimuth.
         angl = rf_angl - abs(np.arctan(dlt_x / dlt_y))  # Defines variable. Calculates range azimuth.
-        trg = 1  # Defines variable. Sets binary toggle. For selection of correct trigonometric operation for
-        # change in x: 1 = cosine, 0 = sine.
     else:  # Begins conditional statement. Checks equality. Executes code when condition satisfied.
         rf_angl = (3/2) * np.pi  # Defines variable. Sets reference angle for correction of calculated orientation to
         # azimuth.
         angl = rf_angl + abs(np.arctan(dlt_x / dlt_y))  # Defines variable. Calculates range azimuth.
-        trg = 0  # Defines variable. Sets binary toggle. For selection of correct trigonometric operation for
-        # change in x: 1 = cosine, 0 = sine.
     if display == 1:  # Begins conditional statement. Checks equality. For display.
         print('\033[1mCALCULATED RANGE ORIENTATION:\033[0m ' + str(angl) + '\n')  # Displays objects.
-    return angl, trg  # Ends function execution.
+    return angl  # Ends function execution.
 
 # ======================================================================================================================
 # * --------------------------------------------------------------------------------------------------------------------
