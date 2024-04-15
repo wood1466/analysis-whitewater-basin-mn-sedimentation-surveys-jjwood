@@ -125,31 +125,24 @@ def slice_DataFrame_cell(data_type, dataframe, position, column, display):  # De
     return slc_cl # Ends function execution.
 
 def retrieve_metadata(dataframe, display):  # Defines function. For metadata retrieval for display and data slicing.
-    chnl_nm = slice_DataFrame_cell('String', dataframe, 0, 'Chnl_name', 0)  # Defines variable. Calls function.
+    bsn_id = slice_DataFrame_cell('String', dataframe, 0, 'sub_basin', 0)  # Defines variable. Calls function.
     # Slices DataFrame to yield stream channel name of present dataset.
-    rng_nm = slice_DataFrame_cell('String', dataframe, 0, 'Srvy_range', 0)  # Defines variable. Calls function.
+    rng_id = slice_DataFrame_cell('String', dataframe, 0, '2024_range_id', 0)  # Defines variable. Calls function.
     # Slices DataFrame to yield transect name of present dataset.
-    srvy_era = slice_DataFrame_cell('Integer', dataframe, 0, 'Srvy_year', 0)  # Defines variable. Calls
+    srvy_era = slice_DataFrame_cell('Integer', dataframe, 0, 'survey_era', 0)  # Defines variable. Calls
     # function. Slices DataFrame to yield survey era of present dataset.
-    srvy_yr = slice_DataFrame_cell('String', dataframe, 0, 'Year', 0)  # Defines variable. Calls function.
+    srvy_yr = slice_DataFrame_cell('String', dataframe, 0, 'survey_year', 0)  # Defines variable. Calls function.
     # Slices DataFrame to yield survey year of present dataset.
-    srvy_mnth = slice_DataFrame_cell('String', dataframe, 0, 'Month', 0)  # Defines variable. Calls function.
+    srvy_mnth = slice_DataFrame_cell('String', dataframe, 0, 'survey_month', 0)  # Defines variable. Calls function.
     # Slices DataFrame to yield survey month of present dataset.
-    srvy_dy = slice_DataFrame_cell('String', dataframe, 0, 'Day', 0)  # Defines variable. Calls function.
+    srvy_dy = slice_DataFrame_cell('String', dataframe, 0, 'survey_day', 0)  # Defines variable. Calls function.
     # Slices DataFrame to yield survey day(s) of present dataset.
-    brng_r_dr = slice_DataFrame_cell('String', dataframe, 0, 'Brng_R_dir', 0)  # Defines variable. Calls
-    # function. Slices DataFrame to yield bearing reference direction of present dataset.
-    brng_angl = slice_DataFrame_cell('Float', dataframe, 0, 'Brng_A', 0)  # Defines variable. Calls function.
-    # Slices DataFrame to yield bearing angle of present dataset.
-    brng_a_dr = slice_DataFrame_cell('String', dataframe, 0, 'Brng_A_dir', 0)  # Defines variable. Calls
-    # function. Slices DataFrame to yield bearing angle direction of present dataset.
     if display == 1:  # Begins conditional statement. Checks equality. For display.
         print('==================================================')  # Displays objects.
-        print('\033[1mChannel:\033[0m ' + str(chnl_nm))  # Displays objects.
-        print('\033[1mTransect:\033[0m ' + str(rng_nm))  # Displays objects.
+        print('\033[1mChannel:\033[0m ' + str(bsn_id))  # Displays objects.
+        print('\033[1mTransect:\033[0m ' + str(rng_id))  # Displays objects.
         print('\033[1mSurvey:\033[0m ' + str(srvy_era))  # Displays objects.
         print('\033[1mDate:\033[0m ' + str(srvy_mnth) + '/' + str(srvy_dy) + '/' + str(srvy_yr))  # Displays objects.
-        print('\033[1mBearing:\033[0m ' + str(brng_r_dr) + str(brng_angl) + str(brng_a_dr))  # Displays objects.
         print('--------------------------------------------------')  # Displays objects.
 
 def range_orientation_calculator(x1, x2, y1, y2, display):  # Defines function. For range azimuth calculation from
@@ -192,6 +185,28 @@ def range_orientation_calculator(x1, x2, y1, y2, display):  # Defines function. 
     if display == 1:  # Begins conditional statement. Checks equality. For display.
         print('\033[1mCALCULATED RANGE ORIENTATION:\033[0m ' + str(angl) + '\n')  # Displays objects.
     return angl  # Ends function execution.
+
+def check_marker_shift(x, y, dataframe, marker_index, conversion_factor, display):  # Defines function. For checking and
+    # adjusting coordinate geometry calculations by a monument shift from range line.
+    shft_dir = slice_DataFrame_cell('String', dataframe, marker_index, 'marker_offset_direction', 0)  # Defines
+    # variable. Calls function. Slices DataFrame to yield the direction of monument shift from range line.
+    if shft_dir == 'North' or 'South' or 'East' or 'West':  # Begins conditional statement. Checks equality.
+        # Performs shift if in cardinal direction.
+        shft = slice_DataFrame_cell('Float', dataframe, marker_index, 'marker_offset_distance', 0)  # Defines variable.
+        # Calls function. Slices DataFrame to yield the magnitude of monument shift from range line.
+        shft /= conversion_factor  # Redefines variable. Converts feet to meters.
+        if shft_dir == 'North':  # Begins conditional statement. Checks equality.
+            y += shft  # Redefines variable. Adds shift to move coordinate further north.
+        elif shft_dir == 'South':  # Continues conditional statement. Checks equality.
+            y -= shft  # Redefines variable. Subtracts shift to move coordinate further south.
+        elif shft_dir == 'East':  # Continues conditional statement. Checks equality.
+            x += shft  # Redefines variable. Adds shift to move coordinate further east.
+        elif shft_dir == 'West':  # Continues conditional statement. Checks equality.
+            x -= shft  # Redefines variable. Subtracts shift to move coordinate further west.
+        if display == 1:  # Begins conditional statement. Checks equality. For display.
+            print('\033[1mMONUMENT SHIFT:\033[0m\n Direction: ' + str(shft_dir) + '\n Magnitude: ' + str('%.2f' % shft)
+                  + '\n Output coordinate: ' + str('%.2f' % x) + ', ' + str('%.2f' % y) + '\n')  # Displays objects.
+    return x, y  # Ends function execution.
 
 # ======================================================================================================================
 # * --------------------------------------------------------------------------------------------------------------------
