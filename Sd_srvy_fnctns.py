@@ -208,6 +208,28 @@ def check_marker_shift(x, y, dataframe, marker_index, conversion_factor, display
                   + '\n Output coordinate: ' + str('%.2f' % x) + ', ' + str('%.2f' % y) + '\n')  # Displays objects.
     return x, y  # Ends function execution.
 
+def plot_range_data(plot_number, figure_size, x, y, label, color, marker, marker_size, line_width, line_style, alpha,
+                     location, marker_scale, frame_alpha, label_spacing, fontsize_ticks, x_label, y_label,
+                     fontsize_axis, label_pad, title, pause, pause_length):  # Defines function. For plotting all of a
+    # range's surface profiles.
+    plt.figure(plot_number, figure_size)  # Creates figure window. Sets size.
+    ax = plt.gca()  # Defines variable. Retrieves plot axes. For iterative plotting on same figure.
+    ax.plot(x, y, label=label, c =color, marker=marker, markersize=marker_size, linewidth=line_width,
+            linestyle=line_style, alpha=alpha)  # Creates line plot. Sets display format.
+    ax.legend(loc=location, markerscale=marker_scale, framealpha=frame_alpha, labelspacing=label_spacing)  # Creates
+    # legend. Sets display format.
+    plt.xticks(fontsize=fontsize_ticks)  # Sets x-axis ticks. Sets display format.
+    plt.yticks(fontsize=fontsize_ticks)  # Sets y-axis ticks. Sets display format.
+    plt.xlabel(x_label, fontsize=fontsize_axis, labelpad=label_pad)  # Creates x-axis label. Sets display format.
+    plt.ylabel(y_label, fontsize=fontsize_axis)  # Creates y-axis label. Sets display format.
+    plt.title(title)  # Creates plot title.
+    if pause == 1:  # Begins conditional statement. Sets plot visibility scheme.
+        plt.pause(pause_length)  # Displays plot. For set interval.
+    elif pause == 0:  # Continues conditional statement. Sets plot visibility scheme.
+        plt.show()  # Displays plot. Indefinite until closed.
+    else:  # Continues conditional statement. Sets plot visibility scheme.
+        pass  # Pass command. Moves on to next line.
+
 # ======================================================================================================================
 # * --------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
