@@ -55,9 +55,9 @@ def slice_DataFrame_rows(search_type, dataframe, column, value, display):  # Def
         df_slc_r = dataframe[dataframe[column] < value]  # Defines DataFrame. Slices DataFrame by value and relation.
     elif search_type == 'Less than/Equal':  # Continues conditional statement. Checks relation. Sets function format.
         df_slc_r = dataframe[dataframe[column] <= value]  # Defines DataFrame. Slices DataFrame by value and relation.
-    elif search_type == 'More than':  # Continues conditional statement. Checks relation. Sets function format.
+    elif search_type == 'Greater than':  # Continues conditional statement. Checks relation. Sets function format.
         df_slc_r = dataframe[dataframe[column] > value]  # Defines DataFrame. Slices DataFrame by value and relation.
-    elif search_type == 'More than/Equal':  # Continues conditional statement. Checks relation. Sets function format.
+    elif search_type == 'Greater than/Equal':  # Continues conditional statement. Checks relation. Sets function format.
         df_slc_r = dataframe[dataframe[column] >= value]  # Defines DataFrame. Slices DataFrame by value and relation.
     else:  # Continues conditional statement. Checks inequality. Sets function format.
         df_slc_r = dataframe[dataframe[column] != value]  # Defines DataFrame. Slices DataFrame by value and relation.
@@ -86,7 +86,7 @@ def slice_DataFrame_columns(output, data_type, dataframe, column, check_duplicat
         elif data_type == 'Float':  # Continues conditional statement. Checks equality. Enforces desired data type.
             df_slc_c = df_slc_c.astype(float)  # Redefines DataFrame. Converts values to float.
         else:  # Continues conditional statement. Checks equality. Enforces desired data type.
-            df_slc_c = df_slc_c.astype(str)  # Redefines DataFrame. Converts values to string.
+            df_slc_c = df_slc_c.astype(str)  # Redefines DataFrame. Converts value to string.
     if output == 'DataFrame':  # Begins conditional statement. Checks equality. For output type selection.
         if display == 1:  # Begins conditional statement. Checks equality. For display.
             print('\033[1mCREATED DATAFRAME:\033[0m \n...\n', df_slc_c, '\n')  # Displays objects.
@@ -105,7 +105,7 @@ def slice_DataFrame_columns(output, data_type, dataframe, column, check_duplicat
 def slice_DataFrame_cell(data_type, dataframe, position, column, display):  # Defines function. For DataFrame slicing by
     # row value and index.
     index = dataframe.index  # Defines object. Retrieves DataFrame index.
-    if column != None:  # Begins conditional statement. Checks inequality. Selects function format.
+    if column is not None:  # Begins conditional statement. Checks inequality. Selects function format.
         slc_cl = dataframe.loc[index[position], column]  # Defines variable. Slices DatFrame by row value and index.
     else:  # Continues conditional statement. Checks inequality. Selects function format.
         slc_cl = dataframe.loc[index[position]]  # Defines variable. Slices DatFrame by row value and index.
@@ -125,12 +125,12 @@ def slice_DataFrame_cell(data_type, dataframe, position, column, display):  # De
     return slc_cl # Ends function execution.
 
 def retrieve_metadata(dataframe, display):  # Defines function. For metadata retrieval for display and data slicing.
-    bsn_id = slice_DataFrame_cell('String', dataframe, 0, 'sub_basin', 0)  # Defines variable. Calls function.
-    # Slices DataFrame to yield stream channel name of present dataset.
+    bsn_id = slice_DataFrame_cell('String', dataframe, 0, 'sub_basin', 0)  # Defines variable. Calls function. Slices
+    # DataFrame to yield stream channel name of present dataset.
     rng_id = slice_DataFrame_cell('String', dataframe, 0, '2024_range_id', 0)  # Defines variable. Calls function.
     # Slices DataFrame to yield transect name of present dataset.
-    srvy_era = slice_DataFrame_cell('Integer', dataframe, 0, 'survey_era', 0)  # Defines variable. Calls
-    # function. Slices DataFrame to yield survey era of present dataset.
+    prfl_yr = slice_DataFrame_cell('Integer', dataframe, 0, 'profile_year', 0)  # Defines variable. Calls function.
+    # Slices DataFrame to yield survey era of present dataset.
     srvy_yr = slice_DataFrame_cell('String', dataframe, 0, 'survey_year', 0)  # Defines variable. Calls function.
     # Slices DataFrame to yield survey year of present dataset.
     srvy_mnth = slice_DataFrame_cell('String', dataframe, 0, 'survey_month', 0)  # Defines variable. Calls function.
@@ -141,9 +141,10 @@ def retrieve_metadata(dataframe, display):  # Defines function. For metadata ret
         print('==================================================')  # Displays objects.
         print('\033[1mChannel:\033[0m ' + str(bsn_id))  # Displays objects.
         print('\033[1mTransect:\033[0m ' + str(rng_id))  # Displays objects.
-        print('\033[1mSurvey:\033[0m ' + str(srvy_era))  # Displays objects.
+        print('\033[1mSurvey:\033[0m ' + str(prfl_yr))  # Displays objects.
         print('\033[1mDate:\033[0m ' + str(srvy_mnth) + '/' + str(srvy_dy) + '/' + str(srvy_yr))  # Displays objects.
         print('--------------------------------------------------')  # Displays objects.
+    return rng_id  # Ends function execution.
 
 def range_orientation_calculator(x1, x2, y1, y2, display):  # Defines function. For range azimuth calculation from
     # cartesian coordinates for coordinate geometry digitization.
@@ -186,26 +187,45 @@ def range_orientation_calculator(x1, x2, y1, y2, display):  # Defines function. 
         print('\033[1mCALCULATED RANGE ORIENTATION:\033[0m ' + str(angl) + '\n')  # Displays objects.
     return angl  # Ends function execution.
 
-def check_marker_shift(x, y, dataframe, marker_index, conversion_factor, display):  # Defines function. For checking and
-    # adjusting coordinate geometry calculations by a monument shift from range line.
-    shft_dir = slice_DataFrame_cell('String', dataframe, marker_index, 'marker_offset_direction', 0)  # Defines
-    # variable. Calls function. Slices DataFrame to yield the direction of monument shift from range line.
-    if shft_dir == 'North' or 'South' or 'East' or 'West':  # Begins conditional statement. Checks equality.
-        # Performs shift if in cardinal direction.
-        shft = slice_DataFrame_cell('Float', dataframe, marker_index, 'marker_offset_distance', 0)  # Defines variable.
+def check_marker_displacement(x, y, dataframe, marker_index, conversion_factor, display):  # Defines function. For
+    # checking if a monument displacement off range warrants an adjustment in the coordinate geometry calculations.
+    dsp_dir = slice_DataFrame_cell('String', dataframe, marker_index, 'marker_offset_direction', 0)  # Defines variable.
+    # Calls function. Slices DataFrame to yield the direction of monument shift from range line.
+    if dsp_dir != 'n/a':  # Begins conditional statement. Checks equality. Continues with shift if one exists.
+        dsp = slice_DataFrame_cell('Float', dataframe, marker_index, 'marker_offset_distance', 0)  # Defines variable.
         # Calls function. Slices DataFrame to yield the magnitude of monument shift from range line.
-        shft /= conversion_factor  # Redefines variable. Converts feet to meters.
-        if shft_dir == 'North':  # Begins conditional statement. Checks equality.
-            y += shft  # Redefines variable. Adds shift to move coordinate further north.
-        elif shft_dir == 'South':  # Continues conditional statement. Checks equality.
-            y -= shft  # Redefines variable. Subtracts shift to move coordinate further south.
-        elif shft_dir == 'East':  # Continues conditional statement. Checks equality.
-            x += shft  # Redefines variable. Adds shift to move coordinate further east.
-        elif shft_dir == 'West':  # Continues conditional statement. Checks equality.
-            x -= shft  # Redefines variable. Subtracts shift to move coordinate further west.
+        dsp /= conversion_factor  # Redefines variable. Converts feet to meters.
+        lctn_cnfdnc = slice_DataFrame_cell('Float', dataframe, marker_index, 'location_confidence', 0)  # Defines
+        # variable. Calls function. Slices DataFrame to yield location confidence of coordinate capture.
+        excpt_cs = slice_DataFrame_cell('String', dataframe, marker_index, '2024_marker_id', 0)  # Defines variable.
+        # Calls function. Slices DataFrame to yield marker id for exception case handling.
+        if lctn_cnfdnc == 1:  # Begins conditional statement. Checks equality. For retrieval of uncertainty of
+            # coordinate capture.
+            pls_mns = 3.0  # Defines variable. Sets plus/minus coordinate uncertainty in meters.
+        elif lctn_cnfdnc == 2:  # Continues conditional statement. Checks equality. For retrieval of uncertainty of
+            # coordinate capture.
+            pls_mns = 10.0  # Defines variable. Sets plus/minus coordinate uncertainty in meters.
+        if dsp > pls_mns or excpt_cs == 'SF-16-L' or excpt_cs == 'SF-28-L':  # Begins conditional statement. Checks relation. Performs marker
+            # coordinate shift when displacement exceeds uncertainty of coordinate capture or for exception case.
+            if dsp_dir == 'North':  # Begins conditional statement. Checks equality. Shifts marker coordinate along
+                # cardinal direction.
+                y -= dsp  # Redefines variable. Adds displacement to move coordinate further north.
+            elif dsp_dir == 'South':  # Continues conditional statement. Checks equality. Shifts marker coordinate along
+                # cardinal direction.
+                y += dsp  # Redefines variable. Subtracts displacement to move coordinate further south.
+            elif dsp_dir == 'East':  # Continues conditional statement. Checks equality. Shifts marker coordinate along
+                # cardinal direction.
+                x -= dsp  # Redefines variable. Adds displacement to move coordinate further east.
+            elif dsp_dir == 'West':  # Continues conditional statement. Checks equality. Shifts marker coordinate along
+                # cardinal direction.
+                x += dsp  # Redefines variable. Subtracts displacement to move coordinate further west.
+            else:  # Continues conditional statement. Checks equality. For composite shifts in two cardinal directions.
+                # Not necessary for this dataset given that the associated displacements are beneath the uncertainty
+                # threshold.
+                pass  # Pass command. Moves on to next line of code.
         if display == 1:  # Begins conditional statement. Checks equality. For display.
-            print('\033[1mMONUMENT SHIFT:\033[0m\n Direction: ' + str(shft_dir) + '\n Magnitude: ' + str('%.2f' % shft)
-                  + '\n Output coordinate: ' + str('%.2f' % x) + ', ' + str('%.2f' % y) + '\n')  # Displays objects.
+            print('\033[1mMONUMENT SHIFT:\033[0m\n Direction: ' + str(dsp_dir) + '\n Magnitude: ' + str('%.2f' % dsp) +
+                  '\n Output coordinate: ' + str('%.2f' % x) + ', ' + str('%.2f' % y) + '\n')  # Displays objects.
     return x, y  # Ends function execution.
 
 def plot_range_data(plot_number, figure_size, x, y, label, color, marker, marker_size, line_width, line_style, alpha,
