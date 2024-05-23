@@ -5,7 +5,6 @@
 # ======================================================================================================================
 
 # SIGNAL RUN -----------------------------------------------------------------------------------------------------------
-import numpy as np
 
 print('\n\033[1m' + 'START SEDIMENTATION DATA DIGITIZATION!!!' + '\033[0m', '\n...\n')  # Displays objects.
 
@@ -81,7 +80,6 @@ for i in rng_nmbrs:  # Begins loop. Loops through array elements. Loops through 
 
     if df_mnt_crdnts.shape[0] != 0:  # Begins conditional statement. Checks
     # inequality. Skips range numbers for which there are no surface profiles.
-        # Retrieve coordinates for ranges where coordinates exist only.
         # Coordinates
         mnt1_e = slice_DataFrame_cell('Float', df_mnt_crdnts, 0, 'easting_m', 0)  # Defines variable. Calls function.
         # Slices DataFrame to yield Easting coordinate of starting monument of present dataset.
@@ -125,7 +123,6 @@ for i in rng_nmbrs:  # Begins loop. Loops through array elements. Loops through 
         df_elvtns = slice_DataFrame_columns('DataFrame', 'Float', df_rng_srvy_dt, 'elevation_1', 0, 0, 0)  # Defines
         # array. Calls function. Slices DataFrame to yield survey elevations of survey dataset.
 
-
         # CALCULATE STATION COORDINATE GEOMETRY ------------------------------------------------------------------------
 
         if df_mnt_crdnts.shape[0] != 0:  # Begins conditional statement. Checks inequality.
@@ -135,16 +132,14 @@ for i in rng_nmbrs:  # Begins loop. Loops through array elements. Loops through 
             # reference monument.
 
             # Survey azimuth
-            thta_1 = range_orientation_calculator(mnt1_e, mnt2_e, mnt1_n, mnt2_n, 0)  # Defines variable. Calls
+            azmth = range_orientation_calculator(mnt1_e, mnt2_e, mnt1_n, mnt2_n, 0)  # Defines variable. Calls
             # function. Calculates azimuth angle of range.
 
             # Station separations projected East and North
-            df_dlt_e = df_dlt_r * np.cos(thta_1)  # Defines DataFrame. Calculates station separation components projected
+            df_dlt_e = df_dlt_r * np.cos(azmth)  # Defines DataFrame. Calculates station separation components projected
             # in the East directions.
-            df_dlt_n = df_dlt_r * np.sin(thta_1)  # Defines DataFrame. Calculates station separation components projected
+            df_dlt_n = df_dlt_r * np.sin(azmth)  # Defines DataFrame. Calculates station separation components projected
             # in the North directions.
-
-            # Handle exception: DC-7 1994 partially displaced survey ---------------------------------------------------
 
             # Station coordinates
             df_e = (df_dlt_e / ft_to_m) + mnt1_e  # Defines DataFrame. Calculates Easting coordinate for all stations.
@@ -152,6 +147,40 @@ for i in rng_nmbrs:  # Begins loop. Loops through array elements. Loops through 
 
             df_e = df_e.rename('easting_m')  # Redefines DataFrame. Renames column.
             df_n = df_n.rename('northing_m')  # Redefines DataFrame. Renames column.
+
+            # Handle exception: DC-7 1994 partially displaced survey ---------------------------------------------------
+
+            if rng_id == 'DC-7' and j == prfl_nmbrs[0]:  # Begins conditional statement. Checks dual equality. Performs
+                # alternate digitization methodology.
+                # Survey displacement azimuth
+                azmth_2 = azmth - (1/2) * np.pi  # Defines variable. Calculates the azimuth that survey measurements
+                # will be displaced upon from the main range.
+
+                # Monument coordinate displacements projected East and North
+                mnt1_dlt_e = (25 / ft_to_m) * np.cos(azmth_2)  # Defines variable. Calculates displacement to coordinate
+                # of synthetic monument.
+                mnt1_dlt_n = (25 / ft_to_m) * np.sin(azmth_2)  # Defines variable. Calculates displacement to coordinate
+                # of synthetic monument.
+
+                # Monument coordinate
+                mnt1_e2 = mnt1_dlt_e + mnt1_e  # Defines variable. Calculates synthetic coordinate.
+                mnt1_n2 = mnt1_dlt_n + mnt1_n  # Defines variable. Calculates synthetic coordinate.
+
+                # Station coordinates
+                df_e2 = (df_dlt_e / ft_to_m) + mnt1_e2  # Defines DataFrame. Calculates Easting coordinate for all
+                # stations from synthetic monument.
+                df_n2 = (df_dlt_n / ft_to_m) + mnt1_n2  # Defines DataFrame. Calculates Northing coordinate for all
+                # stations from synthetic monument.
+
+                df_e2 = df_e2.iloc[8:16]  # Redefines DataFrame. Slices DataFrame to yield displaced survey measurement
+                # coordinates only.
+                df_n2 = df_n2.iloc[8:16]  # Redefines DataFrame. Slices DataFrame to yield displaced survey measurement
+                # coordinates only.
+
+                df_e.iloc[8:16] = df_e2  # Redefines DataFrame. Inserts displaced survey measurement coordinates into
+                # original coordinate DataFrame.
+                df_n.iloc[8:16] = df_n2  # Redefines DataFrame. Inserts displaced survey measurement coordinates into
+                # original coordinate DataFrame.
 
             # Plot
             #plt.scatter([mnt1_e, mnt2_e], [mnt1_n, mnt2_n], c='m', alpha=0.1)  # Creates scatter plot. Plots monument
