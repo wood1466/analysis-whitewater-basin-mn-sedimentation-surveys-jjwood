@@ -213,12 +213,16 @@ for i in rng_nmbrs:  # Begins loop. Loops through array elements. Loops through 
             # Save coordinates to DataFrame and digitizes DataFrame when all surveys have been completed.
             if j == prfl_nmbrs[-1]:  # Begins conditional statement. Checks equality. Executes code when condition
                 # satisfied.
+
                 df_srvy_dt = pd.concat([df_srvy_dt, df_e_all, df_n_all], axis=1)  # Redefines DataFrame.
                 # Concatenates DataFrames. Append coordinates to DataFrame for digitization.
 
                 prfl_yrs = slice_DataFrame_columns('Array', 'Integer', df_srvy_dt, 'profile_year', 1, 0, 0)  # Defines
                 # array. Calls function. Slices DataFrame to yield survey eras of complete dataset.
 
+                # DIGITIZE DATA ----------------------------------------------------------------------------------------
+
+                # Surface profiles
                 for k in prfl_yrs:  # Begins loop. Loops through survey era years. Digitizes data for each survey
                     # era in sequence.
                     df_prfl_yr_k = slice_DataFrame_rows('Equals', df_srvy_dt, 'profile_year', k, 0)  # Defines
@@ -238,6 +242,17 @@ for i in rng_nmbrs:  # Begins loop. Loops through array elements. Loops through 
                     gdf_prfl_yr_k.to_file(otpt_fldr + '/' + gis_fldr + gpkg, layer=lyr_nm, driver='GPKG', index=True)
                     # Saves file to directory.
 
+                # Monuments
+                gdf_crdnt_dt = gpd.GeoDataFrame(df_crdnt_dt,
+                                                geometry=gpd.points_from_xy(df_crdnt_dt.easting_m,
+                                                                            df_crdnt_dt.northing_m), crs=crdnt_rf_sys)
+                # Defines GeoDataFrame. Creates shapefile from DataFrame and coordinate geometry.
+
+                lyr_nm1 = '2011_ww_monuments'  # Defines variable. Sets name of layer for export.
+
+                gdf_crdnt_dt.to_file(otpt_fldr + '/' + gis_fldr + gpkg, layer=lyr_nm1, driver='GPKG', index=True)
+                # Saves file to directory.
+                
 # ======================================================================================================================
 # * --------------------------------------------------------------------------------------------------------------------
 # ======================================================================================================================
