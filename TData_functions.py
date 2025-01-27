@@ -11,8 +11,8 @@ import geopandas as gpd  # Imports GeoPandas with alias. Enables geospatial func
 import matplotlib.pyplot as plt  # Imports Matplotlib (visualization with Python) with alias. Enables figure creation.
 import numpy as np  # Imports pandas (Python data analysis library) with alias. Enables use of DataFrames.
 import os  # Imports os (miscellaneous operating system interfaces). Enables operating system dependent functionality.
-import pandas as pd  # Imports NumPy (the fundamental package for scientific computing with Python) with alias. Enables
-# use of advanced mathematics.
+import pandas as pd  # Imports NumPy (the fundamental package for scientific computing with Python) with alias. Enables use of advanced mathematics.
+import scipy as sc  # Imports SciPy (Fundamental algorithms for scientific computing in Python) with alias. Enables use of advanced mathematics.
 
 # ======================================================================================================================
 # PART 2: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
