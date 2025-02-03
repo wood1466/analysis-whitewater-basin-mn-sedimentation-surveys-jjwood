@@ -14,6 +14,13 @@ import numpy as np  # Imports pandas (Python data analysis library) with alias. 
 import os  # Imports os (miscellaneous operating system interfaces). Enables operating system dependent functionality.
 import pandas as pd  # Imports NumPy (the fundamental package for scientific computing with Python) with alias. Enables
 # use of advanced mathematics.
+import pingouin as pg  # Imports Pingouin (statistical package). Enables use of advanced statistics.
+import scikit_posthocs as sc_p  # Imports scikit-posthocs (post hoc tests for pairwise multiple comparisons). Enables
+# use of advanced statistics.
+import scipy as sc  # Imports SciPy (fundamental algorithms for scientific computing in Python).  Enables use of
+# advanced statistics.
+import statsmodels.api as sm  # Imports statsmodels (statistical models, hypothesis tests, and data exploration) with
+# alias. Enables use of advanced statistics
 
 # ======================================================================================================================
 # PART 2: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
