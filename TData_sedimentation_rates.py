@@ -30,8 +30,8 @@ InputFile2 = InputFolder + '/Calculation_exceptions_20250130.csv'  # Defines var
 OutputFile1 = '/WW_sedimentation_rates.csv'  # Defines variable. Sets name for output file.
 
 # Operation limits
-TransectNumberStart = 78  # Defines variable. Sets start transect number for operation loop.
-TransectNumberEnd = 84  # Defines variable. Sets end transect number for operation loop.
+TransectNumberStart = 1  # Defines variable. Sets start transect number for operation loop.
+TransectNumberEnd = 107  # Defines variable. Sets end transect number for operation loop.
 AryTransectNumbers = CreateForwardRange(TransectNumberStart, TransectNumberEnd, 1, 0)  # Defines array. Calls function.
 # Sets loop order by transect.
 
@@ -147,16 +147,16 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
             # Defines array. Interpolates data.
 
             # Plot
-            plt.plot(AryTInterpStationsFti_jk, AryTInterpElevationsFti_j, c='Magenta', marker='o', alpha=0.9)
+            # plt.plot(AryTInterpStationsFti_jk, AryTInterpElevationsFti_j, c='Magenta', marker='o', alpha=0.9)
             # Creates line plot. Plots interpolated transect data.
-            plt.plot(AryTStationsFti_j, AryTElevationsFti_j, c='Cyan', marker='o', alpha=0.9)  # Creates line plot.
+            # plt.plot(AryTStationsFti_j, AryTElevationsFti_j, c='Cyan', marker='o', alpha=0.9)  # Creates line plot.
             # Plots surveyed transect data.
-            plt.plot(AryTInterpStationsFti_jk, AryTInterpElevationsFti_k, c='Green', marker='o', alpha=0.9)
+            # plt.plot(AryTInterpStationsFti_jk, AryTInterpElevationsFti_k, c='Green', marker='o', alpha=0.9)
             # Creates line plot. Plots interpolated transect data.
-            plt.plot(AryTStationsFti_k, AryTElevationsFti_k, c='Yellow', marker='o', alpha=0.9)  # Creates line plot.
+            # plt.plot(AryTStationsFti_k, AryTElevationsFti_k, c='Yellow', marker='o', alpha=0.9)  # Creates line plot.
             # Plots surveyed transect data.
-            # plt.pause(1)  # Plot show command. Shows plot.
-            plt.show()
+            # plt.show()  # Plot show command. Shows plot.
+
             # CALCULATE SEDIMENTATION RATES ----------------------------------------------------------------------------
 
             # Check for calculation exception --------------------------------------------------------------------------
@@ -381,7 +381,8 @@ dfTMeanElevChangesAll.columns = DataFrameColumns  # Redefines DataFrame. Sets co
 dfTMeanElevChangesAll.to_csv(OutputFolder + '/' + CalculationFolder + OutputFile1, header=True, index=False)  # Exports
 # DataFrame to .csv.
 
-# DISPLAY RESULTS ------------------------------------------------------------------------------------------------------
+# ======================================================================================================================
+# SIGNAL END -----------------------------------------------------------------------------------------------------------
 
 print('\n\033[1m' + 'SEDIMENTATION RATES CALCULATED!!!' + '\033[0m', dfTMeanElevChangesAll, '\n...\n')  # Displays
 # objects.
