@@ -184,9 +184,11 @@ for i in TransectNumbers:  # Begins loop. Loops through array elements. Loops th
 
                 # Reference distance projections
                 TMonument1DistanceEastMi_j = (25 / FtToM) * np.cos(TAzimuthi_j)  # Defines variable. Calculates
-                # reference coordinate distance to line trace of measurements shifted off line projected in the East direction.
+                # reference coordinate distance to line trace of measurements shifted off line projected in the East
+                # direction.
                 TMonument1DistanceNorthMi_j = (25 / FtToM) * np.sin(TAzimuthi_j)  # Defines variable. Calculates
-                # reference coordinate distance to line trace of measurements shifted off line projected in the North direction.
+                # reference coordinate distance to line trace of measurements shifted off line projected in the North
+                # direction.
 
                 # Reference coordinates
                 TMonument1EMi_j = TMonument1DistanceEastMi_j + TMonument1EMi  # Defines variable. Shifts reference
@@ -289,4 +291,7 @@ for i in TransectNumbers:  # Begins loop. Loops through array elements. Loops th
                     gdfTMonumentCoordinates.to_file(OutputFolder + '/' + GISFolder + GPKG, layer=LayerName,
                                                     driver='GPKG', index=True)  # Saves file to directory.
 else:  # Continues conditional statement. Checks inequality
+    # ==================================================================================================================
+    # SIGNAL END -------------------------------------------------------------------------------------------------------
+
     print('\n\033[1m' + 'TRANSECT DATA DIGITIZATION COMPLETE!!!' + '\033[0m', '\n...\n')  # Displays objects.
