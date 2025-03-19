@@ -39,7 +39,7 @@ dfTSedimentationRates = ConvertCsvToDataFrame(InputFile1, 0)
 
 # Select sedimentation rate data ----------------------------------------------
 
-# Calls UDF to slice DataFrame and define resultant array to serve as sample
+# Call UDF to slice DataFrame and define resultant array to serve as sample
 # group for statistical testing.
 
 Ary55_39 = SliceDataFrameColumns(
@@ -148,7 +148,8 @@ print("Tukey's test:\n" + str(TkTest) + '\n')  # Displays objects.
 
 # Compile samples -------------------------------------------------------------
 
-# Defines DataFrame of sample group.
+# Define DataFrame of sample group.
+
 df55_39 = pd.DataFrame({'Samples': Ary55_39, 'Group': 1})
 df39_65 = pd.DataFrame({'Samples': Ary39_65, 'Group': 2})
 df65_94 = pd.DataFrame({'Samples': Ary65_94, 'Group': 3})
