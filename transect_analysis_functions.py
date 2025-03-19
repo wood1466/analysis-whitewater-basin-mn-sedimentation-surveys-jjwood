@@ -1,110 +1,126 @@
-# ======================================================================================================================
-# WHITEWATER RIVER VALLEY (MN) SCS-USGS STREAM AND VALLEY SEDIMENTATION SURVEY DATA * ----------------------------------
-# USER DEFINED FUNCTIONS * ---------------------------------------------------------------------------------------------
-# PYTHON PROGRAMS * ----------------------------------------------------------------------------------------------------
+# WHITEWATER RIVER VALLEY, MN, US, SEDIMENTATION SURVEY DATA ANALYSIS PROGRAMS
+# USER DEFINED FUNCTIONS * ----------------------------------------------------
 
-# ======================================================================================================================
-# PART 1: INITIALIZATION -----------------------------------------------------------------------------------------------
+# INITIALIZATION ==============================================================
 
-# IMPORT MODULES -------------------------------------------------------------------------------------------------------
+# IMPORT MODULES --------------------------------------------------------------
 
-import geopandas as gpd  # Imports GeoPandas with alias. Enables geospatial functionality.
-import matplotlib.pyplot as plt  # Imports Matplotlib (visualization with Python) with alias. Enables figure creation.
-import numpy as np  # Imports pandas (Python data analysis library) with alias. Enables use of DataFrames.
-import os  # Imports os (miscellaneous operating system interfaces). Enables operating system dependent functionality.
-import pandas as pd  # Imports NumPy (the fundamental package for scientific computing with Python) with alias. Enables
-# use of advanced mathematics.
-import pingouin as pg  # Imports Pingouin (statistical package). Enables use of advanced statistics.
-import scikit_posthocs as sc_p  # Imports scikit-posthocs (post hoc tests for pairwise multiple comparisons). Enables
-# use of advanced statistics.
-import scipy as sc  # Imports SciPy (fundamental algorithms for scientific computing in Python).  Enables use of
-# advanced statistics.
-import statsmodels.api as sm  # Imports statsmodels (statistical models, hypothesis tests, and data exploration) with
-# alias. Enables use of advanced statistics
+import geopandas as gpd  # Imports GeoPandas with alias to enable geospatial
+# functionality.
+import matplotlib.pyplot as plt  # Imports Matplotlib--visualization with
+# Python--with alias to enable figure creation.
+import numpy as np  # Imports NumPy--the fundamental package for scientific
+# computing with Python--with alias to enable use of advanced mathematics.
+import os  # Imports os--miscellaneous operating system interfaces--to enable
+# operating system functionality.
+import pandas as pd  # Imports pandas--Python data analysis library--with alias
+# to enable DataFrames functionality.
+import pingouin as pg  # Imports Pingouin--statistical package--to enable use
+# of advanced statistics.
+import scikit_posthocs as sc_p  # Imports scikit-posthocs--post hoc tests for
+# pairwise multiple comparisons--with alias to enable use of advanced
+# statistics.
+import scipy as sc  # Imports SciPy--fundamental algorithms for scientific
+# computing in Python--with alias to enable use of advanced statistics.
+import statsmodels.api as sm  # Imports statsmodels--statistical models,
+# hypothesis tests, and data exploration--with alias to enable use of advanced
+# statistics
 
-# ======================================================================================================================
-# PART 2: DEFINE FUNCTIONS ---------------------------------------------------------------------------------------------
+# DEFINE FUNCTIONS ============================================================
 
-# ------------------------------------- * Functions are ordered alphabetically * ---------------------------------------
-
-
-def CreateFolder(path):  # Defines function. For generating directory paths.
-    if not os.path.exists(path):  # Checks if folder exists. Skips step if exists.
-        os.mkdir(path)  # Creates folder if it does not exist.
-        print('\033[1mCREATED FOLDER:\033[0m ' + path + '\n')  # Displays objects.
+# User-defined functions are ordered alphabetically 
 
 
-def CreateForwardRange(start, end, step, display):  # Defines function. For generating forward array between two
-    # numbers.
-    end += 1  # Defines variable. Resets end of range so array includes final input value.
-    EndLabel = end - 1  # Defines variable. For display.
-    Range = np.arange(start, end, step)  # Defines array.
-    if display == 1:  # Begins conditional statement. Checks equality. For display.
-        print('\033[1mCREATED ARRAY:\033[0m \n  Limits: ' + str(start) + ' & ' + str(EndLabel) + ' --> Array:', Range)
+def create_folder(path):  # Defines function to generate directory paths.
+    if not os.path.exists(path):  # Checks if folder exists and skips directory
+        # generation if it exists.
+        os.mkdir(path)  # Creates folder.
+        
+        print('\033[1mCREATED FOLDER:\033[0m ' + path + '\n')
         # Displays objects.
-    return Range  # Ends function execution.
 
 
-def ConvertCsvToDataFrame(path, display):  # Defines function. For uploading .csv file and converting to a DataFrame for
-    # Python manipulation.
-    CsvData = pd.read_csv(path)  # Defines variable. Uploads .csv file.
-    df = pd.DataFrame(CsvData)  # Defines DataFrame. Converts .csv. to DataFrame.
-    pd.set_option('display.max_columns', None)  # Adjusts DataFrame display format. Displays all DataFrame columns.
-    if display == 1:  # Begins conditional statement. Checks equality. For display.
-        print('\033[1mUPLOADED .CSV DATA:\033[0m ' + path + '\n...\n', df, '\n')  # Displays objects.
-    return df  # Ends function execution.
+def create_forward_range(start, end, step, display):  # Defines function to
+    # generate forward array between two numbers.
+    end += 1  # Defines object to include end of range.
+    
+    range = np.arange(start, end, step)  # Defines array.
+    
+    if display == 1:  # Begins conditional statement for display.
+        print('\033[1mCREATED ARRAY:\033[0m \n  Limits: ' + str(start) + ' & '
+              + str(end - 1) + ' --> Array:', range)  # Displays objects.
+        
+    return range  # Ends function execution.
 
 
-def CalculateTransectAzimuth(x1, y1, x2, y2, display):  # Defines function. For transect azimuth calculations from
-    # reference coordinates.
-    DeltaX = x2 - x1  # Defines variable. Calculates difference in x coordinates between reference points.
-    DeltaY = y2 - y1  # Defines variable. Calculates difference in y coordinates between reference points.
-    if DeltaX > 0:  # Begins conditional statement. Checks relation. Assigns cartesian quadrant for proper reference
-        # angle selection.
-        if DeltaY >= 0:  # Begins conditional statement. Checks relation. Assigns cartesian quadrant for proper
-            # reference angle selection.
-            Quadrant = 1  # Defines variable. Assigns quadrant.
-        else:  # Continues conditional statement. Checks relation. Assigns cartesian quadrant for proper reference angle
-            # selection.
-            Quadrant = 4  # Defines variable. Assigns quadrant.
-    elif DeltaX < 0:  # Continues conditional statement. Checks relation. Assigns cartesian quadrant for proper
-        # reference angle selection.
-        if DeltaY > 0:  # Begins conditional statement. Checks relation. Assigns cartesian quadrant for proper reference
-            # angle selection.
-            Quadrant = 2  # Defines variable. Assigns quadrant.
-        else:  # Continues conditional statement. Checks relation.  Assigns cartesian quadrant for proper reference
-            # angle selection.
-            Quadrant = 3  # Defines variable. Assigns quadrant.
-    else:  # Continues conditional statement. Checks relation.  Assigns cartesian quadrant for proper reference angle
-        # selection.
-        if DeltaY > 0:  # Begins conditional statement. Checks relation.  Assigns cartesian quadrant for proper
-            # reference angle selection.
-            Quadrant = 2  # Defines variable. Assigns quadrant.
-        else:  # Continues conditional statement. Checks relation.  Assigns cartesian quadrant for proper reference
-            # angle selection.
-            Quadrant = 4  # Defines variable. Assigns quadrant.
-    if Quadrant == 1:  # Begins conditional statement. Checks equality. Calculates transect azimuth.
-        ReferenceAngle = (1/2) * np.pi  # Defines variable. Sets reference angle for correction of calculated
-        # orientation to azimuth.
-        Azimuth = ReferenceAngle - abs(np.arctan(DeltaX / DeltaY))  # Defines variable. Calculates transect azimuth.
-    elif Quadrant == 2:  # Continues conditional statement. Checks equality.  Calculates transect azimuth.
-        ReferenceAngle = (1/2) * np.pi  # Defines variable. Sets reference angle for correction of calculated
-        # orientation to azimuth.
-        Azimuth = ReferenceAngle + abs(np.arctan(DeltaX / DeltaY))  # Defines variable. Calculates transect azimuth.
-    elif Quadrant == 3:  # Continues conditional statement. Checks equality.  Calculates transect azimuth.
-        ReferenceAngle = (3/2) * np.pi  # Defines variable. Sets reference angle for correction of calculated
-        # orientation to azimuth.
-        Azimuth = ReferenceAngle - abs(np.arctan(DeltaX / DeltaY))  # Defines variable. Calculates transect azimuth.
-    else:  # Continues conditional statement. Checks equality.  Calculates transect azimuth.
-        ReferenceAngle = (3/2) * np.pi  # Defines variable. Sets reference angle for correction of calculated
-        # orientation to azimuth.
-        Azimuth = ReferenceAngle + abs(np.arctan(DeltaX / DeltaY))  # Defines variable. Calculates transect azimuth.
-    if display == 1:  # Begins conditional statement. Checks equality. For display.
-        print('\033[1mCALCULATED TRANSECT AZIMUTH:\033[0m ' + str(Azimuth) + '\n')  # Displays objects.
-    return Azimuth  # Ends function execution.
+def convert_CSV_to_dataframe(path, display):  # Defines function to upload
+    # .csv file and convert to a DataFrame for Python manipulation.
+    CSV_data = pd.read_csv(path)  # Uploads .csv file.
+    
+    df_CSV_data = pd.DataFrame(CSV_data)  # Defines object by converting .csv
+    # to DataFrame.
+    
+    pd.set_option('display.max_columns', None)  # Redefines object by adjusting
+    # DataFrame to display all columns.
+    
+    if display == 1:  # Begins conditional statement for display.
+        print('\033[1mUPLOADED .CSV DATA:\033[0m ' + path + '\n...\n',
+              df_CSV_data, '\n')  # Displays objects.
+        
+    return df_CSV_data  # Ends function execution.
 
 
-def CalculationExclusionChecker(dataframe, column1, column2, column3, column4, position, value, display):  # Defines
+def calculate_transect_azimuth(x1, y1, x2, y2, display):  # Defines function to
+    # calculate transect azimuth from reference coordinates.
+    # Calculate the difference in x and y coordinates between reference points.
+    
+    delta_x = x2 - x1
+    delta_y = y2 - y1
+
+    # Assign cartesian reference quadrant based on change in x and y coordinates
+    # to enable transect azimuth calculation.
+    
+    if delta_x > 0:
+        if delta_y >= 0:
+            ref_quadrant = 1
+        else:
+            ref_quadrant = 4
+    elif delta_x < 0:
+        if delta_y > 0:
+            ref_quadrant = 2
+        else:
+            ref_quadrant = 3
+    else:
+        if delta_y > 0:
+            ref_quadrant = 2
+        else:
+            ref_quadrant = 4
+
+    # Select reference angle and calculate transect azimuth.
+    
+    if ref_quadrant == 1:
+        ref_angle = (1/2) * np.pi  # Defines object by setting reference angle
+        # for correction of calculated orientation to azimuth.
+        azimuth = ref_angle - abs(np.arctan(delta_x / delta_y))
+        # Defines object by calculating transect azimuth.
+    elif ref_quadrant == 2:
+        ref_angle = (1/2) * np.pi
+        azimuth = ref_angle + abs(np.arctan(delta_x / delta_y))
+    elif ref_quadrant == 3:
+        ref_angle = (3/2) * np.pi
+        azimuth = ref_angle - abs(np.arctan(delta_x / delta_y))
+    else:
+        ref_angle = (3/2) * np.pi
+        azimuth = ref_angle + abs(np.arctan(delta_x / delta_y))
+
+    if display == 1:  # Begins conditional statement for display.
+        print('\033[1mCALCULATED TRANSECT AZIMUTH:\033[0m ' + str(azimuth)
+              + '\n')  # Displays objects.
+        
+    return azimuth  # Ends function execution.
+
+#----------------------------------------------------------------------------79
+def calculation_exclusion_checker(dataframe, column1, column2, column3, column4, position, value, display):  # Defines
     # function. For searching transect data for exclusions prior to calculations.
     dfExcCheck = SliceDataFrameRows('Equals', dataframe, column1, value, 0)  # Defines DataFrame. Calls function. Slices
     # DataFrame to yield excluded transect data.
