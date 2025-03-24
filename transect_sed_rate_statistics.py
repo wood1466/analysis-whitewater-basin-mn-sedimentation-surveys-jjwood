@@ -36,7 +36,7 @@ ALPHA = 0.05  # Defines object for statistical hypothesis testing level of
 # UPLOAD FILE(S) --------------------------------------------------------------
 
 df_sed_rates = ConvertCsvToDataFrame(INPUT_FILE, 0)
-# Calls user-defined function (UDF) to define  DataFrame from input data.
+# Calls UDF to define DataFrame from input data.
 
 # =============================================================================
 # PART 2: DATA OPERATIONS -----------------------------------------------------
@@ -45,8 +45,7 @@ df_sed_rates = ConvertCsvToDataFrame(INPUT_FILE, 0)
 
 # Select sedimentation rate data ----------------------------------------------
 
-# Call UDF to slice DataFrame and define resultant array to serve as sample
-# group for statistical testing.
+# Call UDF to slice DataFrame and yield sample groups for statistical testing.
 
 sed_rates_55_39 = SliceDataFrameColumns(
     'Array', 'Float', df_sed_rates, GROUP_COLUMN_1, 0, 1, 0)  
