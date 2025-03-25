@@ -35,7 +35,7 @@ ALPHA = 0.05  # Defines object for statistical hypothesis testing level of
 
 # UPLOAD FILE(S) --------------------------------------------------------------
 
-df_sed_rates = ConvertCsvToDataFrame(INPUT_FILE, 0)
+df_sed_rates = convert_CSV_to_dataframe(INPUT_FILE, 0)
 # Calls UDF to define DataFrame from input data.
 
 # =============================================================================
@@ -47,11 +47,11 @@ df_sed_rates = ConvertCsvToDataFrame(INPUT_FILE, 0)
 
 # Call UDF to slice DataFrame and yield sample groups for statistical testing.
 
-sed_rates_55_39 = SliceDataFrameColumns(
+sed_rates_55_39 = slice_dataframe_column(
     'Array', 'Float', df_sed_rates, GROUP_COLUMN_1, 0, 1, 0)  
-sed_rates_39_65 = SliceDataFrameColumns(
+sed_rates_39_65 = slice_dataframe_column(
     'Array', 'Float', df_sed_rates, GROUP_COLUMN_2, 0, 1, 0)
-sed_rates_65_94 = SliceDataFrameColumns(
+sed_rates_65_94 = slice_dataframe_column(
     'Array', 'Float', df_sed_rates, GROUP_COLUMN_3, 0, 1, 0)
 
 # SELECT HYPOTHESIS TESTS -----------------------------------------------------
