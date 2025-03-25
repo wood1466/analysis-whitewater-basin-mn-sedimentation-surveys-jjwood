@@ -7,24 +7,22 @@
 
 import geopandas as gpd  # Imports GeoPandas with alias to enable geospatial
 # functionality.
-import matplotlib.pyplot as plt  # Imports Matplotlib--visualization with
-# Python--with alias to enable figure creation.
-import numpy as np  # Imports NumPy--the fundamental package for scientific
-# computing with Python--with alias to enable use of advanced mathematics.
-import os  # Imports os--miscellaneous operating system interfaces--to enable
-# operating system functionality.
-import pandas as pd  # Imports pandas--Python data analysis library--with alias
-# to enable DataFrames functionality.
-import pingouin as pg  # Imports Pingouin--statistical package--to enable use
-# of advanced statistics.
-import scikit_posthocs as sc_p  # Imports scikit-posthocs--post hoc tests for
-# pairwise multiple comparisons--with alias to enable use of advanced
-# statistics.
-import scipy as sc  # Imports SciPy--fundamental algorithms for scientific
-# computing in Python--with alias to enable use of advanced statistics.
-import statsmodels.api as sm  # Imports statsmodels--statistical models,
-# hypothesis tests, and data exploration--with alias to enable use of advanced
-# statistics
+import matplotlib.pyplot as plt  # Matplotlib--visualization with Python--with
+# alias to enable figure creation.
+import numpy as np  # NumPy--the fundamental package for scientific computing
+# with Python--with alias to enable use of advanced mathematics.
+import os  # os--miscellaneous operating system interfaces--to enable operating
+# system functionality.
+import pandas as pd  # pandas--Python data analysis library--with alias to
+# enable DataFrames functionality.
+import pingouin as pg  # Pingouin--statistical package--to enable use of
+# advanced statistics.
+import scikit_posthocs as sc_p  # scikit-posthocs--post hoc tests for pairwise
+# multiple comparisons--with alias to enable use of advanced statistics.
+import scipy as sc  # SciPy--fundamental algorithms for scientific computing in
+# Python--with alias to enable use of advanced statistics.
+import statsmodels.api as sm  # statsmodels--statistical models, hypothesis
+# tests, and data exploration--with alias to enable use of advanced statistics
 
 # DEFINE FUNCTIONS ============================================================
 
@@ -40,8 +38,8 @@ def create_folder(path):  # Defines function to generate directory paths.
         # Displays objects.
 
 
-def create_forward_range(start, end, step, display):  # Defines function to
-    # generate forward array between two numbers.
+def create_forward_range(start, end, step, display):  # Generate forward array
+    # between two numbers.
     end += 1  # Redefines object so input value is included in range.
     
     range = np.arange(start, end, step)  # Defines array for of numbers to
@@ -49,13 +47,13 @@ def create_forward_range(start, end, step, display):  # Defines function to
     
     if display == 1:  # Begins conditional statement for display.
         print('\033[1mCREATED ARRAY:\033[0m \n  Limits: ' + str(start) + ' & '
-              + str(end - 1) + ' --> Array:', range)  # Displays objects.
+              + str(end - 1) + ' --> Array:', range)
         
     return range  # Ends function execution.
 
 
-def convert_CSV_to_dataframe(path, display):  # Defines function to upload
-    # .csv file and convert to a DataFrame for Python manipulation.
+def convert_CSV_to_dataframe(path, display):  # Upload .csv file and convert to
+    # a DataFrame for Python manipulation.
     CSV_data = pd.read_csv(path)  # Defines object by uploading .csv file.
     
     df_CSV_data = pd.DataFrame(CSV_data)  # Defines DataFrame from .csv.
@@ -63,18 +61,18 @@ def convert_CSV_to_dataframe(path, display):  # Defines function to upload
     pd.set_option('display.max_columns', None)  # Updates DataFrame display
     # format to display all columns.
     
-    if display == 1:  # Begins conditional statement for display.
+    if display == 1:
         print('\033[1mUPLOADED .CSV DATA:\033[0m ' + path + '\n...\n',
-              df_CSV_data, '\n')  # Displays objects.
+              df_CSV_data, '\n')
         
-    return df_CSV_data  # Ends function execution.
+    return df_CSV_data
 
 
-def calculate_transect_azimuth(x1, y1, x2, y2, display):  # Defines function to
-    # calculate transect azimuth from reference coordinates.
+def calculate_transect_azimuth(x1, y1, x2, y2, display):  # Calculate transect
+    # azimuth from reference coordinates.
     # Calculate the difference in x and y coordinates between reference points.
     
-    delta_x = x2 - x1  # Define object.
+    delta_x = x2 - x1
     delta_y = y2 - y1
 
     # Assign transect a cartesian reference quadrant based on change in x and y
@@ -113,32 +111,33 @@ def calculate_transect_azimuth(x1, y1, x2, y2, display):  # Defines function to
         ref_angle = (3/2) * np.pi
         azimuth = ref_angle + abs(np.arctan(delta_x / delta_y))
 
-    if display == 1:  # Begins conditional statement for display.
+    if display == 1:
         print('\033[1mCALCULATED TRANSECT AZIMUTH:\033[0m ' + str(azimuth)
-              + '\n')  # Displays objects.
+              + '\n')
         
-    return azimuth  # Ends function execution.
+    return azimuth
 
 
 def calculation_exclusion_checker(
-        dataframe, column1, column2, column3, column4, position, value, 
-        display):  # Defines function to search transect data for calculation
-            # exclusion zones/exceptions.  
+            dataframe, column1, column2, column3, column4, position, value, 
+            display):  # Search transect data for calculation exclusion
+            # zones/exceptions.  
     df_exclusion = slice_dataframe_rows('Equals', dataframe, column1, value, 0)
-    # Calls UDF to slice DataFrame yielding excluded transect data and define
+    # Calls UDF to slice DataFrame for excluded transect data and define
     # resultant DataFrame.
+              
     if df_exclusion.shape[0] != 0:  # Begins conditional statement to select
         # exclusion limits.
         excl_start = slice_dataframe_cell(
-            'Float', df_exclusion, position, column2, 0)  # Calls UDF to slice
-        # DataFrame for exclusion lower limit and define resultant object.
+                'Float', df_exclusion, position, column2, 0)  # Calls UDF to 
+        # slice DataFrame for exclusion lower limit and define resultant
+        # object.
         excl_end = slice_dataframe_cell(
-            'Float', df_exclusion, position, column3, 0)  # Calls UDF to slice
-        # DataFrame for exclusion upper limit and define resultant object.
+                'Float', df_exclusion, position, column3, 0)  # Exclusion upper
+        # limit.
         excl_year_pair = slice_dataframe_cell(
-            'String', df_exclusion, position, column4, 0)  # Calls UDF to slice
-        # DataFrame for year pair for which exclusion applies and define
-        # resultant object.
+                'String', df_exclusion, position, column4, 0)  # Year pair for
+        # which exclusion applies.
     else:
         # Defines object as NaN when no exclusion found.
         
@@ -146,35 +145,32 @@ def calculation_exclusion_checker(
         excl_end = np.nan
         excl_year_pair = np.nan
     
-    if display == 1:  # Begins conditional statement for display.
+    if display == 1:
         print('\033[1mRETRIEVED TRANSECT DATA DISCONTINUITY:\033[0m '
               + str(excl_start) + '-' + str(excl_end) + ' for '
-              + str(excl_year_pair) + '\n')  # Displays objects.
+              + str(excl_year_pair) + '\n')
         
-    return excl_start, excl_end, excl_year_pair  # Ends function execution.
+    return excl_start, excl_end, excl_year_pair
 
-
+  
 def move_reference_coordinates(
-        x, y, dataframe1, dataframe2, position, column1, column2, column3,
-        conversion_factor, display):  # Defines function to move transect
-    # reference coordinates if reference point established off of transect.
+            x, y, dataframe1, dataframe2, position, column1, column2, column3,
+            conversion_factor, display):  # Move transect reference coordinates
+            # if reference point established off of transect.
     off_distance_ft = slice_dataframe_cell(
-        'Float', dataframe1, position, column1, 0)  # Calls UDF to slice
-    # DataFrame for reference point's distance off of transect and define
-    # resultant object.
+            'Float', dataframe1, position, column1, 0)  # Reference point's
+    # distance off of transect.
             
     off_distance_m = off_distance_ft / conversion_factor  # Converts feet to
     # meters.
 
     off_direction = slice_dataframe_cell(
-        'String', dataframe1, position, column2, 0)  # Calls UDF to slice
-    # DataFrame for reference point's offset direction from transect and define
-            # resultant object.
+            'String', dataframe1, position, column2, 0)  # Reference point's
+    # offset direction from transect.
             
     GNSS_accuracy = slice_dataframe_cell(
-        'String', dataframe2, position, column3, 0)  # Calls UDF to slice
-    # DataFrame for reference point's coordinate accuracy and define resultant
-    # object.
+            'String', dataframe2, position, column3, 0)  # Reference point's
+    # coordinate accuracy.
                        
     # Check if coordinate accuracy is a range and select value.
 
@@ -205,18 +201,18 @@ def move_reference_coordinates(
         else:
             pass  # Pass command.
 
-    if display == 1:  # Begins conditional statement for display.
+    if display == 1:
         print('\033[1mMARKER SHIFT:\033[0m\n Direction: '
               + str(off_direction) + '\n Magnitude: '
               + str('%.2f' % off_distance_m) + '\n Output coordinate: '
-              + str('%.2f' % x) + ', ' + str('%.2f' % y) + '\n')  # Displays objects.
+              + str('%.2f' % x) + ', ' + str('%.2f' % y) + '\n')
         
-    return x, y  # Ends function execution.
+    return x, y
 
 
 def slice_dataframe_cell(
-        data_type, dataframe, position, column, display):  # Defines function to
-    # slice DataFrame for individual cell value.
+        data_type, dataframe, position, column, display):  # Slice DataFrame
+    # for individual cell value.
     indx = dataframe.index  # Retrieves DataFrame index.
     
     if column is not None:  # Begins conditional statement to select function
@@ -240,16 +236,15 @@ def slice_dataframe_cell(
         else:
             cell = str(cell)  # Redefines object to string.
             
-    if display == 1:  # Begins conditional statement for display.
+    if display == 1:
         print('\033[1mRETRIEVED VALUE:\033[0m ' + str(cell) + '\n')
-        # Displays objects.
         
-    return cell  # Ends function execution.
+    return cell
 
-
+# DEFINE FUNCTIONS ===========================================================5
 def slice_dataframe_column(
         output, data_type, dataframe, column, check_duplicates, drop_nan, 
-        display):  # Defines function to slice DataFrame for individual column.
+        display):  # Slice DataFrame for individual column.
     
     df_column = dataframe[column]  # Defines DataFrame from DataFrame slice.
 
@@ -286,11 +281,10 @@ def slice_dataframe_column(
     # Enforce desired output type.        
             
     if output == 'DataFrame':
-        if display == 1:  # Begins conditional statement for display.
+        if display == 1:
             print('\033[1mCREATED DATAFRAME:\033[0m \n...\n', df_column, '\n')
-            # Displays objects.
         
-        return df_column  # Ends function execution.
+        return df_column
         
     elif output == 'List':
         list_column = df_column.tolist()  # Redefines DataFrame as list.
@@ -310,7 +304,7 @@ def slice_dataframe_column(
 
 
 def slice_dataframe_rows(search_type, dataframe, column, value, display):
-    # Defines function to slice DataFrame for rows.
+    # Slice DataFrame for rows.
     # Slice DataFrame based off of search parameter.
     
     if search_type == 'Equals':
@@ -330,8 +324,7 @@ def slice_dataframe_rows(search_type, dataframe, column, value, display):
     df_rows = df_rows.loc[:, ~df_rows.columns.str.match('Unnamed')]
     # Redefines DataFrame by deleting empty columns.
     
-    if display == 1:  # Begins conditional statement for display.
+    if display == 1:
         print('\033[1mCREATED DATAFRAME: \033[0m \n...\n', df_rows, '\n')
-        # Displays objects.
     
-    return df_rows  # Ends function execution.
+    return df_rows
