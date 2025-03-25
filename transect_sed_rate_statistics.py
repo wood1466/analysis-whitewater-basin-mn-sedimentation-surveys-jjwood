@@ -11,27 +11,25 @@ print('\n\033[1m' + 'START TRANSECT SEDIMENTATION RATE STATISTICAL ANALYSIS!!!'
 # IMPORT MODULES --------------------------------------------------------------
 
 from transect_analysis_functions import *   # Imports all functions from 
-# complimentary program.
+# associated program.
 
 # DEFINE INPUT PARAMETERS -----------------------------------------------------
 
 # Directory
-INPUT_FOLDER = 'Input'  # Defines object for name of input folder where all 
-# input data will be stored.
+INPUT_FOLDER = 'Input'  # Input folder where all input data will be stored.
 
 # Data
-INPUT_FILE = INPUT_FOLDER + '/Sedimentation_rates_20250201.csv'  # Defines 
-# object for path to input file.
+INPUT_FILE = INPUT_FOLDER + '/Sedimentation_rates_20250201.csv'  # Data to be
+# analyzed.
 
 # Operations
-# Define objects for column names of sample groups in input file.
+# Column names for sample groups in input file.
 
 GROUP_COLUMN_1 = 'SR55_39CmY'
 GROUP_COLUMN_2 = 'SR39_65CmY'
 GROUP_COLUMN_3 = 'SR65_94CmY'
 
-ALPHA = 0.05  # Defines object for statistical hypothesis testing level of 
-# significance.
+ALPHA = 0.05  # Statistical hypothesis testing level of significance.
 
 # UPLOAD FILE(S) --------------------------------------------------------------
 
@@ -48,11 +46,11 @@ df_sed_rates = convert_CSV_to_dataframe(INPUT_FILE, 0)
 # Call UDF to slice DataFrame and yield sample groups for statistical testing.
 
 sed_rates_55_39 = slice_dataframe_column(
-    'Array', 'Float', df_sed_rates, GROUP_COLUMN_1, 0, 1, 0)  
+        'Array', 'Float', df_sed_rates, GROUP_COLUMN_1, 0, 1, 0)  
 sed_rates_39_65 = slice_dataframe_column(
-    'Array', 'Float', df_sed_rates, GROUP_COLUMN_2, 0, 1, 0)
+        'Array', 'Float', df_sed_rates, GROUP_COLUMN_2, 0, 1, 0)
 sed_rates_65_94 = slice_dataframe_column(
-    'Array', 'Float', df_sed_rates, GROUP_COLUMN_3, 0, 1, 0)
+        'Array', 'Float', df_sed_rates, GROUP_COLUMN_3, 0, 1, 0)
 
 # SELECT HYPOTHESIS TESTS -----------------------------------------------------
 
@@ -92,14 +90,13 @@ for i in sample_groups:  # Begins through list elements to plot visual
 # Verify sample group homoscedasticity (variance equality) --------------------
 
 b_f_test = sc.stats.levene(
-      sed_rates_55_39, sed_rates_39_65, sed_rates_65_94, center='median')  
+          sed_rates_55_39, sed_rates_39_65, sed_rates_65_94, center='median')  
 # Defines result of Brown-Forsythe test for variance equality.
 
 if b_f_test.pvalue < ALPHA:  # Begins conditional statement to check if null
     # hypothesis is rejected or not.
     print('Brown-Forsythe test:\n  P value: ' + str(b_f_test.pvalue)
           + '\n  Reject that sample groups have equal variance\n')
-    # Displays objects.
 else:
     print('Brown-Forsythe test:\n  P value: ' + str(b_f_test.pvalue)
           + '\n  Fail to reject that sample groups have equal variance\n')
@@ -110,14 +107,13 @@ else:
 
 # Omnibus comparison
 k_w_ANOVA_test = sc.stats.kruskal(
-      sed_rates_55_39, sed_rates_39_65, sed_rates_65_94)  # Defines result of
-# Kruskal-Wallis H-test for median equality.
+          sed_rates_55_39, sed_rates_39_65, sed_rates_65_94)  # Defines result
+# of Kruskal-Wallis H-test for median equality.
 
 if k_w_ANOVA_test.pvalue < ALPHA:  # Begins conditional statement to check if
     # null hypothesis is rejected or not.
     print('Kruskal-Wallis test:\n  P value: ' + str(k_w_ANOVA_test.pvalue)
           + '\n  Reject that sample groups have equal median\n')
-    # Displays objects.
 else:
     print('Kruskal-Wallis test:\n  P value: ' + str(k_w_ANOVA_test.pvalue)
           + '\n  Fail to reject that sample groups have equal median\n')  
@@ -126,7 +122,7 @@ else:
 d_test = sc_p.posthoc_dunn(sample_groups, p_adjust='bonferroni')  # Defines
 # result of Dunn's test for median equality.
 
-print("Dunn's test:\n" + str(d_test) + '\n')  # Displays objects.
+print("Dunn's test:\n" + str(d_test) + '\n')
 
 # Perform parametric tests ----------------------------------------------------
 
@@ -134,24 +130,23 @@ print("Dunn's test:\n" + str(d_test) + '\n')  # Displays objects.
 
 # Omnibus comparison
 ANOVA_test = sc.stats.f_oneway(
-    sed_rates_55_39, sed_rates_39_65, sed_rates_65_94)  # Defines result of
+        sed_rates_55_39, sed_rates_39_65, sed_rates_65_94)  # Defines result of
 # one-way ANOVA test for mean equality.
 
 if ANOVA_test.pvalue < ALPHA:  # Begins conditional statement to check if null
     # hypothesis is rejected or not.
     print('One-way ANOVA test:\n  P value: ' + str(ANOVA_test.pvalue)
           + '\n  Reject that sample groups have equal mean\n')
-    # Displays objects.
 else:
     print('One-way ANOVA test:\n  P value: ' + str(ANOVA_test.pvalue)
           + '\n  Fail to reject that sample groups have equal mean\n')  
 
 # Post-hoc pairwise comparisons
 t_HSD_test = sc.stats.tukey_hsd(
-    sed_rates_55_39, sed_rates_39_65, sed_rates_65_94)  # Defines result of
+        sed_rates_55_39, sed_rates_39_65, sed_rates_65_94)  # Defines result of
 # Tukey's HSD test for mean equality.
 
-print("Tukey's test:\n" + str(t_HSD_test) + '\n')  # Displays objects.
+print("Tukey's test:\n" + str(t_HSD_test) + '\n')
 
 # Assume normality and unequal variance ---------------------------------------
 
@@ -164,20 +159,19 @@ df_sed_rates_39_65 = pd.DataFrame({'Samples': sed_rates_39_65, 'Group': 2})
 df_sed_rates_65_94 = pd.DataFrame({'Samples': sed_rates_65_94, 'Group': 3})
 
 df_sample_groups = pd.concat([
-    df_sed_rates_55_39, df_sed_rates_39_65, df_sed_rates_65_94])
+        df_sed_rates_55_39, df_sed_rates_39_65, df_sed_rates_65_94])
 # Defines DataFrame through concatenation.
 
 # Omnibus comparison
 w_ANOVA_test = pg.welch_anova(
-    data=df_sample_groups, dv='Samples', between='Group')  # Defines result of
-# One-way Welch's ANOVA test for mean equality.
+        data=df_sample_groups, dv='Samples', between='Group')  # Defines result
+# of One-way Welch's ANOVA test for mean equality.
 
 if w_ANOVA_test.iloc[0, 4] < ALPHA:  # Begins conditional statement to check if
     # null hypothesis is rejected or not.
     print("One-way Welch's ANOVA test:\n  P value: "
           + str(w_ANOVA_test.iloc[0, 4])
           + '\n  Reject that sample groups have equal mean\n')
-    # Displays objects.
 else:
     print("One-way Welch's ANOVA test:\n  P value: "
           + str(w_ANOVA_test.iloc[0, 4])
@@ -185,13 +179,13 @@ else:
 
 # Post-hoc pairwise comparisons
 g_h_test = pg.pairwise_gameshowell(
-    data=df_sample_groups, dv='Samples', between='Group')  # Defines result of
-# Games-Howell (nonparametric) test for mean equality.
+        data=df_sample_groups, dv='Samples', between='Group')  # Defines result
+# of Games-Howell (nonparametric) test for mean equality.
 
-print('Games-Howell test:\n' + str(g_h_test) + '\n')  # Displays objects.
+print('Games-Howell test:\n' + str(g_h_test) + '\n')
 
 # SIGNAL END ==================================================================
 
 print('\n\033[1m'
       + 'TRANSECT SEDIMENTATION RATE STATISTICAL ANALYSIS COMPLETED!!!'
-      + '\033[0m', '\n...\n')  # Displays objects.
+      + '\033[0m', '\n...\n')
