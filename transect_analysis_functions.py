@@ -3,7 +3,7 @@
 
 # INITIALIZATION ==============================================================
 
-# IMPORT MODULES --------------------------------------------------------------
+# IMPORT MODULES. -------------------------------------------------------------
 
 import geopandas as gpd  # Imports GeoPandas with alias to enable geospatial
 # functionality.
@@ -24,9 +24,9 @@ import scipy as sc  # SciPy--fundamental algorithms for scientific computing in
 import statsmodels.api as sm  # statsmodels--statistical models, hypothesis
 # tests, and data exploration--with alias to enable use of advanced statistics
 
-# DEFINE FUNCTIONS ============================================================
+# FUNCTION DEFINITIONS ========================================================
 
-# UDFS are ordered alphabetically 
+# UDFS are ordered alphabetically. 
 
 
 def create_folder(path):  # Defines function to generate directory paths.
@@ -42,7 +42,7 @@ def create_forward_range(start, end, step, display):  # Generate forward array
     # between two numbers.
     end += 1  # Redefines object so input value is included in range.
     
-    range = np.arange(start, end, step)  # Defines array for of numbers to
+    range = np.arange(start, end, step)  # Defines array of numbers to
     # create framework for looping analysis.
     
     if display == 1:  # Begins conditional statement for display.
@@ -95,12 +95,12 @@ def calculate_transect_azimuth(x1, y1, x2, y2, display):  # Calculate transect
             ref_quadrant = 4
 
     # Select reference angle and calculate transect azimuth.
-    
+
     if ref_quadrant == 1:
-        ref_angle = (1/2) * np.pi  # Defines object by setting reference angle
-        # used to correct calculated orientation to azimuth.
+        ref_angle = (1/2) * np.pi  # Sets reference angle used to correct
+        # calculated orientation to azimuth.
         azimuth = ref_angle - abs(np.arctan(delta_x / delta_y))
-        # Defines object by calculating transect azimuth.
+        # Calculates transect azimuth.
     elif ref_quadrant == 2:
         ref_angle = (1/2) * np.pi
         azimuth = ref_angle + abs(np.arctan(delta_x / delta_y))
@@ -139,7 +139,7 @@ def calculation_exclusion_checker(
                 'String', df_exclusion, position, column4, 0)  # Year pair for
         # which exclusion applies.
     else:
-        # Defines object as NaN when no exclusion found.
+        # Define objects as NaN when no exclusion found.
         
         excl_start = np.nan
         excl_end = np.nan
@@ -172,19 +172,17 @@ def move_reference_coordinates(
             'String', dataframe2, position, column3, 0)  # Reference point's
     # coordinate accuracy.
                        
-    # Check if coordinate accuracy is a range and select value.
+    # Check if coordinate accuracy is a range and select single value.
 
     GNSS_accuracy_split = GNSS_accuracy.split('-')  # Defines list of
     # coordinate accuracy split by delimiter to check if value is a range.
-            
+
     if len(GNSS_accuracy_split) == 3:
-        GNSS_accuracy = GNSS_accuracy_split[-1]  # Defines object as largest
-        # value from coordinate accuracy range.
+        GNSS_accuracy = GNSS_accuracy_split[-1]  # Selects largest value from
+        # coordinate accuracy range for conservative estimate.
     else:
-        GNSS_accuracy = GNSS_accuracy_split[0]  # Defines object as single
-        # value.
-    GNSS_accuracy = float(GNSS_accuracy)  # Defines object for coordinate
-    # accuracy.
+        GNSS_accuracy = GNSS_accuracy_split[0]  # Selects single value.
+    GNSS_accuracy = float(GNSS_accuracy)  # Sets coordinate accuracy.
 
     # Check if coordinate distance off of transect exceeds coordinate accuracy
     # and moves coordinate accordingly.
@@ -195,7 +193,7 @@ def move_reference_coordinates(
         elif off_direction == 'South':
             y += off_distance_m
         elif off_direction == 'East':
-            x -= off_distance_m
+            x -= off_distance_m  # Redefines object.
         elif off_direction == 'West':
             x += off_distance_m
         else:
@@ -230,18 +228,18 @@ def slice_dataframe_cell(
         pass  # Pass command.
     else:
         if data_type == 'Integer':
-            cell = int(cell)  # Redefines object to integer.
+            cell = int(cell)  # Redefines object as integer.
         elif data_type == 'Float':
-            cell = float(cell)  # Redefines object to float.
+            cell = float(cell)  # Float.
         else:
-            cell = str(cell)  # Redefines object to string.
+            cell = str(cell)  # String.
             
     if display == 1:
         print('\033[1mRETRIEVED VALUE:\033[0m ' + str(cell) + '\n')
         
     return cell
 
-# DEFINE FUNCTIONS ===========================================================5
+
 def slice_dataframe_column(
         output, data_type, dataframe, column, check_duplicates, drop_nan, 
         display):  # Slice DataFrame for individual column.
@@ -272,11 +270,9 @@ def slice_dataframe_column(
             df_column = df_column.astype(int)  # Redefines DataFrame values to
             # integer.
         elif data_type == 'Float':
-            df_column = df_column.astype(float)  # Redefines DataFrame values
-            # to float.
+            df_column = df_column.astype(float)  # Float.
         else:
-            df_column = df_column.astype(str)  # Redefines DataFrame value to
-            # string.
+            df_column = df_column.astype(str)  # String.
   
     # Enforce desired output type.        
             
