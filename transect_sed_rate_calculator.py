@@ -1,113 +1,127 @@
-# ======================================================================================================================
-# WHITEWATER RIVER VALLEY (MN) SCS-USGS STREAM AND VALLEY SEDIMENTATION SURVEY DATA * ----------------------------------
-# TRANSECT DATA SEDIMENTATION RATE CALCULATOR * ------------------------------------------------------------------------
-# PYTHON PROGRAM * -----------------------------------------------------------------------------------------------------
+# WHITEWATER RIVER VALLEY, MN, US, SEDIMENTATION SURVEY DATA ANALYSIS PROGRAMS
+# TRANSECT DATA SEDIMENTATION RATE CALCULATOR * -------------------------------
 
-# ======================================================================================================================
-# SIGNAL RUN -----------------------------------------------------------------------------------------------------------
+# SIGNAL RUN ==================================================================
 
-print('\n\033[1m' + 'START TRANSECT SEDIMENTATION RATE CALCULATIONS!!!' + '\033[0m', '\n...\n')  # Displays objects.
+print('\n\033[1m' + 'START TRANSECT SEDIMENTATION RATE CALCULATIONS!!!' 
+      + '\033[0m', '\n...\n')  # Displays objects.
 
-# ======================================================================================================================
-# PART 1: INITIALIZATION -----------------------------------------------------------------------------------------------
+# INITIALIZATION ==============================================================
 
-# IMPORT MODULES -------------------------------------------------------------------------------------------------------
+# IMPORT MODULES --------------------------------------------------------------
 
-from TData_functions import *   # Imports functions. Imports all functions from outside program.
+from transect_analysis_functions import *   # Imports all functions from 
+# associated program.
 
-# DEFINE INPUT PARAMETERS ----------------------------------------------------------------------------------------------
+# DEFINE INPUT PARAMETERS -----------------------------------------------------
 
-# Directory
-InputFolder = 'Input'  # Defines variable. Sets name of input folder where all data sources will be housed.
-OutputFolder = 'Output'  # Defines variable. Sets name of output folder where all data products will be exported.
-CalculationFolder = 'Calculations'  # Defines variable. Sets name of output folder where all results will be exported.
+# Directory folders
+INPUT_FOLDER = 'Input'  # Input folder where all input data will be stored.
+OUTPUT_FOLDER = 'Output'  # Output folder where all output data products will
+# be stored.
+CALC_FOLDER = 'Calculations'  # Output sub-folder where all calculation results
+# will be stored.
 
-# Data
-InputFile1 = InputFolder + '/Elevation_surveys_20250129.csv'  # Defines variable. Sets file path to input file. Sets
-# path to transect data that will be used in calculations.
-InputFile2 = InputFolder + '/Calculation_exceptions_20250130.csv'  # Defines variable. Sets file path to input file.
-# Sets path to transect data exceptions that will be used in calculations.
-OutputFile1 = '/WW_sedimentation_rates.csv'  # Defines variable. Sets name for output file.
+# Data files
+INPUT_FILE1 = INPUT_FOLDER + '/Elevation_surveys_20250129.csv'
+# Data referenced for calculations.
+INPUT_FILE2 = INPUT_FOLDER + '/Calculation_exceptions_20250130.csv'
+# Data exceptions to be excluded from calculations.
+CALC_NAME = '/WRV_1855_1994_sedimentation_rates.csv'  # Output file name.
 
-# Operation limits
-TransectNumberStart = 1  # Defines variable. Sets start transect number for operation loop.
-TransectNumberEnd = 107  # Defines variable. Sets end transect number for operation loop.
-AryTransectNumbers = CreateForwardRange(TransectNumberStart, TransectNumberEnd, 1, 0)  # Defines array. Calls function.
-# Sets loop order by transect.
+# Transect operation limits
+TRANSECT_NUM_START = 1  # Start transect number for operation loop.
+TRANSECT_NUM_END = 107  # End transect number for operation loop.
+
+TRANSECT_NUMS = create_forward_range(
+        TRANSECT_NUM_START, TRANSECT_NUM_END, 1, 0)  # Calls UDF to define
+# array of transect numbers for looping calculation.
 
 # Operations
-InterpInterval = 0.1  # Defines variable. Sets interval for transect data interpolation.
+INTERP_INTERVAL = 0.1  # Interval in feet for transect data interpolation.
 
-# Conversion factors
-FtToCm = 12 * 2.54   # Defines variable. Sets conversion factor from feet to centimeters.
+FT_TO_CM = 12 * 2.54  # Feet to centimeters.
 
-# SET UP DIRECTORY -----------------------------------------------------------------------------------------------------
+# SET UP DIRECTORY ------------------------------------------------------------
 
-CreateFolder(OutputFolder)  # Creates folder. Calls function. Creates output folder where all data products will be
-# exported.
-CreateFolder(OutputFolder + '/' + CalculationFolder)  # Creates folder. Calls function. Creates output folder where all
-# results will be exported.
+# Create output folders.
 
-# UPLOAD FILE(S) -------------------------------------------------------------------------------------------------------
+create_folder(OUTPUT_FOLDER)  # Calls UDF.
+create_folder(OUTPUT_FOLDER + '/' + CALC_FOLDER)
 
-dfTransectElevations = ConvertCsvToDataFrame(InputFile1, 0)  # Defines DataFrame. Calls function. Uploads transect data.
-dfTCalculationExceptions = ConvertCsvToDataFrame(InputFile2, 0)  # Defines DataFrame. Calls function. Uploads transect
-# data exceptions.
+# UPLOAD FILE(S) --------------------------------------------------------------
 
-# ======================================================================================================================
-# PART 2: DATA OPERATIONS ----------------------------------------------------------------------------------------------
+# Define DataFrames from input data.
 
-# SELECT DATA ----------------------------------------------------------------------------------------------------------
+df_transect_elevs = convert_CSV_to_dataframe(INPUT_FILE1, 0)  # Calls UDF.
+df_calc_exceptions = convert_CSV_to_dataframe(INPUT_FILE2, 0)
+  
+# DATA OPERATIONS =============================================================
 
-# Select transect data -------------------------------------------------------------------------------------------------
+# SELECT DATA -----------------------------------------------------------------
 
-for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops through transect numbers. Calculates
-    # sedimentation rates for each transect in sequence.
+# Transect data
+for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
+    # sedimentation rates.
+    df_transect_elevs_i = slice_dataframe_rows(
+            'Equals', df_transect_elevs, 'TNum', i, 0)  # Calls UDF to slice
+    # DataFrame and define resultant DataFrame of single transect data.
 
-    dfTransectElevationsi = SliceDataFrameRows('Equals', dfTransectElevations, 'TNum', i, 0)  # Defines DataFrame. Calls
-    # function. Slices DataFrame to yield single transect data.
+    # Survey data pair
+    transect_surv_nums = slice_dataframe_column(
+            'Array', 'Integer', df_transect_elevs_i, 'ESrvNum', 1, 0, 0)
+    # Calls UDF to slice DataFrame and define resultant array as survey
+    # numbers associated with present transect.
 
-    # Select transect survey data --------------------------------------------------------------------------------------
+    for j in transect_surv_nums:  # Begins loop through transect survey pairs
+        # to calculate their sedimentation rates.
+        if j < transect_surv_nums[-1]:  # Begins conditional statement to omit
+            # selection of the most recent survey as it has no later data to
+            # compare to.
+            k = j + 1  # Defines object for next earliest survey number to
+            # select second dataset for transect survey pair.
+            
+            df_transect_elevs_i_j = slice_dataframe_rows(
+                    'Equals', df_transect_elevs_i, 'ESrvNum', j, 0)
+            # Earlier survey.
+            df_transect_elevs_i_k = slice_dataframe_rows(
+                    'Equals', df_transect_elevs_i, 'ESrvNum', k, 0)
+            # Later survey.
 
-    AryTSurveyNumbers = SliceDataFrameColumns('Array', 'Integer', dfTransectElevationsi, 'ESrvNum', 1, 0, 0)  # Defines
-    # array. Calls function. Slices DataFrame to transect survey numbers.
+            # Transect and survey metadata
+            transect_ID = slice_dataframe_cell(
+                    'String', df_transect_elevs_i, 0, 'TId24', 0)  # Calls UDF
+            # to slice DataFrame and define resultant value as transect ID of
+            # present transect.
+            
+            transect_p_year_i_j = slice_dataframe_cell(
+                    'Integer', df_transect_elevs_i_j, 0, 'PYr', 0)
+            # Earlier survey profile year.
+            transect_p_type_i_j = slice_dataframe_cell(
+                    'String', df_transect_elevs_i_j, 0, 'PType', 0)
+            # Earlier survey profile type.
+            transect_p_year_i_k = slice_dataframe_cell(
+                    'Integer', df_transect_elevs_i_k, 0, 'PYr', 0)
+            # Later survey profile year.
+            transect_p_type_i_k = slice_dataframe_cell(
+                    'String', df_transect_elevs_i_k, 0, 'PType', 0)
+            # Later survey profile type.
 
-    for j in AryTSurveyNumbers:  # Begins loop. Loops through array elements. Loops through survey numbers. Calculates
-        # sedimentation rates for each survey in sequence.
-        if j < AryTSurveyNumbers[-1]:  # Begins conditional statement. Checks relation. The most recent transect data
-            # has no other dataset to compare to.
-            k = j + 1  # Defines variable. Calculates survey number of earlier transect data to compare with.
-
-            dfTransectElevationsi_j = SliceDataFrameRows('Equals', dfTransectElevationsi, 'ESrvNum', j, 0)  # Defines
-            # DataFrame. Calls function. Slices DataFrame to yield transect single survey data.
-            dfTransectElevationsi_k = SliceDataFrameRows('Equals', dfTransectElevationsi, 'ESrvNum', k, 0)  # Defines
-            # DataFrame. Calls function. Slices DataFrame to yield transect single survey data.
-
-            # Metadata
-            TID = SliceDataFrameCell('String', dfTransectElevationsi, 0, 'TId24', 0)  # Defines variable. Calls
-            # function.  Slices DataFrame to yield transect ID.
-            TProfileYeari_j = SliceDataFrameCell('Integer', dfTransectElevationsi_j, 0, 'PYr', 0)  # Defines variable.
-            # Calls function.  Slices DataFrame to yield transect survey profile year.
-            TProfileTypei_j = SliceDataFrameCell('String', dfTransectElevationsi_j, 0, 'PType', 0)  # Defines variable.
-            # Calls function.  Slices DataFrame to yield transect survey profile type.
-            TProfileYeari_k = SliceDataFrameCell('Integer', dfTransectElevationsi_k, 0, 'PYr', 0)  # Defines variable.
-            # Calls function.  Slices DataFrame to yield transect survey profile year.
-            TProfileTypei_k = SliceDataFrameCell('String', dfTransectElevationsi_k, 0, 'PType', 0)  # Defines variable.
-            # Calls function.  Slices DataFrame to yield transect survey profile type.
-
-            print('\033[1mCALCULATING:\033[0m', TID, ': ' + str(TProfileYeari_j) + ' (' + str(TProfileTypei_j) + ') – '
-                  + str(TProfileYeari_k) + ' (' + str(TProfileTypei_k) + ') \n')  # Displays objects.
-
-            # Stations
-            AryTStationsFti_j = SliceDataFrameColumns('Array', 'Float', dfTransectElevationsi_j, 'ESttnFt', 0, 0, 0)
+            print('\033[1mCALCULATING:\033[0m', transect_ID, ': ' 
+                  + str(transect_p_year_i_j) + ' (' + str(transect_p_type_i_j) 
+                  + ') – ' + str(transect_p_year_i_k) + ' (' 
+                  + str(transect_p_type_i_k) + ') \n')
+#----------------------------------------------------------------------------79
+            # Survey measurement stations
+            AryTStationsFti_j = slice_dataframe_column('Array', 'Float', df_transect_elevs_i_j, 'ESttnFt', 0, 0, 0)
             # Defines array. Calls function. Slices DataFrame to yield survey stations of survey dataset.
-            AryTStationsFti_k = SliceDataFrameColumns('Array', 'Float', dfTransectElevationsi_k, 'ESttnFt', 0, 0, 0)
+            AryTStationsFti_k = slice_dataframe_column('Array', 'Float', df_transect_elevs_i_k, 'ESttnFt', 0, 0, 0)
             # Defines array. Calls function. Slices DataFrame to yield survey stations of survey dataset.
 
             # Elevations
-            AryTElevationsFti_j = SliceDataFrameColumns('Array', 'Float', dfTransectElevationsi_j, 'E1Ft', 0, 0, 0)
+            AryTElevationsFti_j = slice_dataframe_column('Array', 'Float', df_transect_elevs_i_j, 'E1Ft', 0, 0, 0)
             # Defines array. Calls function. Slices DataFrame to yield absolute elevations of survey dataset.
-            AryTElevationsFti_k = SliceDataFrameColumns('Array', 'Float', dfTransectElevationsi_k, 'E1Ft', 0, 0, 0)
+            AryTElevationsFti_k = slice_dataframe_column('Array', 'Float', df_transect_elevs_i_k, 'E1Ft', 0, 0, 0)
             # Defines array. Calls function. Slices DataFrame to yield absolute elevations of survey dataset.
 
             # INTERPOLATE DATA -----------------------------------------------------------------------------------------
@@ -133,8 +147,8 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
             TInterpStationEndFti_jk = np.min(AryTStationEndFti_jk)  # Defines variable. Selects min element of array.
             # Selects last shared station. Selects interpolation start.
 
-            AryTInterpStationsFti_jk = np.arange(TInterpStationStartFti_jk, TInterpStationEndFti_jk + InterpInterval,
-                                                 InterpInterval)  # Defines array. Creates interpolation framework.
+            AryTInterpStationsFti_jk = np.arange(TInterpStationStartFti_jk, TInterpStationEndFti_jk + INTERP_INTERVAL,
+                                                 INTERP_INTERVAL)  # Defines array. Creates interpolation framework.
 
             AryTInterpStationsFti_jk = np.around(AryTInterpStationsFti_jk, decimals=1)  # Redefines array. Rounds
             # values.
@@ -161,17 +175,17 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
 
             # Check for calculation exception --------------------------------------------------------------------------
 
-            dfTExcChecki = SliceDataFrameRows('Equals', dfTCalculationExceptions, 'TId24', TID, 0)  # Defines DataFrame.
+            dfTExcChecki = slice_dataframe_rows('Equals', df_calc_exceptions, 'TId24', transect_ID, 0)  # Defines DataFrame.
             # Calls function. Slices DataFrame to yield calculation exceptions.
 
             TSurveyExcStart1i_j, TSurveyExcEnd1i_j, TSurveyExcPairYear1i_j = CalculationExclusionChecker(
-                dfTExcChecki, 'PYr', 'ESttnFt1', 'ESttnFt2', 'ExcPYr', 0, TProfileYeari_j, 0)  # Defines array. Calls
+                dfTExcChecki, 'PYr', 'ESttnFt1', 'ESttnFt2', 'ExcPYr', 0, transect_p_year_i_j, 0)  # Defines array. Calls
             # function. Creates array of exception zone if it exists.
             TSurveyExcStart1i_k, TSurveyExcEnd1i_k, TSurveyExcPairYear1i_k = CalculationExclusionChecker(
-                dfTExcChecki, 'PYr', 'ESttnFt1', 'ESttnFt2', 'ExcPYr', 0, TProfileYeari_k, 0)  # Defines array. Calls
+                dfTExcChecki, 'PYr', 'ESttnFt1', 'ESttnFt2', 'ExcPYr', 0, transect_p_year_i_k, 0)  # Defines array. Calls
             # function. Creates array of exception zone if it exists.
 
-            if TProfileYeari_k == 1939 and TProfileTypei_k == 'Extrapolated' and TSurveyExcPairYear1i_k == '1965':
+            if transect_p_year_i_k == 1939 and transect_p_type_i_k == 'Extrapolated' and TSurveyExcPairYear1i_k == '1965':
                 # Begin conditional statement. Checks equalities. Creates empty array of exception zone for 1939
                 # extrapolated exception type. To ignore 1939 extrapolated exception if not paired with 1965 data.
                 TSurveyExcStart1i_k = np.nan  # Defines value. Assigns NaN to value for 1939 extrapolated exception
@@ -190,7 +204,7 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
             AryTSurveyExc2_2i_jk = np.empty(0)  # Defines array. Creates empty array. When 1939 extrapolated exception
             # does not exist or to ignore it if not paired with 1965 data.
 
-            if TProfileYeari_j == 1939 and TProfileTypei_j == 'Extrapolated' and TProfileYeari_k == 1965:  # Begins
+            if transect_p_year_i_j == 1939 and transect_p_type_i_j == 'Extrapolated' and transect_p_year_i_k == 1965:  # Begins
                 # conditional statement. Checks equalities. Creates array of transect exception points. To enact 1939
                 # extrapolation exceptions after calculations if paired with 1965 data.
                 AryTSurveyExc2_1i_jk = np.array([TSurveyExcStart1i_j, TSurveyExcEnd1i_j])  # Defines array. Creates
@@ -199,14 +213,14 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
                 # array. Deletes NaN values.
                 AryTSurveyExc2_1i_jk = np.around(AryTSurveyExc2_1i_jk, decimals=1)  # Redefines array. Rounds values.
 
-                dfTExcChecki_j = SliceDataFrameRows('Equals', dfTExcChecki, 'PYr', 1939, 0)  # Defines DataFrame. Calls
+                dfTExcChecki_j = slice_dataframe_rows('Equals', dfTExcChecki, 'PYr', 1939, 0)  # Defines DataFrame. Calls
                 # function. Slices DataFrame to yield calculation exceptions. For selection of second exception zone if
                 # it exists.
 
                 if any(dfTExcChecki_j.duplicated('PYr')):  # Begins conditional statement. Checks boolean. Checks if
                     # second exception zone exists.
                     TSurveyExcStart2i_j, TSurveyExcEnd2i_j, TSurveyExcPairYear2i_j = CalculationExclusionChecker(
-                        dfTExcChecki, 'PYr', 'ESttnFt1', 'ESttnFt2', 'ExcPYr', 1, TProfileYeari_j, 0)  # Defines array.
+                        dfTExcChecki, 'PYr', 'ESttnFt1', 'ESttnFt2', 'ExcPYr', 1, transect_p_year_i_j, 0)  # Defines array.
                     # Calls function. Creates array of exception zone if it exists.
 
                     AryTSurveyExc2_2i_jk = np.array([TSurveyExcStart2i_j, TSurveyExcEnd2i_j])  # Defines array. Creates
@@ -216,7 +230,7 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
                     AryTSurveyExc2_2i_jk = np.around(AryTSurveyExc2_2i_jk, decimals=1)  # Redefines array. Rounds
                     # values.
 
-            if TProfileYeari_j == 1939 and TProfileTypei_j == 'Extrapolated' and TProfileYeari_k == 1965:  # Begins
+            if transect_p_year_i_j == 1939 and transect_p_type_i_j == 'Extrapolated' and transect_p_year_i_k == 1965:  # Begins
                 # conditional statement. Checks equalities. Creates empty array of exception zone for 1939 extrapolated
                 # exception type. To enact 1939 extrapolated exception after calculations if paired with 1965 data.
                 AryTSurveyExc1i_jk = np.empty(0)  # Defines array. Creates empty array. When 1939 extrapolated exception
@@ -275,7 +289,7 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
 
             # Exclude negative results: 1855–Any year ------------------------------------------------------------------
 
-            if TProfileYeari_j == 1855:  # Begins conditional statement. Checks equality. Removes negative values from
+            if transect_p_year_i_j == 1855:  # Begins conditional statement. Checks equality. Removes negative values from
                 # array.
                 AryTElevChangeFti_jk[AryTElevChangeFti_jk < 0] = -100  # Redefines array. Replaces all negative elements
                 # with -100.
@@ -285,9 +299,9 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
 
             # Exclude negative or channel crossing results: 1939 extrapolated-1965 -------------------------------------
 
-            elif TProfileYeari_j == 1939:  # Continues conditional statement. Checks equality. Removes results from
+            elif transect_p_year_i_j == 1939:  # Continues conditional statement. Checks equality. Removes results from
                 # array.
-                if TID == 'SF-16' or TID == 'SF-17' or TID == 'SF-23':  # Begins conditional statement. Checks
+                if transect_ID == 'SF-16' or transect_ID == 'SF-17' or transect_ID == 'SF-23':  # Begins conditional statement. Checks
                     # equalities. Removes negative values from array for specific transects.
                     AryTElevChangeFti_jk[AryTElevChangeFti_jk < 0] = -100  # Redefines array. Replaces all negative
                     # elements with -100.
@@ -295,12 +309,12 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
                     AryTElevChangeFti_jk = np.delete(AryTElevChangeFti_jk, np.where(AryTElevChangeFti_jk == -100)[0])
                     # Redefines array. Deletes all elements equal to -100.
 
-                elif TProfileTypei_j == 'Extrapolated' and TProfileYeari_k == 1965:  # Begins conditional statement.
+                elif transect_p_type_i_j == 'Extrapolated' and transect_p_year_i_k == 1965:  # Begins conditional statement.
                     # Checks equalities. Removes negative values or values calculated where 1939 extrapolated data is
                     # effectively discontinuous.
                     if len(AryTSurveyExc2_1i_jk) != 0:  # Begins conditional statement. Checks equality. Enacts
                         # exception 1.
-                        if TID == 'MF-26B':  # Begins conditional statement. Checks equality. Modifies exception for
+                        if transect_ID == 'MF-26B':  # Begins conditional statement. Checks equality. Modifies exception for
                             # specific transect.
                             AryTSurveyExcIndicesi_jk = np.where(
                                 np.logical_and(AryTElevChangeFti_jk < 0,
@@ -308,7 +322,7 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
                                                               AryTInterpStationsFti_jk < 156.5)))  # Defines array.
                             # Creates array of indices where condition satisfied. Creates array of exception point
                             # indices.
-                        elif TID == 'DC-7':  # Continues conditional statement. Checks equality. Modifies exception for
+                        elif transect_ID == 'DC-7':  # Continues conditional statement. Checks equality. Modifies exception for
                             # specific transect.
                             AryTSurveyExcIndicesi_jk = np.where(
                                 np.logical_and(AryTElevChangeFti_jk < 0,
@@ -350,9 +364,9 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
 
             TMeanElevChangeFti_jk = np.mean(AryTElevChangeFti_jk)  # Defines value. Calculates mean of array.
 
-            TMeanElevChangeCmi_jk = TMeanElevChangeFti_jk * FtToCm  # Defines value. Converts value from feet to cm.
+            TMeanElevChangeCmi_jk = TMeanElevChangeFti_jk * FT_TO_CM  # Defines value. Converts value from feet to cm.
 
-            TMeanElevChangeRatesCmYi_jk = TMeanElevChangeCmi_jk / (TProfileYeari_k - TProfileYeari_j)  # Defines value.
+            TMeanElevChangeRatesCmYi_jk = TMeanElevChangeCmi_jk / (transect_p_year_i_k - transect_p_year_i_j)  # Defines value.
             # Calculates rate.
 
             # EXPORT RESULTS -------------------------------------------------------------------------------------------
@@ -360,7 +374,7 @@ for i in AryTransectNumbers:  # Begins loop. Loops through array elements. Loops
             # Compile calculations -------------------------------------------------------------------------------------
 
             dfTMeanElevChangesi_jk = pd.DataFrame(
-                np.array([[TID, TProfileYeari_j, TProfileYeari_k, TMeanElevChangeFti_jk, TMeanElevChangeCmi_jk,
+                np.array([[transect_ID, transect_p_year_i_j, transect_p_year_i_k, TMeanElevChangeFti_jk, TMeanElevChangeCmi_jk,
                            TMeanElevChangeRatesCmYi_jk]]))  # Defines DataFrame. Creates new DataFrame to save results.
 
             try:  # Begins try-except statement. Checks object existence. Compiles mean calculations.
@@ -378,7 +392,7 @@ DataFrameColumns = ['TId24', 'PYr1', 'PYr2', '1_2Ft', '1_2Cm', '1_2CmY']  # Defi
 dfTMeanElevChangesAll.columns = DataFrameColumns  # Redefines DataFrame. Sets column labels.
 
 # Export
-dfTMeanElevChangesAll.to_csv(OutputFolder + '/' + CalculationFolder + OutputFile1, header=True, index=False)  # Exports
+dfTMeanElevChangesAll.to_csv(OUTPUT_FOLDER + '/' + CALC_FOLDER + CALC_NAME, header=True, index=False)  # Exports
 # DataFrame to .csv.
 
 # ======================================================================================================================
