@@ -1,28 +1,25 @@
 # WHITEWATER RIVER VALLEY, MN, US, SEDIMENTATION SURVEY DATA ANALYSIS PROGRAMS
 # TRANSECT DATA COORDINATE GEOMETRY DIGITIZER * -------------------------------
 
-# SIGNAL RUN ==================================================================
-
 print('\n\033[1m' + 'START TRANSECT DATA DIGITIZATION!!!' + '\033[0m', 
-      '\n...\n')  # Displays objects.
+      '\n...\n')  # Displays objects  to signal run.
 
 # INITIALIZATION ==============================================================
 
-# IMPORT MODULES --------------------------------------------------------------
+# IMPORT MODULES. -------------------------------------------------------------
 
 from transect_analysis_functions import *   # Imports all functions from 
 # associated program.
 
-# DEFINE INPUT PARAMETERS -----------------------------------------------------
+# DEFINE INPUT PARAMETERS. ----------------------------------------------------
 
-# Directory folders
-INPUT_FOLDER = 'Input'  # Input folder where all input data will be stored.
-OUTPUT_FOLDER = 'Output'  # Output folder where all output data products will
-# be stored.
-GIS_FOLDER = 'GIS'  # Output sub-folder where all geospatial data products will
-# be stored.
+# Define directory folders.
+INPUT_FOLDER = 'Input'  # Input where all input data will be stored.
+OUTPUT_FOLDER = 'Output'  # Output where all output data products will be
+# stored.
+GIS_FOLDER = 'GIS'  # Output where all geospatial data products will be stored.
 
-# Data files
+# Define data files.
 INPUT_FILE1 = INPUT_FOLDER + '/Elevation_surveys_20250127.csv'  # Data to be
 # digitized.
 INPUT_FILE2 = INPUT_FOLDER + '/Coordinate_survey_20250127.csv'
@@ -30,65 +27,60 @@ INPUT_FILE2 = INPUT_FOLDER + '/Coordinate_survey_20250127.csv'
 INPUT_FILE3 = INPUT_FOLDER + '/Marker_metadata_20250120.csv'
 # Reference coordinate metadata.
 
-# Transect operation limits
-transect_num_start = 1  # Start transect number for operation loop.
-transect_num_end = 107  # End transect number for operation loop.
-
-transect_nums = create_forward_range(
-    transect_num_start, transect_num_end, 1, 0)  # Calls UDF to define array of
-# transect numbers for looping digitization.
-
-# Conversion factors
-ft_to_m = 3.281  # Feet to meters.
-
-# Geospatial CRS
-CRS = 'EPSG:26915'  # Projected coordinate reference system EPSG code for
-# output GIS files.
 GPKG_NAME = '/WRV_1855_1994_valley_sedimentation.gpkg'  # Output GeoPackage
 # name.
+
 LAYER_NAME1_PRE = 'WRV_'  # Output layer name prefix.
 LAYER_NAME1_SUF = '_valley_elevations'  # Output layer name suffix.
+
 LAYER_NAME2 = 'WRV_2009_2014_valley_monuments'  # Output layer name.
 
-# SET UP DIRECTORY ------------------------------------------------------------
+# Define operation parameters.
+TRANSECT_NUM_START = 1  # Start transect number for operation loop.
+TRANSECT_NUM_END = 107  # End transect number for operation loop.
+
+transect_nums = create_forward_range(
+    TRANSECT_NUM_START, TRANSECT_NUM_END, 1, 0)  # Calls UDF to define array of
+# transect numbers for looping digitization.
+
+FT_TO_M = 3.281  # Conversion factor from feet to meters.
+
+CRS = 'EPSG:26915'  # Projected coordinate reference system EPSG code for
+# output GIS files.
+
+# SET UP DIRECTORY. -----------------------------------------------------------
 
 # Create output folders.
-
 create_folder(OUTPUT_FOLDER)  # Calls UDF.
 create_folder(OUTPUT_FOLDER + '/' + GIS_FOLDER)
 
-# UPLOAD FILE(S) --------------------------------------------------------------
+# UPLOAD FILE(S). -------------------------------------------------------------
 
 # Define DataFrames from input data.
-
 df_transect_elevs = convert_CSV_to_dataframe(INPUT_FILE1, 0)  # Calls UDF.
 df_monument_coords = convert_CSV_to_dataframe(INPUT_FILE2, 0)
 df_monument_meta = convert_CSV_to_dataframe(INPUT_FILE3, 0)
 
 # DATA OPERATIONS =============================================================
 
-# SELECT DATA -----------------------------------------------------------------
+# SELECT DATA. ----------------------------------------------------------------
 
-# Select transect data --------------------------------------------------------
-
+# Select transect data.
 for i in transect_nums:  # Begins loop through transects to calculate their
     # coordinate geometry.
     df_transect_elevs_i = slice_dataframe_rows(
             'Equals', df_transect_elevs, 'TNum', i, 0)  # Calls UDF to slice
     # DataFrame and define resultant DataFrame of single transect data.
 
-    # Select marker reference data --------------------------------------------
-
+    # Select marker data.
     df_monument_coords_i = slice_dataframe_rows(
             'Equals', df_monument_coords, 'TNum', i, 0)  # Slices DataFrame and
     # defines resultant DataFrame of single transect monument coordinate data.
 
     if df_monument_coords_i.shape[0] != 0:  # Begins conditional statement to
         # skip transects without reference coordinates.
-        # Coordinates
-        
+        #
         # Define marker coordinates.
-        
         monument1_east_i = slice_dataframe_cell(
                 'Float', df_monument_coords_i, 0, 'EastingM', 0)  # Calls UDF
         # to slice DataFrame and define resultant value as Easting coordinate
@@ -103,7 +95,7 @@ for i in transect_nums:  # Begins loop through transects to calculate their
                 'Float', df_monument_coords_i, 1, 'NorthingM', 0)
         # Northing coordinate of end monument of present transect.
 
-        # Metadata
+        # Retreive marker (meta)data.
         df_monument_meta_i = slice_dataframe_rows(
                 'Equals', df_monument_meta, 'TNum', i, 0)  # Slice DataFrame
         # and define resultant DataFrame of single transect monument metadata.
@@ -115,10 +107,9 @@ for i in transect_nums:  # Begins loop through transects to calculate their
                 'Float', df_monument_meta09_14_i, 0, 'MTopSttnFt', 0)
         # Transect station of start monument
 
-        # Check if marker is off transect -------------------------------------
-
+        # Check if marker is off transect.
+        #
         # Retrieve monument off transect condition.
-
         monument1_off_i = slice_dataframe_cell(
                 'Float', df_monument_meta09_14_i, 0, 'MTOff', 0)
         # Start monument off of transect condition.
@@ -128,23 +119,21 @@ for i in transect_nums:  # Begins loop through transects to calculate their
 
         # Check off transect condition and shift reference coordinate to the
         # transect where applicable. 
-
         if monument1_off_i != 0:  # Begins conditional statement to check
             # start monument off transect condition.
             monument1_east_i, monument1_north_i = move_reference_coordinates(
                     monument1_east_i, monument1_north_i, 
                     df_monument_meta09_14_i, df_monument_coords_i, 0, 
-                    'MTOffDisFt', 'MTOffDir', 'GXYAccM', ft_to_m, 0)
+                    'MTOffDisFt', 'MTOffDir', 'GXYAccM', FT_TO_M, 0)
             # Calls UDF to redefine objects by shifting reference coordinate
-          # position.
+            # position.
         if monument2_off_i != 0:  # Check end monument off transect condition.
             monument2_east_i, monument2_north_i = move_reference_coordinates(
                     monument2_east_i, monument2_north_i, 
                     df_monument_meta09_14_i, df_monument_coords_i, 1, 
-                    'MTOffDisFt', 'MTOffDir', 'GXYAccM', ft_to_m, 0)
+                    'MTOffDisFt', 'MTOffDir', 'GXYAccM', FT_TO_M, 0)
 
-        # Select transect survey data -----------------------------------------
-
+        # Select survey data.
         transect_surv_nums = slice_dataframe_column(
                 'Array', 'Integer', df_transect_elevs_i, 'ESrvNum', 1, 0, 0)
         # Calls UDF to slice DataFrame and define resultant array as survey
@@ -156,12 +145,12 @@ for i in transect_nums:  # Begins loop through transects to calculate their
                     'Equals', df_transect_elevs_i, 'ESrvNum', j, 0)
             # Single transect single survey data.
 
-            # Stations
+            # Select measurement stations.
             df_stations_i_j = slice_dataframe_column(
                     'DataFrame', 'Float', df_transect_elevs_i_j, 'ESttnFt', 0, 
                     0, 0)  # Transect survey stations.
 
-            # Metadata
+            # Select transect and survey metadata.
             transect_ID = slice_dataframe_cell(
                     'String', df_transect_elevs_i_j, 0, 'TId24', 0)
             # Transect ID.
@@ -172,23 +161,20 @@ for i in transect_nums:  # Begins loop through transects to calculate their
             print('\033[1mDIGITIZING:\033[0m', transect_ID, ':', 
                   transect_p_year, '\n')  # Displays objects.
 
-            # CALCULATE STATION COORDINATE GEOMETRY ---------------------------
+            # CALCULATE STATION COORDINATE GEOMETRY. --------------------------
 
-            # Calculate station distance from marker --------------------------
-
+            # Calculate station distance from marker.
             df_station_dist_i_j = df_stations_i_j - monument_stat_i
             # Defines DataFrame of measurement distance from start marker
             # station.
 
-            # Calculate survey azimuth ----------------------------------------
-
+            # Calculate survey azimuth.
             transect_azi_i = calculate_transect_azimuth(
                     monument1_east_i, monument1_north_i, monument2_east_i, 
                     monument2_north_i, 0)  # Calls UDF to define object for
             # transect azimuth from reference coordinates. 
 
-            # Calculate station distance projections east and north -----------
-
+            # Calculate station distance projections east and north.
             df_station_dist_east_i_j = (df_station_dist_i_j 
                                         * np.cos(transect_azi_i))  
             # Defines DataFrame of measurement distance from start marker
@@ -197,65 +183,59 @@ for i in transect_nums:  # Begins loop through transects to calculate their
                                          * np.sin(transect_azi_i))
             # North direction.
 
-            # Calculate station coordinates -----------------------------------
-
-            df_station_east_i_j = ((df_station_dist_east_i_j / ft_to_m) 
+            # Calculate station coordinates.
+            df_station_east_i_j = ((df_station_dist_east_i_j / FT_TO_M) 
                                    + monument1_east_i)  # Defines DataFrame of
             # Easting coordinate for all measurement stations.
-            df_station_north_i_j = ((df_station_dist_north_i_j / ft_to_m) 
+            df_station_north_i_j = ((df_station_dist_north_i_j / FT_TO_M) 
                                     + monument1_north_i)  # Northing coordinate
             # for all measurement stations.
 
             # Add field names to new DataFrame columns.
-            
             df_station_east_i_j = df_station_east_i_j.rename('EastingM')
             df_station_north_i_j = df_station_north_i_j.rename('NorthingM')
 
-            # Handle exception: DC-7 1994 mid-transect displaced stations -----
-
+            # Handle exception: DC-7 1994 mid-transect displaced stations.
             if transect_ID == 'DC-7' and j == transect_surv_nums[-1]:
                 # Begins conditional statement to check if standard COGO
                 # methods need modified.
 
-                # Calculate station displacement azimuth ----------------------
-
+                # Calculate station displacement azimuth.
                 transect_azi_i_j = transect_azi_i - (1/2) * np.pi
                 # Defines object for secondary, orthogonal azimuth that
                 # stations will be displaced upon from the main transect.
 
-                # Shift marker off transect -----------------------------------
-
-                # Reference distance projections
-                monument1_dist_east_i_j = ((25 / ft_to_m) 
+                # Shift marker off transect.
+                #
+                # Calculate reference distance projections east and north.
+                monument1_dist_east_i_j = ((25 / FT_TO_M) 
                                            * np.cos(transect_azi_i_j))
                 # Defines object for reference coordinate distance in the East
                 # direction to a synthetic transect where displaced
-                  # measurements are located.
+                # measurements are located.
 
-                monument1_dist_north_i_j = ((25 / ft_to_m) 
+                monument1_dist_north_i_j = ((25 / FT_TO_M) 
                                             * np.sin(transect_azi_i_j))
                 # North direction.
 
-                # Reference coordinates
+                # Calculate reference coordinates.
                 monument1_east_i_j = monument1_dist_east_i_j + monument1_east_i
                 # Defines object for shifted reference coordinate component.
                 monument1_north_i_j = (monument1_dist_north_i_j 
                                        + monument1_north_i)
 
-                # Calculate station coordinates -------------------------------
-
-                df_station_east_i_j2 = ((df_station_dist_east_i_j / ft_to_m) 
+                # Calculate station coordinates.
+                df_station_east_i_j2 = ((df_station_dist_east_i_j / FT_TO_M) 
                                         + monument1_east_i_j)
                 # Easting coordinate for all measurement stations.
-                df_station_north_i_j2 = ((df_station_dist_north_i_j / ft_to_m) 
+                df_station_north_i_j2 = ((df_station_dist_north_i_j / FT_TO_M) 
                                          + monument1_north_i_j)
                 # Northing coordinate for all measurement stations.
                 
-                # Update DataFrame --------------------------------------------
-
+                # Update DataFrame.
+                #
                 # Delete measurement coordinates that were not displaced by the
                 # standard method.
-                
                 df_station_east_i_j2 = df_station_east_i_j2.iloc[8:16]
                 # Easting coordinates.
                 df_station_north_i_j2 = df_station_north_i_j2.iloc[8:16]
@@ -263,7 +243,6 @@ for i in transect_nums:  # Begins loop through transects to calculate their
 
                 # Add measurement coordinates that were displaced by the
                 # modified method.
-                
                 df_station_east_i_j.iloc[8:16] = df_station_east_i_j2
                 df_station_north_i_j.iloc[8:16] = df_station_north_i_j2
 
@@ -277,43 +256,41 @@ for i in transect_nums:  # Begins loop through transects to calculate their
             # Plots station coordinates.
             # plt.pause(0.5)  # Shows plot.
 
-            # PREPARE DATA FOR DIGITIZATION -----------------------------------
+            # PREPARE DATA FOR DIGITIZATION. ----------------------------------
 
-            # Compile calculations --------------------------------------------
-
+            # Compile calculations.
             try:  # Begins try-except statement to select calculation
-            # compilation method.
+                # compilation method.
                 df_station_east_all = pd.concat(
                         [df_station_east_all, df_station_east_i_j], axis=0)
                 # Redefines DataFrame of measurement coordinates through
                 # concatenation.
             except NameError:
                 df_station_east_all = df_station_east_i_j  # Defines DataFrame
-                  # of measurement coordinates.
-
+                # of measurement coordinates.
             try:
                 df_station_north_all = pd.concat(
                         [df_station_north_all, df_station_north_i_j], axis=0)
             except NameError:
                 df_station_north_all = df_station_north_i_j
 
-            # Update input file -----------------------------------------------
-         
-            if i == transect_num_end - 1:  # Begins conditional statement to
-                  # save coordinates and digitizes when all COGO calculations
-                  # have been completed.
+            # Update input file.
+            if i == TRANSECT_NUM_END - 1:  # Begins conditional statement to
+                # save coordinates and digitizes when all COGO calculations
+                # have been completed.
                 if j == transect_surv_nums[-1]:
                     df_transect_elevs = pd.concat(
                             [df_transect_elevs, df_station_east_all, 
                              df_station_north_all], axis=1)
                     # Redefines DataFrame through concatenation.
 
-                    # DIGITIZE DATA -------------------------------------------
+                    # DIGITIZE DATA. ------------------------------------------
+                    
                     transect_p_years = slice_dataframe_column(
                             'Array', 'Integer', df_transect_elevs, 'PYr', 1, 0, 
                             0)  # Survey years of complete entire.
 
-                    # Transect data
+                    # Digitize transect data.
                     for k in transect_p_years:  # Begins loop through surface
                         # profile years tod digitize transect data by surface
                         # profile year in sequence.
@@ -340,7 +317,7 @@ for i in transect_nums:  # Begins loop through transects to calculate their
                                                      index=True)
                         # Saves file to directory.
 
-                    # Reference coordinates
+                    # Digitize reference coordinates.
                     gdf_monument_coords = gpd.GeoDataFrame(
                             df_monument_coords, 
                             geometry=gpd.points_from_xy(
@@ -354,7 +331,5 @@ for i in transect_nums:  # Begins loop through transects to calculate their
                                                 layer=LAYER_NAME2,
                                                 driver='GPKG', index=True)
 else:
-    # SIGNAL END ==============================================================
-
     print('\n\033[1m' + 'TRANSECT DATA DIGITIZATION COMPLETE!!!' + '\033[0m', 
-          '\n...\n')  # Displays objects.
+          '\n...\n')  # Signals end.
