@@ -26,7 +26,7 @@ import statsmodels.api as sm  # statsmodels--statistical models, hypothesis
 
 # FUNCTION DEFINITIONS ========================================================
 
-# UDFS are ordered alphabetically. 
+# UDFs are ordered alphabetically. 
 
 
 def create_folder(path):  # Defines function to generate directory paths.
@@ -42,14 +42,14 @@ def create_forward_range(start, end, step, display):  # Generate forward array
     # between two numbers.
     end += 1  # Redefines object so input value is included in range.
     
-    range = np.arange(start, end, step)  # Defines array of numbers to
+    forward_range = np.arange(start, end, step)  # Defines array of numbers to
     # create framework for looping analysis.
     
     if display == 1:  # Begins conditional statement for display.
         print('\033[1mCREATED ARRAY:\033[0m \n  Limits: ' + str(start) + ' & '
-              + str(end - 1) + ' --> Array:', range)
+              + str(end - 1) + ' --> Array:', forward_range)
         
-    return range  # Ends function execution.
+    return forward_range  # Ends function execution.
 
 
 def convert_CSV_to_dataframe(path, display):  # Upload .csv file and convert to
@@ -121,7 +121,7 @@ def calculate_transect_azimuth(x1, y1, x2, y2, display):  # Calculate transect
 def calculation_exclusion_checker(
             dataframe, column1, column2, column3, column4, position, value, 
             display):  # Search transect data for calculation exclusion
-            # zones/exceptions.  
+    # zones/exceptions.  
     df_exclusion = slice_dataframe_rows('Equals', dataframe, column1, value, 0)
     # Calls UDF to slice DataFrame for excluded transect data and define
     # resultant DataFrame.
@@ -156,7 +156,7 @@ def calculation_exclusion_checker(
 def move_reference_coordinates(
             x, y, dataframe1, dataframe2, position, column1, column2, column3,
             conversion_factor, display):  # Move transect reference coordinates
-            # if reference point established off of transect.
+    # if reference point established off of transect.
     off_distance_ft = slice_dataframe_cell(
             'Float', dataframe1, position, column1, 0)  # Reference point's
     # distance off of transect.
@@ -214,7 +214,7 @@ def slice_dataframe_cell(
     indx = dataframe.index  # Retrieves DataFrame index.
     
     if column is not None:  # Begins conditional statement to select function
-    # format based off of input DataFrame.
+        # format based off of input DataFrame.
         cell = dataframe.loc[indx[position], column]  # Defines object from
         # DataFrame slice.
     else:
