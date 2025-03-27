@@ -95,7 +95,7 @@ for i in transect_nums:  # Begins loop through transects to calculate their
                 'Float', df_monument_coords_i, 1, 'NorthingM', 0)
         # Northing coordinate of end monument of present transect.
 
-        # Retreive marker (meta)data.
+        # Retrieve marker (meta)data.
         df_monument_meta_i = slice_dataframe_rows(
                 'Equals', df_monument_meta, 'TNum', i, 0)  # Slice DataFrame
         # and define resultant DataFrame of single transect monument metadata.
