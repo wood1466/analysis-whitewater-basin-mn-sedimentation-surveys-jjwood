@@ -39,7 +39,7 @@ LAYER_NAME2 = 'WRV_2009_2014_valley_monuments'  # Output layer name.
 TRANSECT_NUM_START = 1  # Start transect number for operation loop.
 TRANSECT_NUM_END = 107  # End transect number for operation loop.
 
-transect_nums = create_forward_range(
+TRANSECT_NUMS = create_forward_range(
     TRANSECT_NUM_START, TRANSECT_NUM_END, 1, 0)  # Calls UDF to define array of
 # transect numbers for looping digitization.
 
@@ -66,7 +66,7 @@ df_monument_meta = convert_CSV_to_dataframe(INPUT_FILE3, 0)
 # SELECT DATA. ----------------------------------------------------------------
 
 # Select transect data.
-for i in transect_nums:  # Begins loop through transects to calculate their
+for i in TRANSECT_NUMS:  # Begins loop through transects to calculate their
     # coordinate geometry.
     df_transect_elevs_i = slice_dataframe_rows(
             'Equals', df_transect_elevs, 'TNum', i, 0)  # Calls UDF to slice
