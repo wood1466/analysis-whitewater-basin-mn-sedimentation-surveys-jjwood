@@ -70,7 +70,7 @@ for i in sample_groups:  # Begins through list elements to plot visual
 
     # Statistically verify.
     k_s_test_i = sc.stats.kstest(i, sc.stats.norm.cdf, N=N_i)  
-    # Defines result of Kolmogorov-Smirnov goodness of fit test for normalilty.
+    # Defines result of Kolmogorov-Smirnov goodness of fit test for normality.
 
     if k_s_test_i.pvalue < ALPHA:  # Begins conditional statement to check if
         # null hypothesis is rejected or not.
