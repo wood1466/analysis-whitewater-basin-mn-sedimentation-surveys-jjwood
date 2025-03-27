@@ -134,7 +134,6 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
             station_start_i_k = np.min(stations_i_k)
             station_end_i_k = np.max(stations_i_k)
 
-            
             station_starts_i_jk = np.array(
                     [station_start_i_j, station_start_i_k])
             station_ends_i_jk = np.array(
@@ -183,13 +182,13 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
             # zones for individual surveys.
 
             exc_station_start_i_j, exc_station_end_i_j, exc_pair_year_i_j = \
-            calculation_exclusion_checker(
-                    transect_exc_check_i, 'PYr', 'ESttnFt1', 'ESttnFt2', 
-                    'ExcPYr', 0, transect_p_year_i_j, 0)  # Calls UDF.
+                 calculation_exclusion_checker(
+                         transect_exc_check_i, 'PYr', 'ESttnFt1', 'ESttnFt2', 
+                         'ExcPYr', 0, transect_p_year_i_j, 0)  # Calls UDF.
             exc_station_start_i_k, exc_station_end_i_k, exc_pair_year_i_k = \
-            calculation_exclusion_checker(
-                    transect_exc_check_i, 'PYr', 'ESttnFt1', 'ESttnFt2', 
-                    'ExcPYr', 0, transect_p_year_i_k, 0)
+                calculation_exclusion_checker(
+                        transect_exc_check_i, 'PYr', 'ESttnFt1', 'ESttnFt2', 
+                        'ExcPYr', 0, transect_p_year_i_k, 0)
 
             # Handle exception: 1939–1965 survey pair exclusion zones.
             if (transect_p_year_i_k == 1939 
@@ -245,9 +244,9 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
 
                 if any(transect_exc_check_i_j.duplicated('PYr')):
                     exc_station_start2_i_j, exc_station_end2_i_j, \
-                    exc_pair_year2_i_j = calculation_exclusion_checker(
-                            transect_exc_check_i, 'PYr', 'ESttnFt1', 
-                            'ESttnFt2', 'ExcPYr', 1, transect_p_year_i_j, 0)
+                         exc_pair_year2_i_j = calculation_exclusion_checker(
+                                 transect_exc_check_i, 'PYr', 'ESttnFt1', 
+                                 'ESttnFt2', 'ExcPYr', 1, transect_p_year_i_j, 0)
 
                     # Establish station limits for shared calculation exclusion
                     # zone.
@@ -351,7 +350,7 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
 
                 # Select exclusion point indices.
                 elif (transect_p_type_i_j == 'Extrapolated' 
-                          and transect_p_year_i_k == 1965):
+                      and transect_p_year_i_k == 1965):
                     if len(exc_stations2_1_i_jk) != 0:  # Checks if array is
                         # non-empty to enact exception.
                         if transect_ID == 'MF-26B':
