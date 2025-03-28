@@ -96,13 +96,13 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
                     'Integer', df_transect_elevs_i_j, 0, 'PYr', 0)
             # Earlier survey profile year.
             transect_p_type_i_j = slice_dataframe_cell(
-                    'String', df_transect_elevs_i_j, 0, 'PType', 0)
+                    'String', df_transect_elevs_i_j, 0, 'PSource', 0)
             # Earlier survey profile type.
             transect_p_year_i_k = slice_dataframe_cell(
                     'Integer', df_transect_elevs_i_k, 0, 'PYr', 0)
             # Later survey profile year.
             transect_p_type_i_k = slice_dataframe_cell(
-                    'String', df_transect_elevs_i_k, 0, 'PType', 0)
+                    'String', df_transect_elevs_i_k, 0, 'PSource', 0)
             # Later survey profile type.
 
             print('\033[1mCALCULATING:\033[0m', transect_ID, ': ' 
@@ -192,7 +192,7 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
 
             # Handle exception: 1939–1965 survey pair exclusion zones.
             if (transect_p_year_i_k == 1939 
-                    and transect_p_type_i_k == 'Extrapolated' 
+                    and transect_p_type_i_k == 'Borings' 
                     and exc_pair_year_i_k == '1965'):
                 # Reset station limits of calculation exclusion zone for
                 # 1939–1965 survey pair to NaN to ignore it when 1939 data is
@@ -227,7 +227,7 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
 
             # Establish station limits for shared calculation exclusion zone.
             if (transect_p_year_i_j == 1939 
-                    and transect_p_type_i_j == 'Extrapolated' 
+                    and transect_p_type_i_j == 'Borings' 
                     and transect_p_year_i_k == 1965):
                 exc_stations2_1_i_jk = np.array([exc_station_start_i_j, 
                                                  exc_station_end_i_j])
@@ -260,7 +260,7 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
                                                      decimals=1)
 
             if (transect_p_year_i_j == 1939 
-                    and transect_p_type_i_j == 'Extrapolated' 
+                    and transect_p_type_i_j == 'Borings' 
                     and transect_p_year_i_k == 1965):
                 exc_stations1_i_jk = np.empty(0)  # Redefines exclusion zone
                 # array as empty so that 1939–1965 survey pair operations only
@@ -346,10 +346,10 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
                             np.where(elev_change_i_jk == -100)[0])
             
                 # Exception 4: Exclude channel crossing results from 
-                # 1939 (extrapolated)–1965 survey pairs. ----------------------
-
+                # 1939 (borings)–1965 survey pairs. ---------------------------
+            
                 # Select exclusion point indices.
-                elif (transect_p_type_i_j == 'Extrapolated' 
+                elif (transect_p_type_i_j == 'Borings' 
                       and transect_p_year_i_k == 1965):
                     if len(exc_stations2_1_i_jk) != 0:  # Checks if array is
                         # non-empty to enact exception.
