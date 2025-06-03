@@ -69,7 +69,7 @@ def convert_CSV_to_dataframe(path, display):  # Upload .csv file and convert to
 
 
 def calculate_transect_azimuth(x1, y1, x2, y2, display):  # Calculate transect
-    # azimuth from reference coordinates.
+    # (sampling line) azimuth from reference coordinates ([near] endpoints).
     # Calculate the difference in x and y coordinates between reference points.
     
     delta_x = x2 - x1
