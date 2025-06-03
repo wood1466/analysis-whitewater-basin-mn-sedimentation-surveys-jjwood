@@ -23,9 +23,9 @@ ALPHA = 0.05  # Statistical hypothesis testing level of significance.
 
 # Define column names for test sample groups in input file. 
 
-GROUP_COLUMN_1 = 'SR55_39CmY'  # Sample group 1.
-GROUP_COLUMN_2 = 'SR39_65CmY'  # Sample group 2.
-GROUP_COLUMN_3 = 'SR65_94CmY'  # Sample group 3.
+GROUP_COLUMN_1 = 'R55_39CmY'  # Sample group 1.
+GROUP_COLUMN_2 = 'R39_65CmY'  # Sample group 2.
+GROUP_COLUMN_3 = 'R65_94CmY'  # Sample group 3.
 
 # UPLOAD FILE(S). -------------------------------------------------------------
 
