@@ -20,20 +20,23 @@ OUTPUT_FOLDER = 'Output'  # Output where all output data products will be
 GIS_FOLDER = 'GIS'  # Output where all geospatial data products will be stored.
 
 # Define data files.
-INPUT_FILE1 = INPUT_FOLDER + '/Elevation_surveys_20250127.csv'  # Data to be
+INPUT_FILE1 = INPUT_FOLDER \
+    + '/WRV_MN_1855_1994_sedimentation_elevations_20250525.csv'  # Data to be
 # digitized.
-INPUT_FILE2 = INPUT_FOLDER + '/Coordinate_survey_20250127.csv'
-# Reference coordinates.
-INPUT_FILE3 = INPUT_FOLDER + '/Marker_metadata_20250120.csv'
-# Reference coordinate metadata.
+INPUT_FILE2 = INPUT_FOLDER \
+    + '/WRV_MN_2008_2014_sedimentation_coordinates_20250525.csv'  # Reference
+# coordinates.
+INPUT_FILE3 = INPUT_FOLDER \
+    + '/WRV_MN_1939_2014_sedimentation_monuments_20250525.csv'  # Reference
+# coordinate metadata.
 
-GPKG_NAME = '/WRV_1855_1994_valley_sedimentation.gpkg'  # Output GeoPackage
+GPKG_NAME = '/WRV_MN_1855_1994_sedimentation.gpkg'  # Output GeoPackage
 # name.
 
-LAYER_NAME1_PRE = 'WRV_'  # Output layer name prefix.
-LAYER_NAME1_SUF = '_valley_elevations'  # Output layer name suffix.
+LAYER_NAME1_PRE = 'WRV_MN_'  # Output layer name prefix.
+LAYER_NAME1_SUF = '_elevations'  # Output layer name suffix.
 
-LAYER_NAME2 = 'WRV_2009_2014_valley_monuments'  # Output layer name.
+LAYER_NAME2 = 'WRV_MN_2008_2014_monuments'  # Output layer name.
 
 # Define operation parameters.
 TRANSECT_NUM_START = 1  # Start transect number for operation loop.
@@ -59,7 +62,7 @@ create_folder(OUTPUT_FOLDER + '/' + GIS_FOLDER)
 # Define DataFrames from input data.
 df_transect_elevs = convert_CSV_to_dataframe(INPUT_FILE1, 0)  # Calls UDF.
 df_monument_coords = convert_CSV_to_dataframe(INPUT_FILE2, 0)
-df_monument_meta = convert_CSV_to_dataframe(INPUT_FILE3, 0)
+df_monument_meta = convert_CSV_to_dataframe(INPUT_FILE3, 1)
 
 # DATA OPERATIONS =============================================================
 
@@ -99,22 +102,22 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate their
         df_monument_meta_i = slice_dataframe_rows(
                 'Equals', df_monument_meta, 'TNum', i, 0)  # Slice DataFrame
         # and define resultant DataFrame of single transect monument metadata.
-        df_monument_meta09_14_i = slice_dataframe_rows(
-                'Equals', df_monument_meta_i, 'SrvEra', '2009–2014', 0)
+        df_monument_meta08_14_i = slice_dataframe_rows(
+                'Equals', df_monument_meta_i, 'SrvEra', '2008–2014', 0)
         # Single transect monument metadata from the 2009–2014 survey.
 
         monument_stat_i = slice_dataframe_cell(
-                'Float', df_monument_meta09_14_i, 0, 'MTopSttnFt', 0)
+                'Float', df_monument_meta08_14_i, 0, 'MTopSttnFt', 0)
         # Transect station of start monument
 
         # Check if marker is off transect.
         #
         # Retrieve monument off transect condition.
         monument1_off_i = slice_dataframe_cell(
-                'Float', df_monument_meta09_14_i, 0, 'MTOff', 0)
+                'Float', df_monument_meta08_14_i, 0, 'MOffT', 0)
         # Start monument off of transect condition.
         monument2_off_i = slice_dataframe_cell(
-                'Float', df_monument_meta09_14_i, 1, 'MTOff', 0)
+                'Float', df_monument_meta08_14_i, 1, 'MOffT', 0)
         # End monument off of transect condition.
 
         # Check off transect condition and shift reference coordinate to the
@@ -123,15 +126,15 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate their
             # start monument off transect condition.
             monument1_east_i, monument1_north_i = move_reference_coordinates(
                     monument1_east_i, monument1_north_i, 
-                    df_monument_meta09_14_i, df_monument_coords_i, 0, 
-                    'MTOffDisFt', 'MTOffDir', 'GXYAccM', FT_TO_M, 0)
+                    df_monument_meta08_14_i, df_monument_coords_i, 0,
+                    'MOffTDisFt', 'MOffTDir', 'GXYAccM', FT_TO_M, 0)
             # Calls UDF to redefine objects by shifting reference coordinate
             # position.
         if monument2_off_i != 0:  # Check end monument off transect condition.
             monument2_east_i, monument2_north_i = move_reference_coordinates(
                     monument2_east_i, monument2_north_i, 
-                    df_monument_meta09_14_i, df_monument_coords_i, 1, 
-                    'MTOffDisFt', 'MTOffDir', 'GXYAccM', FT_TO_M, 0)
+                    df_monument_meta08_14_i, df_monument_coords_i, 1,
+                    'MOffTDisFt', 'MOffTDir', 'GXYAccM', FT_TO_M, 0)
 
         # Select survey data.
         transect_surv_nums = slice_dataframe_column(
@@ -318,18 +321,18 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate their
                         # Saves file to directory.
 
                     # Digitize reference coordinates.
-                    gdf_monument_coords = gpd.GeoDataFrame(
-                            df_monument_coords, 
-                            geometry=gpd.points_from_xy(
-                                    df_monument_coords.EastingM, 
-                                    df_monument_coords.NorthingM), 
-                            crs=CRS)
-
-                    gdf_monument_coords.to_file(OUTPUT_FOLDER + '/' 
-                                                + GIS_FOLDER 
-                                                + GPKG_NAME, 
-                                                layer=LAYER_NAME2,
-                                                driver='GPKG', index=True)
+                    # gdf_monument_coords = gpd.GeoDataFrame(
+                    #         df_monument_coords,
+                    #         geometry=gpd.points_from_xy(
+                    #                 df_monument_coords.EastingM,
+                    #                 df_monument_coords.NorthingM),
+                    #         crs=CRS)
+                    #
+                    # gdf_monument_coords.to_file(OUTPUT_FOLDER + '/'
+                    #                             + GIS_FOLDER
+                    #                             + GPKG_NAME,
+                    #                             layer=LAYER_NAME2,
+                    #                             driver='GPKG', index=True)
 else:
     print('\n\033[1m' + 'TRANSECT DATA DIGITIZATION COMPLETE!!!' + '\033[0m', 
           '\n...\n')  # Signals end.
