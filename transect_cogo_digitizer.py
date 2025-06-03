@@ -319,20 +319,6 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate their
                                                      driver='GPKG', 
                                                      index=True)
                         # Saves file to directory.
-
-                    # Digitize reference coordinates.
-                    # gdf_monument_coords = gpd.GeoDataFrame(
-                    #         df_monument_coords,
-                    #         geometry=gpd.points_from_xy(
-                    #                 df_monument_coords.EastingM,
-                    #                 df_monument_coords.NorthingM),
-                    #         crs=CRS)
-                    #
-                    # gdf_monument_coords.to_file(OUTPUT_FOLDER + '/'
-                    #                             + GIS_FOLDER
-                    #                             + GPKG_NAME,
-                    #                             layer=LAYER_NAME2,
-                    #                             driver='GPKG', index=True)
 else:
     print('\n\033[1m' + 'TRANSECT DATA DIGITIZATION COMPLETE!!!' + '\033[0m', 
           '\n...\n')  # Signals end.
