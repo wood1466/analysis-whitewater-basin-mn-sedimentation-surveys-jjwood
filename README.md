@@ -1,4 +1,4 @@
-metadata date: 20250603
+metadata date: 20250605
 Jimmy J. Wood
 code date: all 20250603
 
@@ -21,3 +21,7 @@ scikit-posthocs 0.7.0
 scipy 1.10.0
 statsmodels 0.14.0
 
+functions code
+digitizer code
+rate code
+stats code
