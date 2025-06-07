@@ -1,9 +1,9 @@
 ## General Information
 Documentation last updated 20250607
 
-[![License: MIT](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE)](https://opensource.org/licenses/MIT)
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE)
+
+[![Python: 3.10.4](https://img.shields.io/python/required-version-toml)](https://www.python.org)
 
 
 **Date finalized for release:** 20250603
