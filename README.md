@@ -18,7 +18,6 @@ Dependencies
 
 [![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood)
 
-
 software versions, instrument or software specicif information needed to interprret the data:
 Python 3.10.4
 geopandas 0.12.2, https://zenodo.org/records/7422493 
