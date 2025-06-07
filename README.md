@@ -2,7 +2,19 @@
 Documentation last updated 20250607
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE)
-[![Python](https://img.shields.io/badge/python-3.10.4-yellow)]([https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE](https://www.python.org/downloads/release/python-3104/))
+
+[![Python version](https://img.shields.io/badge/python-3.10.4-yellow)](https://www.python.org/downloads/release/python-3104/)
+
+Dependencies
+
+[![GeoPandas version](https://img.shields.io/badge/geopandas-0.12.2-yellow)](https://pypi.org/project/geopandas/0.12.2/)
+[![Matplotlib version](https://img.shields.io/badge/matplotlib-3.6.3-yellow)](https://pypi.org/project/matplotlib/3.6.3/)
+[![NumPy version](https://img.shields.io/badge/numpy-1.24.1-yellow)](https://pypi.org/project/numpy/1.24.1/)
+[![pandas version](https://img.shields.io/badge/pandas-1.5.3-yellow)](https://pypi.org/project/pandas/1.5.3/)
+[![pingouin version](https://img.shields.io/badge/pingouin-0.5.5-yellow)](https://pypi.org/project/pingouin/0.5.5/)
+[![scikit-posthocs version](https://img.shields.io/badge/scikit--posthocs-0.7.0-yellow)](https://pypi.org/project/scikit-posthocs/0.7.0/)
+[![SciPy version](https://img.shields.io/badge/scipy-1.10.0-yellow)](https://pypi.org/project/scipy/1.10.0/)
+[![statsmodels version](https://img.shields.io/badge/statsmodels-0.14.0-yellow)](https://pypi.org/project/statsmodels/0.14.0/)
 
 software versions, instrument or software specicif information needed to interprret the data:
 Python 3.10.4
