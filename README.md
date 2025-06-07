@@ -1,7 +1,20 @@
 ## General Information
 Documentation last updated 20250607
 
-[![](https://img.shields.io/badge/License-MIT-yellow)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE)
+[![Python](https://img.shields.io/badge/python-3.10.4-yellow)]([https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE](https://www.python.org/downloads/release/python-3104/))
+
+software versions, instrument or software specicif information needed to interprret the data:
+Python 3.10.4
+geopandas 0.12.2, https://zenodo.org/records/7422493 
+matplotlib 3.6.3
+numpy 1.24.1
+pandas 1.5.3
+pingouin 0.5.5
+scikit-posthocs 0.7.0
+scipy 1.10.0
+statsmodels 0.14.0
+
 
 **Date finalized for release:** 20250603
 
@@ -26,16 +39,6 @@ links to publications that cite or use programs
 
 **Associated Data Sets**
 
-software versions, instrument or software specicif information needed to interprret the data:
-Python 3.10.4
-geopandas 0.12.2, https://zenodo.org/records/7422493 
-matplotlib 3.6.3
-numpy 1.24.1
-pandas 1.5.3
-pingouin 0.5.5
-scikit-posthocs 0.7.0
-scipy 1.10.0
-statsmodels 0.14.0
 
 title of dataset eWHITEWATER RIVER VALLEY, MN, US, SEDIMENTATION SURVEY DATA ANALYSIS PROGRAMS
 
