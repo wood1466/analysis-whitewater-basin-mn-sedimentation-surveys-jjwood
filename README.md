@@ -3,9 +3,6 @@ Documentation last updated 20250607
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE)
 
-[![Python: 3.10.4](https://img.shields.io/python/required-version-toml)](https://www.python.org)
-
-
 **Date finalized for release:** 20250603
 
 **Author:** Jimmy J. Wood
@@ -31,7 +28,7 @@ links to publications that cite or use programs
 
 software versions, instrument or software specicif information needed to interprret the data:
 Python 3.10.4
-geopandas 0.12.2
+geopandas 0.12.2, https://zenodo.org/records/7422493 
 matplotlib 3.6.3
 numpy 1.24.1
 pandas 1.5.3
