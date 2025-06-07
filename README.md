@@ -16,6 +16,9 @@ Dependencies
 [![SciPy version](https://img.shields.io/badge/scipy-1.10.0-yellow)](https://pypi.org/project/scipy/1.10.0/)
 [![statsmodels version](https://img.shields.io/badge/statsmodels-0.14.0-yellow)](https://pypi.org/project/statsmodels/0.14.0/)
 
+[![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood)
+
+
 software versions, instrument or software specicif information needed to interprret the data:
 Python 3.10.4
 geopandas 0.12.2, https://zenodo.org/records/7422493 
