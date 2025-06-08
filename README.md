@@ -46,7 +46,7 @@ links to publications that cite or use programs
 
 **Progress:** Complete
 
-[![Progress](https://img.shields.io/badge/Progress-complete-yellow)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main)
+![Progress](https://img.shields.io/badge/Progress-complete-yellow)
 
 **Maintenance/update frequency:** As needed. 
 
