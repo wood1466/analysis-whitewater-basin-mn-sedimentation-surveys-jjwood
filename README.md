@@ -41,7 +41,6 @@
 
 ## transect_sed_rate_statistics.py
 
-[![GeoPandas version](https://img.shields.io/badge/geopandas-0.12.2-yellow)](https://pypi.org/project/geopandas/0.12.2/)
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.6.3-yellow)](https://pypi.org/project/matplotlib/3.6.3/)
 [![NumPy version](https://img.shields.io/badge/numpy-1.24.1-yellow)](https://pypi.org/project/numpy/1.24.1/)
 [![pandas version](https://img.shields.io/badge/pandas-1.5.3-yellow)](https://pypi.org/project/pandas/1.5.3/)
@@ -50,11 +49,11 @@
 [![SciPy version](https://img.shields.io/badge/scipy-1.10.0-yellow)](https://pypi.org/project/scipy/1.10.0/)
 [![statsmodels version](https://img.shields.io/badge/statsmodels-0.14.0-yellow)](https://pypi.org/project/statsmodels/0.14.0/)
 
-
 ## General information
-Documentation last updated 20250608
 
-**Date finalized for release:** 20250603
+**Documentation date:** 20250608
+
+**Date finalized for release:** 
 
 **Author:** Jimmy J. Wood
 - Institution: University of Minnesota Twin Cities (UMN), Saint Anthony Falls Laboratory
@@ -67,6 +66,6 @@ Documentation last updated 20250608
 - National Science Foundation grant 1944782.
 - UMN, College of Science & Engineering Inclusion Fellowship.
 
-links to publications that cite or use programs
-
-**Associated Data Sets**
+**Related publications**e
+- Data release
+- GIS data release
