@@ -21,7 +21,7 @@
 
 ## transect_analysis_functions.py
 
-[![GeoPandas version](https://img.shields.io/badge/geopandas-0.12.2-yellow)](https://pypi.org/project/geopandas/0.12.2/)
+
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.6.3-yellow)](https://pypi.org/project/matplotlib/3.6.3/)
 [![NumPy version](https://img.shields.io/badge/numpy-1.24.1-yellow)](https://pypi.org/project/numpy/1.24.1/)
 [![pandas version](https://img.shields.io/badge/pandas-1.5.3-yellow)](https://pypi.org/project/pandas/1.5.3/)
