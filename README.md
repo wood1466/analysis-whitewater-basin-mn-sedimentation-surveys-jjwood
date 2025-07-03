@@ -52,7 +52,7 @@
 
 **Documentation date:** 20250703
 
-**Date finalized for release:** 
+**Date finalized for release:** 20250703
 
 **Author:** Jimmy J. Wood
 - Institution: University of Minnesota Twin Cities (UMN), Saint Anthony Falls Laboratory
@@ -63,8 +63,8 @@
 **Funding sources**
 - Legislative-Citizen Commission on Minnesota Resources (LCCMR) Environment and Natural Resources Trust Fund (ENTRF) grant 2022-163.
 - National Science Foundation grant 1944782.
-- UMN, College of Science & Engineering Inclusion Fellowship.
+- UMN College of Science & Engineering Inclusion Fellowship.
 
-**Related publications**e
-- Data release
-- GIS data release
+**Related publications**
+
+Wood, J. J., Svien, L., Christianson, D. & Claas, L. Historical stream and valley sedimentation survey data for the Whitewater River Valley, Minnesota, United States (1855–1994). *University of Minnesota Twin Cities Data Repository for U of M* https://doi.org/10.13020/2ggx-qk28 (2025).
