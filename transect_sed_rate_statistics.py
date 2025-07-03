@@ -15,8 +15,8 @@ from transect_analysis_functions import *   # Imports all functions from
 
 INPUT_FOLDER = 'Input'  # Input folder where all input data will be stored.
 
-INPUT_FILE = INPUT_FOLDER + '/Sedimentation_rates_20250201.csv'  # Input file
-# with data to be analyzed.
+INPUT_FILE = INPUT_FOLDER + '/WRV_MN_1855_1994_sedimentation_statistics.csv'  
+# Input file with data to be analyzed.
 
 # Define operation parameters.
 ALPHA = 0.05  # Statistical hypothesis testing level of significance.
