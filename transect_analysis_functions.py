@@ -1,4 +1,5 @@
-# WHITEWATER RIVER VALLEY, MN, US, SEDIMENTATION SURVEY TRANSECT DATA PROGRAMS
+# STREAM AND VALLEY SEDIMENTATION SURVEY TRANSECT DATA ANALYSIS * -------------
+# WHITEWATER RIVER VALLEY, MN, US * -------------------------------------------
 # USER DEFINED FUNCTIONS * ----------------------------------------------------
 
 # INITIALIZATION ==============================================================
