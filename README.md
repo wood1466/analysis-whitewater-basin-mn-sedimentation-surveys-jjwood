@@ -1,4 +1,3 @@
-# Whitewater River Valley, MN, US, sedimentation survey transect data programs
 # Stream and valley sedimentation survey transect data analysis
 
 [![Release version](https://img.shields.io/badge/Release-1.0.0-brightgreen)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentmgmation-surveys-jjwood/blob/main)
