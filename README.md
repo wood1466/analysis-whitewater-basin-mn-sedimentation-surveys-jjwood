@@ -1,4 +1,3 @@
-
 # Whitewater River Valley, MN, US, sedimentation survey data analysis programs: 1.0.0
 
 [![Release version](https://img.shields.io/badge/Release-1.0.0-brightgreen)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentmgmation-surveys-jjwood/blob/main)
@@ -30,8 +29,6 @@
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
 [![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
-
-## transect_data_vizualizer.py
 
 ## transect_sed_rate_calculator.py
 
