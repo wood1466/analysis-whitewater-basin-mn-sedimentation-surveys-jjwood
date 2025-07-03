@@ -1,4 +1,4 @@
-# Whitewater River Valley, MN, US, sedimentation survey data analysis programs: 1.0.0
+# Whitewater River Valley, MN, US, sedimentation survey data analysis programs
 
 [![Release version](https://img.shields.io/badge/Release-1.0.0-brightgreen)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentmgmation-surveys-jjwood/blob/main)
 [![Python version](https://img.shields.io/badge/python-3.10.4-yellow)](https://www.python.org/downloads/release/python-3104/)
@@ -6,17 +6,17 @@
 [![Update frequency](https://img.shields.io/badge/Updates-as--needed-informational)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main)
 [![License](https://img.shields.io/badge/License-MIT-informational)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE)
 
-## Repository overview
+## Repository background & summary
 
 **Title:** analysis-whitewater-basin-mn-sedimentation-surveys-jjwood
 
 **Abstract**
 
 **Programs**
-- transect_analysis_functions.py
-- transect_cogo_digitizer.py
-- transect_sed_rate_calculator.py
-- transect_sed_rate_statistics.py
+- transect_analysis_functions.py: *Description*
+- transect_cogo_digitizer.py: *Description*
+- transect_sed_rate_calculator.py: *Description*
+- transect_sed_rate_statistics.py: *Description*
 
 ## transect_analysis_functions.py
 
