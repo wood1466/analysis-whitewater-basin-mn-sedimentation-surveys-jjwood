@@ -8,15 +8,15 @@
 
 ## Background & summary
 
-**Title:** analysis-whitewater-basin-mn-sedimentation-surveys-jjwood
+These programs were developed during the compilation of a historical stream and valley sedimentation survey dataset collected in the Whitewater River Valley, MN, U.S., between 1939 and 1994 to compliment the data through geospatial digitization and the calculation of results with that data and their analysis to enable their future use in GIS and enable their further study via the results. The historical data and more contemporary results are described by Wood et al. (2025; see below). Those relevant to this code package are the transect elevation profiles and transect monuments and coordinates. This code also serves as an example of sets of transect data and wherever elevation data is collected on a transect this would be applicable. *include example plot of cross-section, maybe monument*
 
-**Abstract**
-
-**Programs**
+This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) includes 4 programs used in the above things:
 - transect_analysis_functions.py: *Description*
 - transect_cogo_digitizer.py: *Description*
 - transect_sed_rate_calculator.py: *Description*
 - transect_sed_rate_statistics.py: *Description*
+
+This documentation will briefly describe each by example.
 
 ## transect_analysis_functions.py
 
@@ -24,20 +24,20 @@
 [![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
 
 ## transect_cogo_digitizer.py
-
+*include example figure of mapped cross-section with monuments then with digitized elevations*
 [![GeoPandas version](https://img.shields.io/badge/geopandas-1.1.0-yellow)](https://pypi.org/project/geopandas/1.1.0/)
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
 [![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
 
 ## transect_sed_rate_calculator.py
-
+*include example figure of calculation*
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
 [![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
 
 ## transect_sed_rate_statistics.py
-
+*include example figure of test result*
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
 [![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
