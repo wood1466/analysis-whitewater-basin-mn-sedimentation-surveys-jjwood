@@ -21,14 +21,13 @@ GIS_FOLDER = 'GIS'  # Output where all geospatial data products will be stored.
 
 # Define data files.
 INPUT_FILE1 = INPUT_FOLDER \
-    + '/WRV_MN_1855_1994_sedimentation_elevations_20250525.csv'  # Data to be
-# digitized.
+    + '/WRV_MN_1855_1994_sedimentation_elevations.csv'  # Data to be digitized.
 INPUT_FILE2 = INPUT_FOLDER \
-    + '/WRV_MN_2008_2014_sedimentation_coordinates_20250525.csv'  # Reference
+    + '/WRV_MN_2008_2014_sedimentation_coordinates.csv'  # Reference
 # coordinates.
 INPUT_FILE3 = INPUT_FOLDER \
-    + '/WRV_MN_1939_2014_sedimentation_monuments_20250525.csv'  # Reference
-# coordinate metadata.
+    + '/WRV_MN_1939_2014_sedimentation_monuments.csv'  # Reference coordinate
+#metadata.
 
 GPKG_NAME = '/WRV_MN_1855_1994_sedimentation.gpkg'  # Output GeoPackage
 # name.
