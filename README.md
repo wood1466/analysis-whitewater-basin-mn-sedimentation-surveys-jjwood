@@ -1,4 +1,4 @@
-# Whitewater River Valley, MN, US, sedimentation survey data analysis programs
+# Whitewater River Valley, MN, US, sedimentation survey transect data programs
 
 [![Release version](https://img.shields.io/badge/Release-1.0.0-brightgreen)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentmgmation-surveys-jjwood/blob/main)
 [![Python version](https://img.shields.io/badge/python-3.10.4-yellow)](https://www.python.org/downloads/release/python-3104/)
@@ -6,7 +6,7 @@
 [![Update frequency](https://img.shields.io/badge/Updates-as--needed-informational)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main)
 [![License](https://img.shields.io/badge/License-MIT-informational)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE)
 
-## Repository background & summary
+## Background & summary
 
 **Title:** analysis-whitewater-basin-mn-sedimentation-surveys-jjwood
 
