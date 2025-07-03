@@ -15,43 +15,42 @@
 **Programs**
 - transect_analysis_functions.py
 - transect_cogo_digitizer.py
-- transect_data_vizualizer.py
 - transect_sed_rate_calculator.py
 - transect_sed_rate_statistics.py
 
 ## transect_analysis_functions.py
 
-[![NumPy version](https://img.shields.io/badge/numpy-1.24.1-yellow)](https://pypi.org/project/numpy/1.24.1/)
-[![pandas version](https://img.shields.io/badge/pandas-1.5.3-yellow)](https://pypi.org/project/pandas/1.5.3/)
+[![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/1.24.1/)
+[![pandas version](https://img.shields.io/badge/pandas-2.3.0-yellow)](https://pypi.org/project/pandas/1.5.3/)
 
 ## transect_cogo_digitizer.py
 
-[![GeoPandas version](https://img.shields.io/badge/geopandas-0.12.2-yellow)](https://pypi.org/project/geopandas/0.12.2/)
-[![Matplotlib version](https://img.shields.io/badge/matplotlib-3.6.3-yellow)](https://pypi.org/project/matplotlib/3.6.3/)
-[![NumPy version](https://img.shields.io/badge/numpy-1.24.1-yellow)](https://pypi.org/project/numpy/1.24.1/)
-[![pandas version](https://img.shields.io/badge/pandas-1.5.3-yellow)](https://pypi.org/project/pandas/1.5.3/)
+[![GeoPandas version](https://img.shields.io/badge/geopandas-1.1.0-yellow)](https://pypi.org/project/geopandas/0.12.2/)
+[![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-yellow)](https://pypi.org/project/matplotlib/3.6.3/)
+[![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/1.24.1/)
+[![pandas version](https://img.shields.io/badge/pandas-2.3.0-yellow)](https://pypi.org/project/pandas/1.5.3/)
 
 ## transect_data_vizualizer.py
 
 ## transect_sed_rate_calculator.py
 
-[![Matplotlib version](https://img.shields.io/badge/matplotlib-3.6.3-yellow)](https://pypi.org/project/matplotlib/3.6.3/)
-[![NumPy version](https://img.shields.io/badge/numpy-1.24.1-yellow)](https://pypi.org/project/numpy/1.24.1/)
-[![pandas version](https://img.shields.io/badge/pandas-1.5.3-yellow)](https://pypi.org/project/pandas/1.5.3/)
+[![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-yellow)](https://pypi.org/project/matplotlib/3.6.3/)
+[![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/1.24.1/)
+[![pandas version](https://img.shields.io/badge/pandas-2.3.0-yellow)](https://pypi.org/project/pandas/1.5.3/)
 
 ## transect_sed_rate_statistics.py
 
-[![Matplotlib version](https://img.shields.io/badge/matplotlib-3.6.3-yellow)](https://pypi.org/project/matplotlib/3.6.3/)
-[![NumPy version](https://img.shields.io/badge/numpy-1.24.1-yellow)](https://pypi.org/project/numpy/1.24.1/)
-[![pandas version](https://img.shields.io/badge/pandas-1.5.3-yellow)](https://pypi.org/project/pandas/1.5.3/)
+[![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-yellow)](https://pypi.org/project/matplotlib/3.6.3/)
+[![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/1.24.1/)
+[![pandas version](https://img.shields.io/badge/pandas-2.3.0-yellow)](https://pypi.org/project/pandas/1.5.3/)
 [![pingouin version](https://img.shields.io/badge/pingouin-0.5.5-yellow)](https://pypi.org/project/pingouin/0.5.5/)
-[![scikit-posthocs version](https://img.shields.io/badge/scikit--posthocs-0.7.0-yellow)](https://pypi.org/project/scikit-posthocs/0.7.0/)
-[![SciPy version](https://img.shields.io/badge/scipy-1.10.0-yellow)](https://pypi.org/project/scipy/1.10.0/)
-[![statsmodels version](https://img.shields.io/badge/statsmodels-0.14.0-yellow)](https://pypi.org/project/statsmodels/0.14.0/)
+[![scikit-posthocs version](https://img.shields.io/badge/scikit--posthocs-0.11.4-yellow)](https://pypi.org/project/scikit-posthocs/0.7.0/)
+[![SciPy version](https://img.shields.io/badge/scipy-1.15.3-yellow)](https://pypi.org/project/scipy/1.10.0/)
+[![statsmodels version](https://img.shields.io/badge/statsmodels-0.14.4-yellow)](https://pypi.org/project/statsmodels/0.14.0/)
 
 ## General information
 
-**Documentation date:** 20250608
+**Documentation date:** 20250703
 
 **Date finalized for release:** 
 
