@@ -21,11 +21,11 @@ CALC_FOLDER = 'Calculations'  # Output where all calculation results will be
 # stored.
 
 # Define data files.
-INPUT_FILE1 = INPUT_FOLDER + '/Elevation_surveys_20250129.csv'
+INPUT_FILE1 = INPUT_FOLDER + '/WRV_MN_1855_2014_sedimentation_elevations.csv'
 # Data referenced for calculations.
-INPUT_FILE2 = INPUT_FOLDER + '/Calculation_exceptions_20250130.csv'
+INPUT_FILE2 = INPUT_FOLDER + '/WRV_MN_1955_1994_sedimentation_exceptions.csv'
 # Data exceptions to be excluded from calculations.
-CALC_NAME = '/WRV_1855_1994_sedimentation_rates.csv'  # Output file name.
+CALC_NAME = '/WRV_MN_1855_1994_sedimentation_rates.csv'  # Output file name.
 
 DATAFRAME_COLUMNS = ['TId24', 'PYr1', 'PYr2', '1_2Ft', '1_2Cm', '1_2CmY']
 # Output file column labels.
