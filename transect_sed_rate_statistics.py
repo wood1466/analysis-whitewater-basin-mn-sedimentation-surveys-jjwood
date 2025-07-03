@@ -1,8 +1,8 @@
-# WHITEWATER RIVER VALLEY, MN, US, SEDIMENTATION SURVEY DATA ANALYSIS PROGRAMS 
-# TRANSECT DATA SEDIMENTATION RATE STATISTICAL ANALYZER * ---------------------
+# WHITEWATER RIVER VALLEY, MN, US, SEDIMENTATION SURVEY TRANSECT DATA PROGRAMS
+# TRANSECT DATA ELEVATION CHANGE RATE STATISTICAL ANALYZER * ------------------
 
-print('\n\033[1m' + 'START TRANSECT SEDIMENTATION RATE STATISTICAL ANALYSIS!!!'
-      + '\033[0m', '\n...\n')  # Displays objects to signal run.
+print('\n\033[1m' + 'START TRANSECT ELEVATION CHANGE RATE STATISTICAL' 
+      + ' ANALYSIS!!!\033[0m', '\n...\n')  # Displays objects to signal run.
 
 # INITIALIZATION ==============================================================
 
@@ -36,7 +36,7 @@ df_sed_rates = convert_CSV_to_dataframe(INPUT_FILE, 0)  # Calls UDF to define
 
 # SELECT DATA. ----------------------------------------------------------------
 
-# Select sample group sedimentation rate data.
+# Select sample group elevation change rate data.
 
 sed_rates_55_39 = slice_dataframe_column(
         'Array', 'Float', df_sed_rates, GROUP_COLUMN_1, 0, 1, 0)  # Calls UDF
@@ -174,5 +174,5 @@ g_h_test = pg.pairwise_gameshowell(
 print('Games-Howell test:\n' + str(g_h_test) + '\n')
 
 print('\n\033[1m'
-      + 'TRANSECT SEDIMENTATION RATE STATISTICAL ANALYSIS COMPLETED!!!'
+      + 'TRANSECT ELEVATION CHANGE RATE STATISTICAL ANALYSIS COMPLETED!!!'
       + '\033[0m', '\n...\n')  # Signals end.
