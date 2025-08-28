@@ -24,7 +24,7 @@ This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) incl
 - **transect_sed_rate_statistics.py:** Performs Analysis of Variance (ANOVA) hypothesis testing suites to compare mean elevation change rates over the time interval represented in this dataset—1855–1994.
 - **transect_analysis_functions.py:** Houses the user-defined functions (UDFs) executed in the previous programs.
 
-We will briefly describe how to use each program.
+We will briefly describe how to use each program. Retreive and use the input data files from Wood et al. (2025a) as you follow along. The relevant files are identified in screenshots below.
 
 ## transect_cogo_digitizer.py
 [![GeoPandas version](https://img.shields.io/badge/geopandas-1.1.0-yellow)](https://pypi.org/project/geopandas/1.1.0/)
@@ -34,23 +34,36 @@ We will briefly describe how to use each program.
 
 ### General
 
-The maps below highlight this program's function. The right one displays a transect's GNSS surveyed monuments (cyan) and the transect's trace extending between them (dashed line). The left one displays that trace populated with elevation measurements (magenta) digitized from a data table via this program.
+The maps below highlight this program's function. The right one displays a transect's GNSS surveyed monuments (cyan) and the transect's trace extending between them (dashed line). The left one displays that trace populated with elevation measurements (magenta) digitized from a data table via this program. 
 
 <img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
 
 ### Initialization
 
-Wherever the digitizer program is stored, create a new folder named *Input* to house the program's required input files.
+<img width="665" height="301" align="right" alt="Screenshot 2025-08-28 at 2 20 52 PM" src="https://github.com/user-attachments/assets/a3699570-c97c-4ef8-90d8-01dfe2ca18e8" />
 
-<img width="697" height="202" align="right" alt="Screenshot 2025-08-28 at 1 29 25 PM" src="https://github.com/user-attachments/assets/a2624ab6-baf0-4113-9e75-dac75abc1240" />
-
+Wherever you have stored the digitizer program, create a new folder named *Input* where you will in turn store the code's required input files containing the:
 
 1. Elevation data,
 2. Monument/reference coordinate data,
 3. And reference coordinate metadata.
 
+Also, set the names of your output GIS files, a GeoPackage containing elevation layers grouped by data year.
 
-   
+&#8202;
+&#8202;
+
+<img width="665" height="239" align="right" alt="Screenshot 2025-08-28 at 2 47 31 PM" src="https://github.com/user-attachments/assets/a2db389b-80c2-4528-9f6a-7e8c022b9d84" />
+
+Lastly, set some misc. items: *TRANSECT_NUM_START*, *TRANSECT_NUM_END*, and *CRS*. 
+
+The first two relate to the transect number, an integer data ID that provides a convenient framework for looping the digitizer through each transect. Setting the operation limits 1 and 107 will digitize every transect elevation dataset in the input file. 
+
+*CRS* sets the target projected coordinate system for the output GIS data via its unique EPSG (European Petroleum Survey Group) code. *EPSG:26915* sets the *CRS* to NAD83 / UTM zone 15N for Minnesota.
+
+
+
+
 ## transect_sed_rate_calculator.py
 *include example figure of calculation*
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
