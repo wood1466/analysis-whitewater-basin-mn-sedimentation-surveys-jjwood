@@ -42,27 +42,32 @@ The maps below highlight this program's function. The right one displays a trans
 
 <img width="665" height="301" align="right" alt="Screenshot 2025-08-28 at 2 20 52 PM" src="https://github.com/user-attachments/assets/a3699570-c97c-4ef8-90d8-01dfe2ca18e8" />
 
-Wherever you have stored the digitizer program, create a new folder named *Input* where you will in turn store the code's required input files containing the:
+Wherever you have stored the digitizer program, create a new folder named *'Input'* where you will, in turn, store the code's required input files:
 
-1. Elevation data,
+1. The elevation data,
 2. Monument/reference coordinate data,
 3. And reference coordinate metadata.
 
+Each file is converted into a pandas DataFrame at the end of *Initialization* section to enable manipulation.
+
 Also, set the names of your output GIS files, a GeoPackage containing elevation layers grouped by data year.
 
-&#8202;
-&#8202;
-
 <img width="665" height="239" align="right" alt="Screenshot 2025-08-28 at 2 47 31 PM" src="https://github.com/user-attachments/assets/a2db389b-80c2-4528-9f6a-7e8c022b9d84" />
-
 Lastly, set some misc. items: *TRANSECT_NUM_START*, *TRANSECT_NUM_END*, and *CRS*. 
 
-The first two relate to the transect number, an integer data ID that provides a convenient framework for looping the digitizer through each transect. Setting the operation limits 1 and 107 will digitize every transect elevation dataset in the input file. 
+The first two relate to the transect number, an integer data ID that provides a convenient framework for looping the digitizer through each transect. Setting the operation limits to 1 and 107 will digitize every transect elevation dataset in the input file. 
 
-*CRS* sets the target projected coordinate system for the output GIS data via its unique EPSG (European Petroleum Survey Group) code. *EPSG:26915* sets the *CRS* to NAD83 / UTM zone 15N for Minnesota.
+*CRS* sets the target projected coordinate system for the output GIS data via its unique EPSG (European Petroleum Survey Group) code. *'EPSG:26915'* sets the *CRS* to NAD83 / UTM zone 15N for Minnesota.
 
+### Data operations
 
+Calculate station coordinate geometry
 
+Prepare data for digitization
+
+Digitize data
+&#8202;
+# end
 
 ## transect_sed_rate_calculator.py
 *include example figure of calculation*
