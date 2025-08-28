@@ -12,7 +12,7 @@ These programs were developed to augment and analyze floodplain transect data co
 
 The historical data was collected by federal agencies during stream and valley sedimentation surveys aimed at investigating accelerated erosion and deposition and increased flooding in the basin; therefore, this dataset is geomorphic in nature and these programs pursue analyses of interest primarily to the earth scientist. 
 
-<img width="547.5" height="282.5" align="right" alt="2_3_8plots" src="https://github.com/user-attachments/assets/41717673-7e0f-4739-89f5-9dee6868fcb7" />
+<img width="561.25" height="302.25" align="right" alt="2_3_8plots" src="https://github.com/user-attachments/assets/df71b17f-f69c-4efa-be20-82a849f75460" />
 
 All data associated with this project has been published by Wood et al. (2025a) and is described in Wood et al. (2025b; manuscript in development). 
 
