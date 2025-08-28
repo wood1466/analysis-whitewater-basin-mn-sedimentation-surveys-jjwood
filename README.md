@@ -40,9 +40,11 @@ The maps below highlight this program's function. The right one displays a trans
 
 ### Initialization
 
+Wherever the digitizer program is stored, create a new folder named *Input* to house the program's required input files.
+
 <img width="697" height="202" align="right" alt="Screenshot 2025-08-28 at 1 29 25 PM" src="https://github.com/user-attachments/assets/a2624ab6-baf0-4113-9e75-dac75abc1240" />
 
-The digitizer requires 3 input files:
+
 1. Elevation data,
 2. Monument/reference coordinate data,
 3. And reference coordinate metadata.
