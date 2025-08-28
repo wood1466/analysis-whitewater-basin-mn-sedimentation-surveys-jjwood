@@ -48,6 +48,8 @@ Wherever the digitizer program is stored, create a new folder named *Input* to h
 1. Elevation data,
 2. Monument/reference coordinate data,
 3. And reference coordinate metadata.
+
+
    
 ## transect_sed_rate_calculator.py
 *include example figure of calculation*
