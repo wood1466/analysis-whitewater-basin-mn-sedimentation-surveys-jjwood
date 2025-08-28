@@ -38,6 +38,15 @@ The maps below highlight this program's function. The right one displays a trans
 
 <img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
 
+### Initialization
+
+<img width="697" height="202" align="right" alt="Screenshot 2025-08-28 at 1 29 25 PM" src="https://github.com/user-attachments/assets/a2624ab6-baf0-4113-9e75-dac75abc1240" />
+
+The digitizer requires 3 input files:
+1. Elevation data,
+2. Monument/reference coordinate data,
+3. And reference coordinate metadata.
+   
 ## transect_sed_rate_calculator.py
 *include example figure of calculation*
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
