@@ -24,12 +24,7 @@ This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) incl
 - **transect_sed_rate_statistics.py:** Performs Analysis of Variance (ANOVA) hypothesis testing suites to compare mean elevation change rates over the time interval represented in this dataset—1855–1994.
 - **transect_analysis_functions.py:** Houses the user-defined functions (UDFs) executed in the previous programs.
 
-This documentation will briefly describe each by example.
-
-## transect_analysis_functions.py
-
-[![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
-[![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
+We will briefly describe each program.
 
 ## transect_cogo_digitizer.py
 *include example figure of mapped cross-section with monuments then with digitized elevations*
@@ -53,6 +48,11 @@ This documentation will briefly describe each by example.
 [![scikit-posthocs version](https://img.shields.io/badge/scikit--posthocs-0.11.4-brightgreen)](https://pypi.org/project/scikit-posthocs/)
 [![SciPy version](https://img.shields.io/badge/scipy-1.15.3-yellow)](https://pypi.org/project/scipy/1.15.3/)
 [![statsmodels version](https://img.shields.io/badge/statsmodels-0.14.4-brightgreen)](https://pypi.org/project/statsmodels/)
+
+## transect_analysis_functions.py
+
+[![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
+[![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
 
 ## General information
 
