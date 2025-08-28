@@ -28,7 +28,7 @@ INPUT_FILE2 = INPUT_FOLDER \
 # coordinates.
 INPUT_FILE3 = INPUT_FOLDER \
     + '/WRV_MN_1939_2014_sedimentation_monuments.csv'  # Reference coordinate
-#metadata.
+# metadata.
 
 GPKG_NAME = '/WRV_MN_1855_1994_sedimentation.gpkg'  # Output GeoPackage
 # name.
