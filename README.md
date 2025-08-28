@@ -8,11 +8,12 @@
 
 ## Background
 
-These programs were developed to augment and analyze floodplain transect data collected in Minnesota's Whitewater River Valley (U.S.) between 1939 and 1994 through (1) geospatial digitization, (2) derivative calculations, and (3) statistical tests. 
+These programs were developed to augment and analyze floodplain transect data collected in Minnesota's Whitewater River Valley (U.S.), between 1939 and 1994, through (1) geospatial digitization, (2) derivative calculations, and (3) statistical tests. 
+
+<img width="561.25" height="302.25" align="right" alt="2_3_8plots" src="https://github.com/user-attachments/assets/df71b17f-f69c-4efa-be20-82a849f75460" />
 
 The historical data was collected by federal agencies during stream and valley sedimentation surveys aimed at investigating accelerated erosion and deposition and increased flooding in the basin; therefore, this dataset is geomorphic in nature and these programs pursue analyses of interest primarily to the earth scientist. 
 
-<img width="561.25" height="302.25" align="right" alt="2_3_8plots" src="https://github.com/user-attachments/assets/df71b17f-f69c-4efa-be20-82a849f75460" />
 
 All data associated with this project has been published by Wood et al. (2025a) and is described in Wood et al. (2025b; manuscript in development). 
 
