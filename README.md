@@ -20,8 +20,8 @@ The hillslope-floodplain-channel cross-section to the right displays the kind of
 
 This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) includes 4 programs:
 - **transect_cogo_digitizer.py:** Performs coordinate geometry (COGO) calculations to digitize tabular transect elevation data into GIS files.
-- **transect_sed_rate_calculator.py:** Calculates mean transect elevation change rates between successive elevation datasets.
-- **transect_sed_rate_statistics.py:** Performs Analysis of Variance (ANOVA) hypothesis testing suites to determine the significance of mean elevation change rate change over the time interval represented in this dataset.
+- **transect_sed_rate_calculator.py:** Calculates mean transect elevation change rates between successive elevation datasets to measure topographic change.
+- **transect_sed_rate_statistics.py:** Performs Analysis of Variance (ANOVA) hypothesis testing suites to compare mean elevation change rates over the time interval represented in this dataset—1855–1994.
 - **transect_analysis_functions.py:** Houses the user-defined functions (UDFs) executed in the previous programs.
 
 This documentation will briefly describe each by example.
