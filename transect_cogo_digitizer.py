@@ -36,8 +36,6 @@ GPKG_NAME = '/WRV_MN_1855_1994_sedimentation.gpkg'  # Output GeoPackage
 LAYER_NAME1_PRE = 'WRV_MN_'  # Output layer name prefix.
 LAYER_NAME1_SUF = '_elevations'  # Output layer name suffix.
 
-LAYER_NAME2 = 'WRV_MN_2008_2014_monuments'  # Output layer name.
-
 # Define operation parameters.
 TRANSECT_NUM_START = 1  # Start transect number for operation loop.
 TRANSECT_NUM_END = 107  # End transect number for operation loop.
