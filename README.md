@@ -6,9 +6,15 @@
 [![Update frequency](https://img.shields.io/badge/Updates-as--needed-informational)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main)
 [![License](https://img.shields.io/badge/License-MIT-informational)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main/LICENSE)
 
-## Background & summary
+## Background
 
-These programs were developed during the compilation of a historical stream and valley sedimentation survey dataset collected in the Whitewater River Valley, MN, U.S., between 1939 and 1994 to compliment the data through geospatial digitization and the calculation of results with that data and their analysis to enable their future use in GIS and enable their further study via the results. The historical data and more contemporary results are described by Wood et al. (2025; see below). Those relevant to this code package are the transect elevation profiles and transect monuments and coordinates. This code also serves as an example of sets of transect data and wherever elevation data is collected on a transect this would be applicable. *include example plot of cross-section, maybe monument*
+These programs were developed to augment and analyze floodplain transect data collected in Minnesota's Whitewater River Valley (U.S.) between 1939 and 1994 through (1) geospatial digitization, (2) derivative calculations, and (3) statistical tests. 
+
+The historical data was collected by federal agencies during stream and valley sedimentation surveys aimed at investigating accelerated erosion and deposition and increased flooding in the basin; therefore, this dataset is geomorphic in nature and these programs pursue analyses of interest primarily to the earth scientist. 
+
+<img width="547.5" height="282.5" align="right" alt="2_3_8plots" src="https://github.com/user-attachments/assets/41717673-7e0f-4739-89f5-9dee6868fcb7" />
+
+All data associated with this project has been published by Wood et al. (2025a) and is described in Wood et al. (2025b; manuscript in development). 
 
 This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) includes 4 programs used in the above things:
 - transect_analysis_functions.py: *Description*
@@ -48,7 +54,7 @@ This documentation will briefly describe each by example.
 
 ## General information
 
-**Documentation date:** 20250703
+**Documentation date:** 20250828
 
 **Date finalized:** 20250703
 
@@ -59,8 +65,9 @@ This documentation will briefly describe each by example.
 
 **Related publications**
 
-**Wood, J. J.,** Svien, L., Christianson, D. & Claas, L. Historical stream and valley sedimentation survey data for the Whitewater River Valley, Minnesota, United States (1855–1994). *University of Minnesota Twin Cities Data Repository for U of M* https://doi.org/10.13020/2ggx-qk28 (2025).
+**Wood, J. J.,** Svien, L., Christianson, D. & Claas, L. Historical stream and valley sedimentation survey data for the Whitewater River Valley, Minnesota, United States (1855–1994). *University of Minnesota Twin Cities Data Repository for U of M* https://doi.org/10.13020/2ggx-qk28 (2025a).
 
+**Wood, J. J.,** Wickert, A. D., Larson, P. H. & Svien, L. A 140-year record of stream and valley sedimentation in the Whitewater River Valley, Minnesota, United States. (2025b). [Manuscript in development].
   
 **Funding sources**
 - Legislative-Citizen Commission on Minnesota Resources (LCCMR) Environment and Natural Resources Trust Fund (ENTRF) grant 2022-163.
