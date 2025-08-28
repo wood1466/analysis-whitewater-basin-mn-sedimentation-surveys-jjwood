@@ -18,11 +18,11 @@ All data associated with this project has been published by Wood et al. (2025a) 
 
 The hillslope-floodplain-channel cross-section to the right displays the kind of transect data these programs operate on—surface profiles (i.e., elevations).
 
-This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) includes 4 programs used in the above things:
-- transect_analysis_functions.py: *Description*
-- transect_cogo_digitizer.py: *Description*
-- transect_sed_rate_calculator.py: *Description*
-- transect_sed_rate_statistics.py: *Description*
+This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) includes 4 programs:
+- **transect_analysis_functions.py:** *Description*
+- **transect_cogo_digitizer.py:** *Description*
+- **transect_sed_rate_calculator.py:** *Description*
+- **transect_sed_rate_statistics.py:** *Description*
 
 This documentation will briefly describe each by example.
 
@@ -61,15 +61,13 @@ This documentation will briefly describe each by example.
 **Date finalized:** 20250703
 
 **Author:** Jimmy J. Wood
-- Institution: University of Minnesota Twin Cities (UMN), Saint Anthony Falls Laboratory: 2 SE 3rd Ave, Minneapolis, MN 55414
+- Institution: University of Minnesota Twin Cities (UMN), Saint Anthony Falls Laboratory
 - Email: <jimmyjwood24@gmail.com>
 - ORCID: 0009-0009-7263-433X
 
 **Related publications**
-
-**Wood, J. J.,** Svien, L., Christianson, D. & Claas, L. Historical stream and valley sedimentation survey data for the Whitewater River Valley, Minnesota, United States (1855–1994). *University of Minnesota Twin Cities Data Repository for U of M* https://doi.org/10.13020/2ggx-qk28 (2025a).
-
-**Wood, J. J.,** Wickert, A. D., Larson, P. H. & Svien, L. A 140-year record of stream and valley sedimentation in the Whitewater River Valley, Minnesota, United States. (2025b). [Manuscript in development].
+- **Wood, J. J.,** Svien, L., Christianson, D. & Claas, L. Historical stream and valley sedimentation survey data for the Whitewater River Valley, Minnesota, United States (1855–1994). *University of Minnesota Twin Cities Data Repository for U of M* https://doi.org/10.13020/2ggx-qk28 (2025a).
+- **Wood, J. J.,** Wickert, A. D., Larson, P. H. & Svien, L. A 140-year record of stream and valley sedimentation in the Whitewater River Valley, Minnesota, United States. (2025b). [Manuscript in development].
   
 **Funding sources**
 - Legislative-Citizen Commission on Minnesota Resources (LCCMR) Environment and Natural Resources Trust Fund (ENTRF) grant 2022-163.
