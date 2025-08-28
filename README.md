@@ -14,8 +14,9 @@ These programs were developed to augment and analyze floodplain transect data co
 
 The historical data was collected by federal agencies during stream and valley sedimentation surveys aimed at investigating accelerated erosion and deposition and increased flooding in the basin; therefore, this dataset is geomorphic in nature and these programs pursue analyses of interest primarily to the earth scientist. 
 
-
 All data associated with this project has been published by Wood et al. (2025a) and is described in Wood et al. (2025b; manuscript in development). 
+
+The cross-section to the right displays the kind of transect data these programs operate on—surface elevation profiles.
 
 This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) includes 4 programs used in the above things:
 - transect_analysis_functions.py: *Description*
