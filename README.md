@@ -32,9 +32,11 @@ We will briefly describe how to use each program.
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
 [![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
 
-<img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
+### General
 
-The maps above highlight this program's function. The right one displays a transect's GNSS surveyed monuments (cyan) and the transect's trace extending between them (dashed line). The left one displays that trace populated with elevation measurements (magenta) that were digitized from COGO (trigonometric) calculations involving the monument coordinates.
+The maps below highlight this program's function. The right one displays a transect's GNSS surveyed monuments (cyan) and the transect's trace extending between them (dashed line). The left one displays that trace populated with elevation measurements (magenta) digitized from a data table via this program.
+
+<img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
 
 ## transect_sed_rate_calculator.py
 *include example figure of calculation*
