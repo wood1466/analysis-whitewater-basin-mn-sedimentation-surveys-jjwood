@@ -313,8 +313,8 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate their
                         # Defines object for name of layer for export.
 
                         gdf_transect_elevs_k.to_file(OUTPUT_FOLDER + '/' 
-                                                     + GIS_FOLDER + 
-                                                     GPKG_NAME, 
+                                                     + GIS_FOLDER 
+                                                     + GPKG_NAME, 
                                                      layer=layer_name_k, 
                                                      driver='GPKG', 
                                                      index=True)
