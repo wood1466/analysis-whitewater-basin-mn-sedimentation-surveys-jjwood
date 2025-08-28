@@ -27,7 +27,6 @@ This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) incl
 We will briefly describe each program.
 
 ## transect_cogo_digitizer.py
-*include example figure of mapped cross-section with monuments then with digitized elevations*
 [![GeoPandas version](https://img.shields.io/badge/geopandas-1.1.0-yellow)](https://pypi.org/project/geopandas/1.1.0/)
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
