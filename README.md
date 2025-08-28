@@ -16,7 +16,7 @@ The historical data was collected by federal agencies during stream and valley s
 
 All data associated with this project has been published by Wood et al. (2025a) and is described in Wood et al. (2025b; manuscript in development). 
 
-The cross-section to the right displays the kind of transect data these programs operate on—surface elevation profiles.
+The hillslope-floodplain-channel cross-section to the right displays the kind of transect data these programs operate on—surface profiles (i.e., elevations).
 
 This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) includes 4 programs used in the above things:
 - transect_analysis_functions.py: *Description*
