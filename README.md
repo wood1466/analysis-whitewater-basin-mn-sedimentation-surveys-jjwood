@@ -66,7 +66,7 @@ Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *
 
 This section begins the digitization loop at your starting transect. First it begins slicing through your initial DataFrames to select the data required to complete the COGO calculations:
 1. The survey stations (measurement positions) of the first elevation dataset,
-2. the transect's monument coordinate pairs,
+2. the transect monuments' cartesian coordinate pairs,
 3. and the station/position of the first, or survey start, monument.
 
 (All DataFrame slicing is accomplished with UDFs, as shown.)
@@ -94,8 +94,17 @@ With the requisite data selected, a message displays which dataset will be digit
 
 To perform your COGO calculations the program takes the three data components selected previously and first calculates:
 
-1. the transect azimuth,
-2. and the distance between each elevation station and that of the starting monument.  
+1. the transect azimuth between monuments (*θ*),
+2. and the distance between each elevation station and the starting monument (*r* for the example below).  
+
+<img width="512.5" height="3475" align="right" alt="Digitizer3" src="https://github.com/user-attachments/assets/eddc41b6-3a41-43b1-b885-d0f96ac0ada6" />
+
+With your cartesian coordinate system, *θ*, in general, ccan be calculated with,
+
+θ = $tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$.
+
+
+
 
 Calculate station coordinate geometry
 
