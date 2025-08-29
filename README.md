@@ -148,7 +148,7 @@ When the message below is visible, your output GeoPackage is stored in an automa
 **Date finalized:** 20250703
 
 **Author:** Jimmy J. Wood
-- Institution: University of Minnesota Twin Cities (UMN), Saint Anthony Falls Laboratory
+- Institution: University of Minnesota Twin Cities, Saint Anthony Falls Laboratory
 - Email: <jimmyjwood24@gmail.com>
 - ORCID: 0009-0009-7263-433X
 
