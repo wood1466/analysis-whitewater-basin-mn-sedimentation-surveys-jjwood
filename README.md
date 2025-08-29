@@ -65,9 +65,12 @@ Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *
 Select data
 -selects transect data from input
 -selects monument data from input, both coordinate pairs, marker metadata being station and two offset conditions
--checks monuments for needing a shift and transforms if needed *show example of why this is necessary*
+-checks monuments for needing a shift and transforms if needed
 -selects transect survey data
--selects transect metadata to provide message *show message example*
+-selects transect metadata to provide message
+
+<img width="639" height="97" alt="Screenshot 2025-08-29 at 9 59 26 AM" src="https://github.com/user-attachments/assets/ded0d0fc-ea56-4c7e-a873-61f69b24a8af" />
+<img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/b65d9893-12c3-4b53-8f3b-d88cae950934" />
 
 Calculate station coordinate geometry
 
