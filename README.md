@@ -92,20 +92,26 @@ With the requisite data selected, a message displays which dataset will be digit
 
 &#8202;
 
-To perform your COGO calculations the program takes the three data components selected previously and first calculates:
+To perform its COGO calculations the program takes the three data components selected previously and first calculates:
 
 1. the transect azimuth between monuments (*θ*),
-2. and the distance between each elevation station and the starting monument (*r* for the example below).  
+2. and the distance between each elevation station and the starting monument (*r*, for the example below).  
 
-<img width="512.5" height="3475" align="right" alt="Digitizer3" src="https://github.com/user-attachments/assets/eddc41b6-3a41-43b1-b885-d0f96ac0ada6" />
+<img width="512.5" height="3475" align="right" alt="Digitizer3" src="https://github.com/user-attachments/assets/3e2b6e7f-feaf-4ab3-9065-625186ba7234" />
 
 With your cartesian coordinate system, *θ*, in general, can be calculated with,
 
 $θ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
 
-where *(x1, y1)* and *(x2, y2)* are the starting and ending monuments, respectively.
+where *(x1, y1)* and *(x2, y2)* are the starting and ending coordinates, respectively.
 
 Each *r<sub>i</sub> = elevation station<sub>i</sub> - starting monument station*.
+
+The program then calculates the component displacements North (*Δy*) and East (*Δx*) required to travel an *r<sub>i</sub>* length down the transect to the elevation station. Its subsequent coordinates are:
+
+*Northing<sub>i</sub> = Δy + y1*,
+*Easting<sub>i</sub> = Δx + x1*.
+
 
 
 
