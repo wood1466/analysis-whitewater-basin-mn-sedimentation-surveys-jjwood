@@ -84,19 +84,19 @@ With that being the case, the program calculates a new pair of synthetic referen
 (This program does not compensate for composite directional shifts [i.e., *NW*, *Upstream*, etc.].) 
 
 <img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/2a631dcb-6f9e-4aa8-b27a-136c8a4abb1f" />
+&#8202;
 
-
-Select data
--selects transect data from input
--selects monument data from input, both coordinate pairs, marker metadata being station and two offset conditions
--checks monuments for needing a shift and transforms if needed
--selects transect survey data
--selects transect metadata to provide message
+With the requisite data selected, a message displays which dataset will be digitized by identifying the transect ID and elevation data year.
 
 <img width="639" height="97" alt="Screenshot 2025-08-29 at 9 59 26 AM" src="https://github.com/user-attachments/assets/ded0d0fc-ea56-4c7e-a873-61f69b24a8af" />
 
 
 Calculate station coordinate geometry
+
+-elevation station distance from monument station
+-transect azimuth between monuments
+-elevation station distance components north and east
+-elevation easting and northing coordinates
 
 Prepare data for digitization
 
