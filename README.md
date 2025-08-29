@@ -45,8 +45,8 @@ The maps below highlight this program's function. The left one displays a transe
 In the same location as the digitizer program, create a new folder named *'Input'* where you will store the code's required input files. 
 There are three:
 1. The elevation data,
-2. Monument/reference coordinate data,
-3. And reference coordinate metadata.
+2. monument/reference coordinate data,
+3. and reference coordinate metadata.
 
 Each is converted into a pandas DataFrame at the end of the *Initialization* section to enable their manipulation.
 
@@ -61,6 +61,13 @@ Lastly, you'll need to set the program's spatial operational limits and the coor
 Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *'EPSG:26915'* sets the *CRS* to *NAD83 / UTM zone 15N* for Minnesota.
 
 ### Data operations
+
+<img width="647" height="161" align="right" alt="Screenshot 2025-08-29 at 12 08 43 PM" src="https://github.com/user-attachments/assets/fc8dd66f-50cd-4d8e-a7e2-54181efbebba" />
+
+This section begins the digitization loop. First it begins slicing through your input file DataFrames to select the data of interest:
+1. The survey stations (measurement points) for a single elevation dataset for a single transect,
+2. the monument coordinate pairs for that transect,
+3. and the transect station/position of the first, or survey start, monument.
 
 Select data
 -selects transect data from input
