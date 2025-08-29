@@ -110,26 +110,15 @@ Each *r<sub>i</sub> = elevation station<sub>i</sub> - starting monument station*
 The program then calculates the component displacements North (*Δy*) and East (*Δx*) required to travel an *r<sub>i</sub>* length down the transect to the elevation station. Its subsequent coordinates are:
 
 *Northing<sub>i</sub> = Δy + y1*,
-*Easting<sub>i</sub> = Δx + x1*.
 
+and *Easting<sub>i</sub> = Δx + x1*.
 
+Lastly, the newly calculated elevation coordinates are compiled and appended onto the input elevation DataFrame so the points' precompiled metadata can double as their attribute fields and values. 
 
+When the message below is visible, your output GeoPackage is stored in an automatically created folder named *GIS*. 
 
-
-
-
-Calculate station coordinate geometry
-
--elevation station distance from monument station
--transect azimuth between monuments
--elevation station distance components north and east
--elevation easting and northing coordinates
-
-Prepare data for digitization
-
-Digitize data
 &#8202;
-# end
+<img width="624" height="51" alt="Screenshot 2025-08-29 at 4 18 46 PM" src="https://github.com/user-attachments/assets/226512e1-3446-4413-9c64-dda8a643e587" />
 
 ## transect_sed_rate_calculator.py
 *include example figure of calculation*
