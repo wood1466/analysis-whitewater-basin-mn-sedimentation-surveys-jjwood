@@ -79,9 +79,12 @@ Typically, transects in the Whitewater Watershed extend in a line directly betwe
 
 To compensate for these shifts, the program first compares the coordinate's estimated accuracy to the monument's shift magnitude. On the right map, the cyan buffer corresponds to an *XY accuracy* of 0.25 m and the yellow buffer to a *shift radius* of 3 m (10 ft). The *shift radius* does not lie within the *XY accuracy* buffer (i.e., *XY accuracy*<*shift radius*); therefore, the horizontal resolution of the GNSS coordinates are capable of meaningfully representing a locational shift 3 m. 
 
-Then, the program calculates a new pair of synthetic reference coordinates via COGO. In this case, the monument's X (Easting) coordinate is reduced by 3 m (10 ft) and its Y (Northing) coordinate remains the same. 
+With that being the case, the program calculates a new pair of synthetic reference coordinates via COGO. Here, the monument's X (Easting) coordinate is reduced by 3 m (10 ft) and its Y (Northing) coordinate remains the same. Subsequent digitization places the elevation data on the *measured trace*. 
+
+(This program does not compensate for composite directional shifts [i.e., *NW*, *Upstream*, etc.].) 
 
 <img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/2a631dcb-6f9e-4aa8-b27a-136c8a4abb1f" />
+
 
 Select data
 -selects transect data from input
