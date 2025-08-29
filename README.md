@@ -14,7 +14,7 @@ These programs were developed to augment and analyze floodplain transect data co
 
 The historical data was collected by federal agencies during stream and valley sedimentation surveys aimed at investigating accelerated erosion and deposition and/or increased flooding in the basin; this dataset is inherently geomorphic in nature so these programs pursue analyses primarily of interest to the earth scientist. 
 
-All data associated with this project has been published by Wood et al. (2025a) and is described in Wood et al. (2025b; manuscript in development). 
+All data associated with this project has been published by Wood et al. (2025a) and is described in Wood et al. (2025b; in development). 
 
 The hillslope-floodplain-channel cross-section to the right displays the kind of transect data these programs operate on—topographic surface profiles (i.e., elevation data).
 
@@ -103,7 +103,7 @@ Digitize data
 
 **Related publications**
 - **Wood, J. J.,** Svien, L., Christianson, D. & Claas, L. Historical stream and valley sedimentation survey data for the Whitewater River Valley, Minnesota, United States (1855–1994). *University of Minnesota Twin Cities Data Repository for U of M* https://doi.org/10.13020/2ggx-qk28 (2025a).
-- **Wood, J. J.,** Wickert, A. D., Larson, P. H. & Svien, L. A 140-year record of stream and valley sedimentation in the Whitewater River Valley, Minnesota, United States. (2025b). [Manuscript in development].
+- **Wood, J. J.,** Wickert, A. D., Larson, P. H. & Svien, L. A 140-year record of stream and valley sedimentation in the Whitewater River Valley, Minnesota, United States. (2025b). [In development].
   
 **Funding sources**
 - Legislative-Citizen Commission on Minnesota Resources (LCCMR) Environment and Natural Resources Trust Fund (ENTRF) grant 2022-163.
