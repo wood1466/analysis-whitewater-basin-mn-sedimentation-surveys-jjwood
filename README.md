@@ -64,7 +64,7 @@ Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *
 
 <img width="647" height="161" align="right" alt="Screenshot 2025-08-29 at 12 08 43 PM" src="https://github.com/user-attachments/assets/fc8dd66f-50cd-4d8e-a7e2-54181efbebba" />
 
-This section begins the digitization loop at your starting transect. First it begins slicing through your initial DataFrames to select the data required for the COGO calculations:
+This section begins the digitization loop at your starting transect. First it begins slicing through your initial DataFrames to select the data required to complete the COGO calculations:
 1. The survey stations (measurement positions) of the first elevation dataset,
 2. the transect's monument coordinate pairs,
 3. and the station/position of the first, or survey start, monument.
@@ -90,6 +90,12 @@ With the requisite data selected, a message displays which dataset will be digit
 
 <img width="639" height="97" alt="Screenshot 2025-08-29 at 9 59 26 AM" src="https://github.com/user-attachments/assets/ded0d0fc-ea56-4c7e-a873-61f69b24a8af" />
 
+&#8202;
+
+To perform your COGO calculations the program takes the three data components selected previously and first calculates:
+
+1. the transect azimuth,
+2. and the distance between each elevation station and that of the starting monument.  
 
 Calculate station coordinate geometry
 
