@@ -99,9 +99,15 @@ To perform your COGO calculations the program takes the three data components se
 
 <img width="512.5" height="3475" align="right" alt="Digitizer3" src="https://github.com/user-attachments/assets/eddc41b6-3a41-43b1-b885-d0f96ac0ada6" />
 
-With your cartesian coordinate system, *θ*, in general, ccan be calculated with,
+With your cartesian coordinate system, *θ*, in general, can be calculated with,
 
-θ = $tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$.
+$θ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
+
+where *(x1, y1)* and *(x2, y2)* are the starting and ending monuments, respectively.
+
+Each *r<sub>i</sub> = elevation station<sub>i</sub> - starting monument station*.
+
+
 
 
 
