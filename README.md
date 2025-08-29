@@ -62,6 +62,13 @@ Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *
 
 ### Data operations
 
+Select data
+-selects transect data from input
+-selects monument data from input, both coordinate pairs, marker metadata being station and two offset conditions
+-checks monuments for needing a shift and transforms if needed *show example of why this is necessary*
+-selects transect survey data
+-selects transect metadata to provide message *show message example*
+
 Calculate station coordinate geometry
 
 Prepare data for digitization
