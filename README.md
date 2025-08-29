@@ -34,7 +34,7 @@ We will briefly describe how to use each program. Retreive and use the input dat
 
 ### General
 
-The maps below highlight this program's function. The left one displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them, for reference. This program takes information about the monuments' position and a table of elevation data and yields what is displayed in the right map, the transect trace populated with elevation measurements (magenta circles). 
+The maps below highlight this program's function. The left one displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them, for reference. This program takes information about the monuments' position and a table of elevation data and yields what is displayed in the right map, the transect trace populated with elevation measurements (magenta circles). The program's output is a GeoPackage of elevation point layers grouped by data year.
 
 <img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
 
@@ -48,12 +48,14 @@ There are three:
 2. Monument/reference coordinate data,
 3. And reference coordinate metadata.
 
-Each file is converted into a pandas DataFrame at the end of *Initialization* section to enable manipulation.
+Each is converted into a pandas DataFrame at the end of the *Initialization* section to enable their manipulation.
 
-Also, set the names of your output GIS files, a GeoPackage containing elevation layers grouped by data year.
+Also, set the names of your output GIS files.
 
 <img width="665" height="239" align="right" alt="Screenshot 2025-08-28 at 2 47 31 PM" src="https://github.com/user-attachments/assets/a2db389b-80c2-4528-9f6a-7e8c022b9d84" />
-Lastly, set some misc. items: *TRANSECT_NUM_START*, *TRANSECT_NUM_END*, and *CRS*. 
+*TRANSECT_NUM_START* and *TRANSECT_NUM_END* set the operational limits of the program. These relate to the *transect number*, an integer ID that provides a convenient framework for looping the digitizer through each transect dataset. Starting at *1* and an ending at *107* will digitize every transect elevation dataset.
+
+, and *CRS*. 
 
 The first two relate to the transect number, an integer data ID that provides a convenient framework for looping the digitizer through each transect. Setting the operation limits to 1 and 107 will digitize every transect elevation dataset in the input file. 
 
