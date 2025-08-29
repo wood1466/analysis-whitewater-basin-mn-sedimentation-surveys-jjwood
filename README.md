@@ -71,11 +71,15 @@ This section begins the digitization loop at your starting transect. First it be
 
 (All DataFrame slicing is accomplished with UDFs, as shown.)
 
-Second, the program checks if the monument coordinates must be replaced by synthetic reference coordinates. Typically, transects in the Whitewater Watershed extend in a line directly between (and often beyond) its two monuments. On the left map below, this is labeled the *expected trace*, but occassionally, monuments were shifted off of the actual line, the *measured trace*. In this example, the monument was established 10 ft East of the measured transect. 
+<img width="656" height="300" align="right" alt="Screenshot 2025-08-29 at 12 53 33 PM" src="https://github.com/user-attachments/assets/65468943-a5fc-4a23-af77-b27a45d11163" />
+
+Second, the program consults a UDF to checks if the monument coordinates must be replaced by synthetic reference coordinates. 
+
+Typically, transects in the Whitewater Watershed extend in a line directly between (and often beyond) its two monuments. On the left map below, this is labeled the *expected trace*, but occassionally, monuments were shifted off of the actual line, the *measured trace*. In this example, the monument was established 10 ft East of the measured transect. 
 
 To compensate for these shifts, the program first compares the coordinate's estimated accuracy to the monument's shift magnitude. On the right map, the cyan buffer corresponds to an *XY accuracy* of 0.25 m and the yellow buffer to a *shift radius* of 3 m (10 ft). The *shift radius* does not lie within the *XY accuracy* buffer (i.e., *XY accuracy*<*shift radius*); therefore, the horizontal resolution of the GNSS coordinates are capable of meaningfully representing a locational shift 3 m. 
 
-Second, the program calculates a new pair of synthetic reference coordinates via COGO. 
+Then, the program calculates a new pair of synthetic reference coordinates via COGO. In this case, the monument's X (Easting) coordinate is reduced by 3 m (10 ft) and its Y (Northing) coordinate remains the same. 
 
 <img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/2a631dcb-6f9e-4aa8-b27a-136c8a4abb1f" />
 
