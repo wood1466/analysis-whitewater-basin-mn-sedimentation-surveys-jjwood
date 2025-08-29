@@ -69,7 +69,15 @@ This section begins the digitization loop at your starting transect. First it be
 2. the transect's monument coordinate pairs,
 3. and the station/position of the first, or survey start, monument.
 
-(All DataFrame slicing is accomplished with UDFs.)
+(All DataFrame slicing is accomplished with UDFs, as shown.)
+
+Second, the program checks if the monument coordinates must be replaced by synthetic reference coordinates. Typically, transects in the Whitewater Watershed extend in a line directly between (and often beyond) its two monuments. On the left map below, this is labeled the *expected trace*, but occassionally, monuments were shifted off of the actual line, the *measured trace*. In this example, the monument was established 10 ft East of the measured transect. 
+
+To compensate for these shifts, the program first compares the coordinate's estimated accuracy to the monument's shift magnitude. On the right map, the cyan buffer corresponds to an *XY accuracy* of 0.25 m and the yellow buffer to a *shift radius* of 3 m (10 ft). The *shift radius* does not lie within the *XY accuracy* buffer (i.e., *XY accuracy*<*shift radius*); therefore, the horizontal resolution of the GNSS coordinates are capable of meaningfully representing a locational shift 3 m. 
+
+Second, the program calculates a new pair of synthetic reference coordinates via COGO. 
+
+<img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/2a631dcb-6f9e-4aa8-b27a-136c8a4abb1f" />
 
 Select data
 -selects transect data from input
@@ -79,7 +87,7 @@ Select data
 -selects transect metadata to provide message
 
 <img width="639" height="97" alt="Screenshot 2025-08-29 at 9 59 26 AM" src="https://github.com/user-attachments/assets/ded0d0fc-ea56-4c7e-a873-61f69b24a8af" />
-<img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/b65d9893-12c3-4b53-8f3b-d88cae950934" />
+
 
 Calculate station coordinate geometry
 
