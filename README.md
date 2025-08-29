@@ -42,8 +42,8 @@ The maps below highlight this program's function. The left one displays a transe
 
 <img width="665" height="301" align="right" alt="Screenshot 2025-08-28 at 2 20 52 PM" src="https://github.com/user-attachments/assets/a3699570-c97c-4ef8-90d8-01dfe2ca18e8" />
 
-Wherever you have stored the digitizer program, create a new folder named *'Input'* where you will, in turn, store the code's required input files:
-
+In the same location as the digitizer program, create a new folder named *'Input'* where you will store the code's required input files. 
+There are three:
 1. The elevation data,
 2. Monument/reference coordinate data,
 3. And reference coordinate metadata.
