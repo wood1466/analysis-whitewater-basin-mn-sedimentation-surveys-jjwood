@@ -34,9 +34,7 @@ We will briefly describe how these programs operate and how to use them; see the
 
 ### General
 
-The maps below highlight this program's function. The left one displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line), for reference. This program compares positional data for the monuments' and elevation surveys 
-
-yields what is displayed in the right map, the transect trace populated with elevation measurements (magenta circles). The program's output is a GeoPackage of elevation point layers grouped by data year.
+The maps below highlight this program's function. The left one displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line)—the starting condition. The right map displays that transect trace populated with elevation measurements (magenta circles)—the post-run condition. This program compares the monuments' and elevations' positional data to calculate coordinates for the elevation data (Easting, Northing [m]). Its output is a GeoPackage of elevation point layers grouped by data year—1855, 1939, 1965, 1975, 1978, and 1994 for the Whitewater data.
 
 <img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
 
@@ -50,15 +48,17 @@ There are three:
 2. monument/reference coordinate data,
 3. and reference coordinate metadata.
 
-Each is converted into a pandas DataFrame at the end of the *Initialization* section to enable their manipulation.
+Each is converted into a pandas DataFrame at the end of the *Initialization* section to enable program manipulation.
 
-Also, set the names of your output GIS files.
+Also, set the names of your output GIS files: *GPKG_NAME* and *LAYER_NAME1_PRE*.
+
+Output folders are automatically created at the end of the *Initialization* section.
 
 <img width="665" height="239" align="right" alt="Screenshot 2025-08-28 at 2 47 31 PM" src="https://github.com/user-attachments/assets/a2db389b-80c2-4528-9f6a-7e8c022b9d84" />
 
 Lastly, you'll need to set the program's spatial operational limits and the coordinate reference system (CRS) of the output GeoPackage.
 
-*TRANSECT_NUM_START* and *TRANSECT_NUM_END*, together, determine which transect datasets are digitized. Their input is a *transect number*, an integer ID that provides a convenient framework for looping the digitizer through each transect. (two different numbers must be set for the loop to function). Starting at *1* and an ending at *107* will digitize every Whitewater transect elevation dataset.
+*TRANSECT_NUM_START* and *TRANSECT_NUM_END*, together, determine which transect datasets are digitized. Their input is a *transect number*, an integer ID that provides a convenient framework for looping the digitizer through each transect. (Two different numbers must be set for the loop to function). Starting at *1* and an ending at *107* will digitize every Whitewater transect elevation dataset.
 
 Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *'EPSG:26915'* sets the *CRS* to *NAD83 / UTM zone 15N* for Minnesota.
 
@@ -66,7 +66,7 @@ Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *
 
 <img width="647" height="161" align="right" alt="Screenshot 2025-08-29 at 12 08 43 PM" src="https://github.com/user-attachments/assets/fc8dd66f-50cd-4d8e-a7e2-54181efbebba" />
 
-This section begins the digitization loop at your starting transect. First it begins slicing through your initial DataFrames to select the data required to complete the COGO calculations:
+This section begins the digitization loop at your starting transect. First it begins slicing through your three starting DataFrames to select the data required to complete the COGO calculations:
 1. The survey stations (measurement positions) of the first elevation dataset,
 2. the transect monuments' cartesian coordinate pairs,
 3. and the station/position of the first, or survey start, monument.
@@ -75,18 +75,17 @@ This section begins the digitization loop at your starting transect. First it be
 
 <img width="656" height="300" align="right" alt="Screenshot 2025-08-29 at 12 53 33 PM" src="https://github.com/user-attachments/assets/65468943-a5fc-4a23-af77-b27a45d11163" />
 
-Second, the program consults a UDF to checks if the monument coordinates must be replaced by synthetic reference coordinates. 
+Second, the program consults a UDF to check if the monument coordinates must be replaced by synthetic reference coordinates. 
 
-Typically, transects in the Whitewater Watershed extend in a line directly between (and often beyond) its two monuments. On the left map below, this is labeled the *expected trace*, but occassionally, monuments were shifted off of the actual line, the *measured trace*. In this example, the monument was established 10 ft East of the measured transect. 
+Typically, transects in the Whitewater Watershed extend in a line directly between (and often beyond) its two monuments. On the left map below, this is labeled the *expected trace*. Occassionally, monuments were shifted off of the actual line, the *measured trace*. In this example, the monument was established 10 ft East of the measured transect. 
 
-To compensate for these shifts, the program first compares the coordinate's estimated accuracy to the monument's shift magnitude. On the right map, the cyan buffer corresponds to an *XY accuracy* of 0.25 m and the yellow buffer to a *shift radius* of 3 m (10 ft). The *shift radius* does not lie within the *XY accuracy* buffer (i.e., *XY accuracy*<*shift radius*); therefore, the horizontal resolution of the GNSS coordinates are capable of meaningfully representing a locational shift 3 m. 
+<img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/2a631dcb-6f9e-4aa8-b27a-136c8a4abb1f" />
+
+To compensate for these shifts, the program first compares a monument's estimated coordinate accuracy to its shift magnitude. On the right map, the cyan buffer corresponds to an *XY accuracy* of 0.25 m and the yellow buffer to a *shift radius* of 3 m (10 ft). The *shift radius* does not lie within the *XY accuracy* buffer (i.e., *XY accuracy*<*shift radius*); therefore, the horizontal resolution of the GNSS coordinates are capable of meaningfully representing a locational shift of 3 m. 
 
 With that being the case, the program calculates a new pair of synthetic reference coordinates via COGO. Here, the monument's X (Easting) coordinate is reduced by 3 m (10 ft) and its Y (Northing) coordinate remains the same. Subsequent digitization places the elevation data on the *measured trace*. 
 
 (This program does not compensate for composite directional shifts [i.e., *NW*, *Upstream*, etc.].) 
-
-<img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/2a631dcb-6f9e-4aa8-b27a-136c8a4abb1f" />
-&#8202;
 
 With the requisite data selected, a message displays which dataset will be digitized by identifying the transect ID and elevation data year.
 
@@ -101,7 +100,7 @@ To perform its COGO calculations the program takes the three data components sel
 
 <img width="512.5" height="3475" align="right" alt="Digitizer3" src="https://github.com/user-attachments/assets/3e2b6e7f-feaf-4ab3-9065-625186ba7234" />
 
-With your cartesian coordinate system, *θ*, in general, can be calculated with,
+With a cartesian coordinate system, *θ*, in general, can be calculated with,
 
 $θ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
 
@@ -115,9 +114,11 @@ The program then calculates the component displacements North (*Δy*) and East (
 
 and *Easting<sub>i</sub> = Δx + x1*.
 
-Lastly, the newly calculated elevation coordinates are compiled and appended onto the input elevation DataFrame so the points' precompiled metadata can double as their attribute fields and values. 
+The newly calculated elevation coordinates are compiled and appended onto the input elevation DataFrame to use the points' precompiled metadata as attribute fields and values.
 
-When the message below is visible, your output GeoPackage is stored in an automatically created folder named *GIS*. 
+Lastly, the DataFrame is converted into a GeoPandas GeoDataFrame with the preselected *CRS*.
+
+When the message below is visible, your output GeoPackage is stored in a folder named *GIS*. 
 
 &#8202;
 <img width="624" height="51" alt="Screenshot 2025-08-29 at 4 18 46 PM" src="https://github.com/user-attachments/assets/226512e1-3446-4413-9c64-dda8a643e587" />
