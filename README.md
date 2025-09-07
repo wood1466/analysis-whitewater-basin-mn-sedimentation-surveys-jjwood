@@ -22,9 +22,9 @@ This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) incl
 - **transect_cogo_digitizer.py:** Performs coordinate geometry (COGO) calculations to digitize tabular transect elevation data into GIS files.
 - **transect_sed_rate_calculator.py:** Calculates mean transect elevation change rates between successive elevation datasets to measure topographic change.
 - **transect_sed_rate_statistics.py:** Performs Analysis of Variance (ANOVA) hypothesis testing suites to compare mean elevation change rates over the time interval represented in this dataset—1855–1994.
-- **transect_analysis_functions.py:** Houses the user-defined functions (UDFs) executed in the previous programs.
+- **transect_analysis_functions.py:** The user-defined functions (UDFs) executed in the previous programs.
 
-We will briefly describe how to use each program. Retreive and use the input data files from Wood et al. (2025a) as you follow along. The relevant files are identified in screenshots below.
+We will briefly describe how these programs operate and how to use them; see the programs' line comments for in depth descriptions of their contents. Retreive and use the input data files from Wood et al. (2025a) as you follow along. The relevant files per program are identified in screenshots below.
 
 ## transect_cogo_digitizer.py
 [![GeoPandas version](https://img.shields.io/badge/geopandas-1.1.0-yellow)](https://pypi.org/project/geopandas/1.1.0/)
@@ -121,13 +121,17 @@ When the message below is visible, your output GeoPackage is stored in an automa
 <img width="624" height="51" alt="Screenshot 2025-08-29 at 4 18 46 PM" src="https://github.com/user-attachments/assets/226512e1-3446-4413-9c64-dda8a643e587" />
 
 ## transect_sed_rate_calculator.py
-*include example figure of calculation*
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
 [![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
 
+### General
+
+### Initialization
+
+### Data operations
+
 ## transect_sed_rate_statistics.py
-*include example figure of test result*
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
 [![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
@@ -135,6 +139,12 @@ When the message below is visible, your output GeoPackage is stored in an automa
 [![scikit-posthocs version](https://img.shields.io/badge/scikit--posthocs-0.11.4-brightgreen)](https://pypi.org/project/scikit-posthocs/)
 [![SciPy version](https://img.shields.io/badge/scipy-1.15.3-yellow)](https://pypi.org/project/scipy/1.15.3/)
 [![statsmodels version](https://img.shields.io/badge/statsmodels-0.14.4-brightgreen)](https://pypi.org/project/statsmodels/)
+
+### General
+
+### Initialization
+
+### Data operations
 
 ## transect_analysis_functions.py
 
