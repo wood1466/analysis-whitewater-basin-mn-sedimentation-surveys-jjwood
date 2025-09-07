@@ -130,6 +130,9 @@ When the message below is visible, your output GeoPackage is stored in a folder 
 
 ### General
 
+The maps below highlight this program's function. The left one displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line)—the starting condition. The right map displays that transect trace populated with elevation measurements (magenta circles)—the post-run condition. This program compares the monuments' and elevations' positional data to calculate coordinates for the elevation data (Easting, Northing [m]). Its output is a GeoPackage of elevation point layers grouped by data year—1855, 1939, 1965, 1975, 1978, and 1994 for the Whitewater data.
+
+
 ### Initialization
 
 ### Data operations
