@@ -34,7 +34,9 @@ We will briefly describe how these programs operate and how to use them; see the
 
 ### General
 
-The maps below highlight this program's function. The left one displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them, for reference. This program takes information about the monuments' position and a table of elevation data and yields what is displayed in the right map, the transect trace populated with elevation measurements (magenta circles). The program's output is a GeoPackage of elevation point layers grouped by data year.
+The maps below highlight this program's function. The left one displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line), for reference. This program compares positional data for the monuments' and elevation surveys 
+
+yields what is displayed in the right map, the transect trace populated with elevation measurements (magenta circles). The program's output is a GeoPackage of elevation point layers grouped by data year.
 
 <img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
 
