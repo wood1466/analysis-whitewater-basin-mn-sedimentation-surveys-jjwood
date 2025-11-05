@@ -119,7 +119,7 @@ To perform its COGO calculations the program takes the three data components sel
 With a cartesian coordinate system, *θ*, in general, can be calculated with,
 
 <p align="center">
-  $θ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
+  <$θ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,>
 <p/>
   
 where *(x1, y1)* and *(x2, y2)* are the starting and ending coordinates, respectively.
