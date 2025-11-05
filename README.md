@@ -54,7 +54,11 @@ There are three:
   <img width="665" height="301" alt="Screenshot 2025-08-28 at 2 20 52 PM" src="https://github.com/user-attachments/assets/a3699570-c97c-4ef8-90d8-01dfe2ca18e8" />
 <p/>
   
-Each is converted into a pandas DataFrame at the end of the *Initialization* section to enable program manipulation.
+Each is converted into a pandas DataFrame at the end of the *Initialization* section to enable program manipulation. 
+
+Prior to run, delete the data below from the input files to avoid erroneous digitization:
+1. *WRV_MN_1855_1994_sedimentation_elevations.csv*: NF-21 (original) and NF-28B (original).
+2. *WRV_MN_2008_2014_sedimentation_coordinates.csv*: MF-26B (1994).
 
 Then, set the names of your output GIS files: *GPKG_NAME* and *LAYER_NAME1_PRE*. These will be stored in the *GIS* folder automatically created at the end of the *Initialization* section.
   
