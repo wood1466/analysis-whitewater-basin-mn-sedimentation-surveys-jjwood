@@ -24,7 +24,7 @@ This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) incl
 - **transect_sed_rate_statistics.py:** Performs Analysis of Variance (ANOVA) hypothesis testing suites to compare all mean elevation change rates over the time interval represented in this dataset—1855–1994.
 - **transect_analysis_functions.py:** The user-defined functions (UDFs) executed in the other programs.
 
-We will briefly describe how these programs operate and how to use them; see the programs' line comments for in depth descriptions of their contents. Retreive and use the input data files from Wood et al. (2025a) as you follow along. The relevant files per program are identified in screenshots below.
+We will briefly describe how these programs operate and how to use them; see the programs' line comments for in depth descriptions of their contents. Retreive and use the input data files from Wood et al. (2025a) as you follow along. The relevant files per program will be identified by screenshot.
 
 ## transect_cogo_digitizer.py
 [![GeoPandas version](https://img.shields.io/badge/geopandas-1.1.0-yellow)](https://pypi.org/project/geopandas/1.1.0/)
