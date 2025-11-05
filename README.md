@@ -89,7 +89,7 @@ Second, the program consults a UDF to check if the monument coordinates must be 
   <img width="656" height="300" alt="Screenshot 2025-08-29 at 12 53 33 PM" src="https://github.com/user-attachments/assets/65468943-a5fc-4a23-af77-b27a45d11163" />
 <p/>
   
-Typically, transects in the Whitewater Watershed extend in a line directly between (and often beyond) its two monuments. On the left map below, this is labeled the *expected trace*. Occassionally, monuments were shifted off of the actual line, the *measured trace*. In the example below, the monument was established 10 ft East of the measured transect. 
+Typically, transects in the Whitewater Watershed extend in a line directly between (and often beyond) its two monuments. On the left map below, this is labeled the *expected trace*. Occassionally, monuments were shifted off of the actual measured line, the *shifted trace*. In the example below, the monument was established 10 ft East of the measured line. 
 
 <p align="center">
   <img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/2a631dcb-6f9e-4aa8-b27a-136c8a4abb1f" />
