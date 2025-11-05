@@ -106,13 +106,11 @@ With the requisite data selected, a message displays which dataset will be digit
 <p align="center">
   <img width="639" height="97" alt="Screenshot 2025-08-29 at 9 59 26 AM" src="https://github.com/user-attachments/assets/ded0d0fc-ea56-4c7e-a873-61f69b24a8af" />
 <p/>
-  
-&#8202;
 
 To perform its COGO calculations the program takes the three data components selected previously and first calculates:
 
-1. the transect azimuth between monuments (*θ*),
-2. and the distance between each elevation station and the starting monument (*r*, for the example below).  
+1. The transect azimuth between monuments (*θ*), and
+2. the distance between each elevation station and the starting monument (*r*, for the example below).  
 
 <p align="center">
   <img width="512.5" height="3475" alt="Digitizer3" src="https://github.com/user-attachments/assets/3e2b6e7f-feaf-4ab3-9065-625186ba7234" />
