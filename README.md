@@ -10,15 +10,15 @@
 
 These programs were developed to augment and analyze topographic floodplain transect data collected in Minnesota's Whitewater River Valley (U.S.), between 1939 and 1994, through (1) geospatial digitization, (2) derivative calculations, and (3) statistical tests.
 
-<p align="center">
-  <img width="561.25" height="302.25" alt="2_3_8plots" src="https://github.com/user-attachments/assets/df71b17f-f69c-4efa-be20-82a849f75460" />
-</p>
-
 The historical data was collected by federal agencies during stream and valley sedimentation surveys aimed at investigating accelerated erosion and deposition and/or increased flooding in the basin; this dataset is inherently geomorphic in nature so these programs pursue analyses primarily of interest to the earth scientist. 
 
 All data associated with this project has been published by Wood et al. (2025a) and is described in Wood et al. (2025b; in development). 
 
-The hillslope–floodplain–channel cross-section to the right displays the kind of transect data these programs operate on—surface profiles (i.e., elevation data).
+The hillslope–floodplain–channel cross-section below displays the kind of transect data these programs operate on—surface profiles (i.e., elevation data).
+
+<p align="center">
+  <img width="561.25" height="302.25" alt="2_3_8plots" src="https://github.com/user-attachments/assets/df71b17f-f69c-4efa-be20-82a849f75460" />
+</p>
 
 This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) includes 4 programs:
 - **transect_cogo_digitizer.py:** Performs coordinate geometry (COGO) calculations to digitize tabular transect elevation data into GIS files.
