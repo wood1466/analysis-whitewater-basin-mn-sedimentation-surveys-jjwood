@@ -50,9 +50,7 @@ There are three:
 
 Each is converted into a pandas DataFrame at the end of the *Initialization* section to enable program manipulation.
 
-Then, set the names of your output GIS files: *GPKG_NAME* and *LAYER_NAME1_PRE*.
-
-Output folders are automatically created at the end of the *Initialization* section.
+Then, set the names of your output GIS files: *GPKG_NAME* and *LAYER_NAME1_PRE*. These will be stored in the */Output/GIS* folder automatically created at the end of the *Initialization* section.
 
 <img width="665" height="239" align="right" alt="Screenshot 2025-08-28 at 2 47 31 PM" src="https://github.com/user-attachments/assets/a2db389b-80c2-4528-9f6a-7e8c022b9d84" />
 
