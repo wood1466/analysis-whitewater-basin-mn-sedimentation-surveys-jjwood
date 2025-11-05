@@ -57,13 +57,13 @@ There are three:
 Each is converted into a pandas DataFrame at the end of the *Initialization* section to enable program manipulation.
 
 Then, set the names of your output GIS files: *GPKG_NAME* and *LAYER_NAME1_PRE*. These will be stored in the *GIS* folder automatically created at the end of the *Initialization* section.
+  
+Lastly, you'll need to set the program's spatial operational limits and the coordinate reference system (CRS) of the output GeoPackage.
 
 <p align="center">
   <img width="665" height="239" alt="Screenshot 2025-08-28 at 2 47 31 PM" src="https://github.com/user-attachments/assets/a2db389b-80c2-4528-9f6a-7e8c022b9d84" />
 <p/>
   
-Lastly, you'll need to set the program's spatial operational limits and the coordinate reference system (CRS) of the output GeoPackage.
-
 *TRANSECT_NUM_START* and *TRANSECT_NUM_END*, together, determine which transect datasets are digitized. Their input is a *transect number*, an integer ID that provides a convenient framework for looping the digitizer through each transect (two different numbers must be set for the loop to function). Starting at *1* and an ending at *107* will digitize every Whitewater transect elevation dataset.
 
 Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *EPSG:26915* sets the *CRS* to *NAD83 / UTM zone 15N* for Minnesota.
