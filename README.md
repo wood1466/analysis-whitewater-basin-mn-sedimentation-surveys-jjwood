@@ -76,19 +76,19 @@ This section begins the digitization loop at the starting transect.
   <img width="647" height="161" alt="Screenshot 2025-08-29 at 12 08 43 PM" src="https://github.com/user-attachments/assets/fc8dd66f-50cd-4d8e-a7e2-54181efbebba" />
 <p/> 
   
-First, it slices through the three starting DataFrames to select the data required to complete the COGO calculations:
+First, it begins a series of slices through the three starting DataFrames to select the data required to complete the COGO calculations:
 1. The survey stations (measurement positions) of the first elevation dataset,
 2. the transect monuments' cartesian coordinate pairs, and
 3. the station/position of the first, or survey start, monument.
 
-All DataFrame slicing is accomplished with UDFs, as shown.
+The first slice to derive the survey stations is shown above.
+  
+Second, the program consults a UDF to check if the monument coordinates must be replaced by synthetic reference coordinates. 
 
 <p align="center">
   <img width="656" height="300" alt="Screenshot 2025-08-29 at 12 53 33 PM" src="https://github.com/user-attachments/assets/65468943-a5fc-4a23-af77-b27a45d11163" />
 <p/>
   
-Second, the program consults a UDF to check if the monument coordinates must be replaced by synthetic reference coordinates. 
-
 Typically, transects in the Whitewater Watershed extend in a line directly between (and often beyond) its two monuments. On the left map below, this is labeled the *expected trace*. Occassionally, monuments were shifted off of the actual line, the *measured trace*. In this example, the monument was established 10 ft East of the measured transect. 
 
 <p align="center">
