@@ -177,6 +177,8 @@ The maps below highlight this program's function. The left one displays a transe
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
 [![pandas version](https://img.shields.io/badge/pandas-2.3.0-brightgreen)](https://pypi.org/project/pandas/)
 
+### General
+
 ## General information
 
 **Documentation date:** 20251104
