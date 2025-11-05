@@ -34,7 +34,7 @@ We will briefly describe how these programs operate and how to use them; see the
 
 ### General
 
-The maps below highlight this program's function. The left one—starting condition—displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line). The right map—post-run condition—displays that transect trace populated with elevation measurements (magenta circles). This program compares the monuments' and elevations' field-surveyed transect positions to calculate coordinates for the elevation data (Easting, Northing [m]). Its output is a GeoPackage of elevation point layers grouped by data year—1855, 1939, 1965, 1975, 1978, and 1994 for the Whitewater data.
+The maps below highlight this program's function. The left one—starting condition—displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line). The right map—post-run condition—displays that transect trace populated with elevation measurements (magenta circles). This program takes the monuments' GNSS coordinates and compares their field-surveyed transect positions to that of the elevations' to calculate coordinates for the elevation data (Easting, Northing). Its output is a GeoPackage of elevation point layers grouped by data year—1855, 1939, 1965, 1975, 1978, and 1994 for the Whitewater data.
 
 <img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
 
