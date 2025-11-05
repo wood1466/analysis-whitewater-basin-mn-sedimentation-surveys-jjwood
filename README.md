@@ -69,12 +69,14 @@ Lastly, you'll need to set the program's spatial operational limits and the coor
 Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *EPSG:26915* sets the *CRS* to *NAD83 / UTM zone 15N* for Minnesota.
 
 ### Data operations
+  
+This section begins the digitization loop at the starting transect. 
 
 <p align="center">
   <img width="647" height="161" alt="Screenshot 2025-08-29 at 12 08 43 PM" src="https://github.com/user-attachments/assets/fc8dd66f-50cd-4d8e-a7e2-54181efbebba" />
 <p/> 
   
-This section begins the digitization loop at the starting transect. It begins by slicing through the three starting DataFrames to select the data required to complete the COGO calculations:
+First, it slices through the three starting DataFrames to select the data required to complete the COGO calculations:
 1. The survey stations (measurement positions) of the first elevation dataset,
 2. the transect monuments' cartesian coordinate pairs, and
 3. the station/position of the first, or survey start, monument.
