@@ -151,7 +151,7 @@ When the message below is visible, your output GeoPackage has been exported.
 
 ### General
   
-This code compares successive elevation datasets to measure vertical topograpic change over time on a transect. The paired cross-sections below show the typical data year comparions: 1855–1939, 1939–1965, and 1965–1994. The program's output is a table of mean transect elevation change rates (cm/y)
+This code compares successive elevation datasets to measure vertical topograpic change over time on a transect. The paired cross-sections below show the typical data year comparions: 1855–1939, 1939–1965, and 1965–1994. The program's output is a table of mean transect elevation change in terms of depths (f and cm) and rates (cm/y).
 
 <p align="center">
   <img width="640" height="480" alt="2_3_rateplots" src="https://github.com/user-attachments/assets/287b5414-4637-4c8d-bb7b-46abb547f28f" />
@@ -159,6 +159,22 @@ This code compares successive elevation datasets to measure vertical topograpic 
   
 ### Initialization
 
+In the same location as the rate calculator program, create a new folder named *Input* where you will store the code's required input files. 
+There are two:
+1. The elevation data from which to calculate change rates, and
+2. transect calculation exclusion zones.
+   
+<p align="center">
+  <img width="644" height="182" alt="Screenshot 2025-11-05 at 6 32 23 AM" src="https://github.com/user-attachments/assets/0e8f1fcd-9fae-4051-93d2-75ec0416fc4f" />
+<p/>
+
+Each is converted into a pandas DataFrame at the end of the *Initialization* section to enable program manipulation. 
+
+Prior to run, delete the data below from the input files to avoid erroneous calculation:
+1. *WRV_MN_1855_1994_sedimentation_elevations.csv*: NF-21 (original) and NF-28B (original).
+
+Then, set the name of your output table and it column labels: *CALC_NAME* and *DATAFRAME_COLUMNS*. The table will be stored in the *Calculations* folder automatically created at the end of the *Initialization* section.
+  
 ### Data operations
 
 ## transect_sed_rate_statistics.py
