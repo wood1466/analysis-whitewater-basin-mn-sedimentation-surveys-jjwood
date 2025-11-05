@@ -44,16 +44,16 @@ The maps below highlight this program's function. The left one—starting condit
 
 ### Initialization
 
-<p align="center">
-  <img width="665" height="301" alt="Screenshot 2025-08-28 at 2 20 52 PM" src="https://github.com/user-attachments/assets/a3699570-c97c-4ef8-90d8-01dfe2ca18e8" />
-<p/>
-
 In the same location as the digitizer program, create a new folder named *Input* where you will store the code's required input files. 
 There are three:
-1. The elevation data,
+1. The elevation data to be digitized,
 2. monument/reference coordinate data, and
 3. reference coordinate metadata.
 
+<p align="center">
+  <img width="665" height="301" alt="Screenshot 2025-08-28 at 2 20 52 PM" src="https://github.com/user-attachments/assets/a3699570-c97c-4ef8-90d8-01dfe2ca18e8" />
+<p/>
+  
 Each is converted into a pandas DataFrame at the end of the *Initialization* section to enable program manipulation.
 
 Then, set the names of your output GIS files: *GPKG_NAME* and *LAYER_NAME1_PRE*. These will be stored in the *GIS* folder automatically created at the end of the *Initialization* section.
