@@ -151,7 +151,7 @@ When the message below is visible, your output GeoPackage has been exported.
 
 ### General
   
-The maps below highlight this program's function. The left one displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line)—the starting condition. The right map displays that transect trace populated with elevation measurements (magenta circles)—the post-run condition. This program compares the monuments' and elevations' positional data to calculate coordinates for the elevation data (Easting, Northing [m]). Its output is a GeoPackage of elevation point layers grouped by data year—1855, 1939, 1965, 1975, 1978, and 1994 for the Whitewater data.
+This code compares successive elevation datasets to measure vertical topograpic change over time on a transect. The paired cross-sections below show the typical data year comparions: 1855–1939, 1939–1965, and 1965–1994. The program's output is a table of mean transect elevation change rates (cm/y)
 
 <p align="center">
   <img width="640" height="480" alt="2_3_rateplots" src="https://github.com/user-attachments/assets/287b5414-4637-4c8d-bb7b-46abb547f28f" />
