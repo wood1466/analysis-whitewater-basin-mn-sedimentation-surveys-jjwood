@@ -38,11 +38,15 @@ We will briefly describe how these programs operate and how to use them; see the
 
 The maps below highlight this program's function. The left one—starting condition—displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line). The right map—post-run condition—displays that transect trace populated with elevation measurements (magenta circles). This program takes the monuments' GNSS coordinates and compares their field-surveyed transect positions to that of the elevations' to calculate coordinates for the elevation data (Easting and Northing). Its output is a GeoPackage of elevation point layers grouped by data year—1855, 1939, 1965, 1975, 1978, and 1994 (for the Whitewater data).
 
-<img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
+<p align="center">
+  <img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
+<p/>
 
 ### Initialization
 
-<img width="665" height="301" align="right" alt="Screenshot 2025-08-28 at 2 20 52 PM" src="https://github.com/user-attachments/assets/a3699570-c97c-4ef8-90d8-01dfe2ca18e8" />
+<p align="center">
+  <img width="665" height="301" alt="Screenshot 2025-08-28 at 2 20 52 PM" src="https://github.com/user-attachments/assets/a3699570-c97c-4ef8-90d8-01dfe2ca18e8" />
+<p/>
 
 In the same location as the digitizer program, create a new folder named *Input* where you will store the code's required input files. 
 There are three:
@@ -54,8 +58,10 @@ Each is converted into a pandas DataFrame at the end of the *Initialization* sec
 
 Then, set the names of your output GIS files: *GPKG_NAME* and *LAYER_NAME1_PRE*. These will be stored in the *GIS* folder automatically created at the end of the *Initialization* section.
 
-<img width="665" height="239" align="right" alt="Screenshot 2025-08-28 at 2 47 31 PM" src="https://github.com/user-attachments/assets/a2db389b-80c2-4528-9f6a-7e8c022b9d84" />
-
+<p align="center">
+  <img width="665" height="239" alt="Screenshot 2025-08-28 at 2 47 31 PM" src="https://github.com/user-attachments/assets/a2db389b-80c2-4528-9f6a-7e8c022b9d84" />
+<p/>
+  
 Lastly, you'll need to set the program's spatial operational limits and the coordinate reference system (CRS) of the output GeoPackage.
 
 *TRANSECT_NUM_START* and *TRANSECT_NUM_END*, together, determine which transect datasets are digitized. Their input is a *transect number*, an integer ID that provides a convenient framework for looping the digitizer through each transect (two different numbers must be set for the loop to function). Starting at *1* and an ending at *107* will digitize every Whitewater transect elevation dataset.
@@ -64,8 +70,10 @@ Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *
 
 ### Data operations
 
-<img width="647" height="161" align="right" alt="Screenshot 2025-08-29 at 12 08 43 PM" src="https://github.com/user-attachments/assets/fc8dd66f-50cd-4d8e-a7e2-54181efbebba" />
-
+<p align="center">
+  <img width="647" height="161" align="right" alt="Screenshot 2025-08-29 at 12 08 43 PM" src="https://github.com/user-attachments/assets/fc8dd66f-50cd-4d8e-a7e2-54181efbebba" />
+<p/> 
+  
 This section begins the digitization loop at the starting transect. It begins by slicing through the three starting DataFrames to select the data required to complete the COGO calculations:
 1. The survey stations (measurement positions) of the first elevation dataset,
 2. the transect monuments' cartesian coordinate pairs, and
