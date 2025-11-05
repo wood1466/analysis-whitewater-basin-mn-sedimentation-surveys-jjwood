@@ -12,7 +12,7 @@ These programs were developed to augment and analyze topographic floodplain tran
 
 <p align="center">
   <img width="561.25" height="302.25" alt="2_3_8plots" src="https://github.com/user-attachments/assets/df71b17f-f69c-4efa-be20-82a849f75460" />
-</p>>
+</p>
 
 The historical data was collected by federal agencies during stream and valley sedimentation surveys aimed at investigating accelerated erosion and deposition and/or increased flooding in the basin; this dataset is inherently geomorphic in nature so these programs pursue analyses primarily of interest to the earth scientist. 
 
@@ -162,7 +162,7 @@ The maps below highlight this program's function. The left one displays a transe
 
 ## General information
 
-**Documentation date:** 20250829
+**Documentation date:** 20251104
 
 **Date finalized:** 20250703
 
