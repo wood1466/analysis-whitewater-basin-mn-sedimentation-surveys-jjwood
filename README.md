@@ -10,7 +10,7 @@
 
 These programs were developed to augment and analyze topographic floodplain transect data collected in Minnesota's Whitewater River Valley (U.S.), between 1939 and 1994, through (1) geospatial digitization, (2) derivative calculations, and (3) statistical tests.
 
-<img width="561.25" height="302.25" align="right" alt="2_3_8plots" src="https://github.com/user-attachments/assets/df71b17f-f69c-4efa-be20-82a849f75460" />
+<img width="561.25" height="302.25" alt="2_3_8plots" src="https://github.com/user-attachments/assets/df71b17f-f69c-4efa-be20-82a849f75460" />
 
 The historical data was collected by federal agencies during stream and valley sedimentation surveys aimed at investigating accelerated erosion and deposition and/or increased flooding in the basin; this dataset is inherently geomorphic in nature so these programs pursue analyses primarily of interest to the earth scientist. 
 
@@ -66,10 +66,10 @@ Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *
 
 This section begins the digitization loop at the starting transect. It begins by slicing through the three starting DataFrames to select the data required to complete the COGO calculations:
 1. The survey stations (measurement positions) of the first elevation dataset,
-2. the transect monuments' cartesian coordinate pairs,
-3. and the station/position of the first, or survey start, monument.
+2. the transect monuments' cartesian coordinate pairs, and
+3. the station/position of the first, or survey start, monument.
 
-(All DataFrame slicing is accomplished with UDFs, as shown.)
+All DataFrame slicing is accomplished with UDFs, as shown.
 
 <img width="656" height="300" align="right" alt="Screenshot 2025-08-29 at 12 53 33 PM" src="https://github.com/user-attachments/assets/65468943-a5fc-4a23-af77-b27a45d11163" />
 
