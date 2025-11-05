@@ -71,7 +71,7 @@ Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *
 ### Data operations
 
 <p align="center">
-  <img width="647" height="161" align="right" alt="Screenshot 2025-08-29 at 12 08 43 PM" src="https://github.com/user-attachments/assets/fc8dd66f-50cd-4d8e-a7e2-54181efbebba" />
+  <img width="647" height="161" alt="Screenshot 2025-08-29 at 12 08 43 PM" src="https://github.com/user-attachments/assets/fc8dd66f-50cd-4d8e-a7e2-54181efbebba" />
 <p/> 
   
 This section begins the digitization loop at the starting transect. It begins by slicing through the three starting DataFrames to select the data required to complete the COGO calculations:
@@ -81,14 +81,18 @@ This section begins the digitization loop at the starting transect. It begins by
 
 All DataFrame slicing is accomplished with UDFs, as shown.
 
-<img width="656" height="300" align="right" alt="Screenshot 2025-08-29 at 12 53 33 PM" src="https://github.com/user-attachments/assets/65468943-a5fc-4a23-af77-b27a45d11163" />
-
+<p align="center">
+  <img width="656" height="300" alt="Screenshot 2025-08-29 at 12 53 33 PM" src="https://github.com/user-attachments/assets/65468943-a5fc-4a23-af77-b27a45d11163" />
+<p/>
+  
 Second, the program consults a UDF to check if the monument coordinates must be replaced by synthetic reference coordinates. 
 
 Typically, transects in the Whitewater Watershed extend in a line directly between (and often beyond) its two monuments. On the left map below, this is labeled the *expected trace*. Occassionally, monuments were shifted off of the actual line, the *measured trace*. In this example, the monument was established 10 ft East of the measured transect. 
 
-<img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/2a631dcb-6f9e-4aa8-b27a-136c8a4abb1f" />
-
+<p align="center">
+  <img width="6781" height="3474" alt="Digitizer2" src="https://github.com/user-attachments/assets/2a631dcb-6f9e-4aa8-b27a-136c8a4abb1f" />
+<p/>
+  
 To compensate for these shifts, the program first compares a monument's estimated coordinate accuracy to its shift magnitude. On the right map, the cyan buffer corresponds to an *XY accuracy* of 0.25 m and the yellow buffer to a *shift radius* of 3 m (10 ft). The *shift radius* does not lie within the *XY accuracy* buffer (i.e., *XY accuracy*<*shift radius*); therefore, the horizontal resolution of the GNSS coordinates are capable of meaningfully representing a locational shift of 3 m. 
 
 With that being the case, the program calculates a new pair of synthetic reference coordinates via COGO. Here, the monument's X (Easting) coordinate is reduced by 3 m (10 ft) and its Y (Northing) coordinate remains the same. Subsequent digitization places the elevation data on the *measured trace*. 
@@ -97,8 +101,10 @@ With that being the case, the program calculates a new pair of synthetic referen
 
 With the requisite data selected, a message displays which dataset will be digitized by identifying the transect ID and elevation data year.
 
-<img width="639" height="97" alt="Screenshot 2025-08-29 at 9 59 26 AM" src="https://github.com/user-attachments/assets/ded0d0fc-ea56-4c7e-a873-61f69b24a8af" />
-
+<p align="center">
+  <img width="639" height="97" alt="Screenshot 2025-08-29 at 9 59 26 AM" src="https://github.com/user-attachments/assets/ded0d0fc-ea56-4c7e-a873-61f69b24a8af" />
+<p/>
+  
 &#8202;
 
 To perform its COGO calculations the program takes the three data components selected previously and first calculates:
@@ -106,8 +112,10 @@ To perform its COGO calculations the program takes the three data components sel
 1. the transect azimuth between monuments (*θ*),
 2. and the distance between each elevation station and the starting monument (*r*, for the example below).  
 
-<img width="512.5" height="3475" align="right" alt="Digitizer3" src="https://github.com/user-attachments/assets/3e2b6e7f-feaf-4ab3-9065-625186ba7234" />
-
+<p align="center">
+  <img width="512.5" height="3475" alt="Digitizer3" src="https://github.com/user-attachments/assets/3e2b6e7f-feaf-4ab3-9065-625186ba7234" />
+<p/>
+  
 With a cartesian coordinate system, *θ*, in general, can be calculated with,
 
 $θ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
@@ -129,8 +137,10 @@ Lastly, the DataFrame is converted into a GeoPandas GeoDataFrame with the presel
 When the message below is visible, your output GeoPackage is stored in a folder named *GIS*. 
 
 &#8202;
-<img width="624" height="51" alt="Screenshot 2025-08-29 at 4 18 46 PM" src="https://github.com/user-attachments/assets/226512e1-3446-4413-9c64-dda8a643e587" />
-
+<p align="center">
+  <img width="624" height="51" alt="Screenshot 2025-08-29 at 4 18 46 PM" src="https://github.com/user-attachments/assets/226512e1-3446-4413-9c64-dda8a643e587" />
+<p/>
+  
 ## transect_sed_rate_calculator.py
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
@@ -138,9 +148,11 @@ When the message below is visible, your output GeoPackage is stored in a folder 
 
 ### General
 
-<img width="640" height="480" align="right" alt="2_3_rateplots" src="https://github.com/user-attachments/assets/287b5414-4637-4c8d-bb7b-46abb547f28f" />
-<img width="436" height="360" align="right" alt="Screenshot 2025-09-09 at 6 41 24 PM" src="https://github.com/user-attachments/assets/cb0794c9-92d8-4593-99e1-45cf5dbc3b71" />
-
+<p align="center">
+  <img width="640" height="480" alt="2_3_rateplots" src="https://github.com/user-attachments/assets/287b5414-4637-4c8d-bb7b-46abb547f28f" />
+  <img width="436" height="360" alt="Screenshot 2025-09-09 at 6 41 24 PM" src="https://github.com/user-attachments/assets/cb0794c9-92d8-4593-99e1-45cf5dbc3b71" />
+<p/>
+  
 The maps below highlight this program's function. The left one displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line)—the starting condition. The right map displays that transect trace populated with elevation measurements (magenta circles)—the post-run condition. This program compares the monuments' and elevations' positional data to calculate coordinates for the elevation data (Easting, Northing [m]). Its output is a GeoPackage of elevation point layers grouped by data year—1855, 1939, 1965, 1975, 1978, and 1994 for the Whitewater data.
 
 
