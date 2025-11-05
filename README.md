@@ -126,17 +126,16 @@ Each *r<sub>i</sub> = elevation station<sub>i</sub> - starting monument station*
 
 The program then calculates the component displacements North (*Δy*) and East (*Δx*) required to travel an *r<sub>i</sub>* length down the transect to the elevation station. Its subsequent coordinates are:
 
-*Northing<sub>i</sub> = Δy + y1*,
+*Northing<sub>i</sub> = Δy + y1*, and
 
-and *Easting<sub>i</sub> = Δx + x1*.
+*Easting<sub>i</sub> = Δx + x1*.
 
 The newly calculated elevation coordinates are compiled and appended onto the input elevation DataFrame to use the points' precompiled metadata as attribute fields and values.
 
 Lastly, the DataFrame is converted into a GeoPandas GeoDataFrame with the preselected *CRS*.
 
-When the message below is visible, your output GeoPackage is stored in a folder named *GIS*. 
+When the message below is visible, your output GeoPackage has been exported. 
 
-&#8202;
 <p align="center">
   <img width="624" height="51" alt="Screenshot 2025-08-29 at 4 18 46 PM" src="https://github.com/user-attachments/assets/226512e1-3446-4413-9c64-dda8a643e587" />
 <p/>
