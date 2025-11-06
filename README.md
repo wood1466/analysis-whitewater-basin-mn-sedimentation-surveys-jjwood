@@ -175,15 +175,22 @@ Prior to run, delete the data below from the input files to avoid erroneous calc
 
 Then, set the name of your output table and it's column labels: *CALC_NAME* and *DATAFRAME_COLUMNS*. The table will be stored in the *Calculations* folder automatically created at the end of the *Initialization* section.
 
-Lastly, set the program's spatial operational limits—*TRANSECT_NUM_START* and *TRANSECT_NUM_END*—and the interpolation interval for pre-calculation data resampling.
+Lastly, set the program's spatial operational limits—*TRANSECT_NUM_START* and *TRANSECT_NUM_END*—and the interpolation interval (ft) for pre-calculation resampling.
 
 <p align="center">
   <img width="643" height="221" alt="Screenshot 2025-11-05 at 5 50 33 PM" src="https://github.com/user-attachments/assets/5e90700b-b0df-4cbf-982f-ed1be8ab7682" />
 <p/>
 
-*TRANSECT_NUM_START* and *TRANSECT_NUM_END*, together, determine which transect datasets are digitized. Their input is a *transect number*, an integer ID that provides a convenient framework for looping the digitizer through each transect (two different numbers must be set for the loop to function). Starting at *1* and an ending at *107* will digitize every Whitewater transect elevation dataset.
-
 ### Data operations
+  
+This section begins the calculation loop at the starting transect. 
+
+
+The top subplot below shows that transect elevations were not measured at the same points/spacings between sedimentation surveys. To enable vertical elevation change calculations, we resample both datasets by linearly interpolating them onto their shared x-axis with a systematic spacing of 0.1 ft. The bottom subplot displays the interpolated elevation data. Note 
+
+<p align="center">
+  <img width="1920" height="1440" alt="2_interp" src="https://github.com/user-attachments/assets/b2c5579b-a189-4e87-a420-2acb7c188133" />
+<p/>
 
 ## transect_sed_rate_statistics.py
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
