@@ -173,8 +173,16 @@ Each is converted into a pandas DataFrame at the end of the *Initialization* sec
 Prior to run, delete the data below from the input files to avoid erroneous calculation:
 1. *WRV_MN_1855_1994_sedimentation_elevations.csv*: NF-21 (original) and NF-28B (original).
 
-Then, set the name of your output table and it column labels: *CALC_NAME* and *DATAFRAME_COLUMNS*. The table will be stored in the *Calculations* folder automatically created at the end of the *Initialization* section.
-  
+Then, set the name of your output table and it's column labels: *CALC_NAME* and *DATAFRAME_COLUMNS*. The table will be stored in the *Calculations* folder automatically created at the end of the *Initialization* section.
+
+Lastly, set the program's spatial operational limits—*TRANSECT_NUM_START* and *TRANSECT_NUM_END*—and the interpolation interval for pre-calculation data resampling.
+
+<p align="center">
+  <img width="643" height="221" alt="Screenshot 2025-11-05 at 5 50 33 PM" src="https://github.com/user-attachments/assets/5e90700b-b0df-4cbf-982f-ed1be8ab7682" />
+<p/>
+
+*TRANSECT_NUM_START* and *TRANSECT_NUM_END*, together, determine which transect datasets are digitized. Their input is a *transect number*, an integer ID that provides a convenient framework for looping the digitizer through each transect (two different numbers must be set for the loop to function). Starting at *1* and an ending at *107* will digitize every Whitewater transect elevation dataset.
+
 ### Data operations
 
 ## transect_sed_rate_statistics.py
