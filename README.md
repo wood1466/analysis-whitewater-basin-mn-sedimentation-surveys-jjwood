@@ -81,7 +81,7 @@ This section begins the digitization loop at the starting transect.
 <p/> 
   
 First, it begins a series of slices through the three starting DataFrames to select the data required to complete the COGO calculations:
-1. The survey stations (measurement positions) of the first elevation dataset,
+1. The survey stations (measurement positions) of the first (earliest) elevation dataset,
 2. the transect monuments' cartesian coordinate pairs, and
 3. the station/position of the first, or survey start, monument.
 
@@ -185,12 +185,19 @@ Lastly, set the program's spatial operational limits—*TRANSECT_NUM_START* and 
   
 This section begins the calculation loop at the starting transect. 
 
+First, it slices through the elevation DataFrame to select the cross-section components required to complete the elevation change rate calculations:
+1. The survey stations of the first (earliest) elevation dataset,
+2. the elevations of the first dataset, 
+3. the survey stations of a second (later) elevation dataset, and
+4. the elevations of the second dataset.
 
-The top subplot below shows that transect elevations were not measured at the same points/spacings between sedimentation surveys. To enable vertical elevation change calculations, we resample both datasets by linearly interpolating them onto their shared x-axis with a systematic spacing of 0.1 ft. The bottom subplot displays the interpolated elevation data. Note 
+Second, the program interpolates the two cross-sections to resample them onto the same set of survey stations. The plots below demonstrate why this is necessary. The top subplot shows that transect elevations were not measured at the same points/spacings between sedimentation surveys. These must match to enable vertical elevation change calculations, so we resample the datasets onto their shared x-axis with a systematic spacing of 0.1 ft. The bottom subplot displays the interpolated elevation data. The apparent increase in line thickness is an artifact of the much smaller sample spacing post interpolation. 
 
 <p align="center">
   <img width="640" height="480" alt="2_interp" src="https://github.com/user-attachments/assets/b2c5579b-a189-4e87-a420-2acb7c188133" />
 <p/>
+
+In this example, the gray regions of the 1965 data were not interpolated because they do not share any x-values with the 1939 dataset. Any data excluded from the interpoltion procedure for this reason is not included in the later elevation change calculations by default.
 
 ## transect_sed_rate_statistics.py
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
