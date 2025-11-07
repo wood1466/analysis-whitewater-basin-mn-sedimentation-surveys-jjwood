@@ -175,7 +175,7 @@ Prior to run, delete the data below from the input files to avoid erroneous calc
 
 Then, set the name of your output table and it's column labels: *CALC_NAME* and *DATAFRAME_COLUMNS*. The table will be stored in the *Calculations* folder automatically created at the end of the *Initialization* section.
 
-Lastly, set the program's spatial operational limits—*TRANSECT_NUM_START* and *TRANSECT_NUM_END*—and the interpolation interval (ft) for pre-calculation resampling.
+Lastly, set the program's spatial operational limits—*TRANSECT_NUM_START* and *TRANSECT_NUM_END*—and the interpolation interval for pre-calculation resampling.
 
 <p align="center">
   <img width="643" height="221" alt="Screenshot 2025-11-05 at 5 50 33 PM" src="https://github.com/user-attachments/assets/5e90700b-b0df-4cbf-982f-ed1be8ab7682" />
@@ -191,14 +191,34 @@ First, it slices through the elevation DataFrame to select the cross-section com
 3. the survey stations of a second (later) elevation dataset, and
 4. the elevations of the second dataset.
 
-Second, the program interpolates the two cross-sections to resample them onto the same set of survey stations. The plots below demonstrate why this is necessary. The top subplot shows that transect elevations were not measured at the same points/spacings between sedimentation surveys. These must match to enable vertical elevation change calculations, so we resample the datasets onto their shared x-axis with a systematic spacing of 0.1 ft. The bottom subplot displays the interpolated elevation data. The apparent increase in line thickness is an artifact of the much smaller sample spacing post interpolation. 
+With the requisite data selected, a message displays which transect data pair the mean elevation change rate will be calculated for by identifying the transect ID and elevation data years.
+
+<p align="center">
+  <img width="640" height="99" alt="Screenshot 2025-11-07 at 4 34 15 PM" src="https://github.com/user-attachments/assets/cf01b779-9b12-483b-adcc-029c246e987a" />
+<p/>
+
+Second, the program resamples the two cross-sections onto the same set of survey stations via linear interpolation. 
+
+<p align="center">
+  <img width="655" height="121" alt="Screenshot 2025-11-07 at 4 23 59 PM" src="https://github.com/user-attachments/assets/6b60e1cb-f5cd-4245-b34c-34a7d8e591df" />
+<p/>
+
+The top subplot below shows that transect elevations are not measured at the same points (stations) between sedimentation surveys. To measure vertical elevation change, the two points must coincide; therefore, we resample the datasets onto their shared range of stations with a systematic spacing of 0.1 ft. The bottom subplot displays the interpolated elevation data. The apparent increase in line thickness is an artifact of the much smaller sample spacing post interpolation—the measurement circles overlap. 
 
 <p align="center">
   <img width="640" height="480" alt="2_interp" src="https://github.com/user-attachments/assets/b2c5579b-a189-4e87-a420-2acb7c188133" />
 <p/>
 
-In this example, the gray regions of the 1965 data were not interpolated because they do not share any x-values with the 1939 dataset. Any data excluded from the interpoltion procedure for this reason is not included in the later elevation change calculations by default.
+In this example, note how part of the 1965 dataset, plotted in gray, was not interpolated. The relevant points do not share any stations measurements with the 1939 dataset and so were excluded from the interpoltion step. Any transect data excluded from this step, by default, is not included in later elevation change calculations.
 
+Next, the program begins the calculation procedure. In general, it will first calculate elevation change rates at each interpolation point in the cross-section and, upon completion, will then calculate their mean.
+
+Prior to the interpolation point calculations, it will check if we have chosen to exclude any parts of our survey data pair from consideration. There are 
+
+<p aling="center">
+  <img width="658" height="380" alt="Screenshot 2025-11-07 at 5 09 28 PM" src="https://github.com/user-attachments/assets/eaab15cf-e367-4cc6-b6e9-4c0d716f7a25" />
+<p/>
+  
 ## transect_sed_rate_statistics.py
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
