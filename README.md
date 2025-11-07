@@ -213,11 +213,16 @@ In this example, note how part of the 1965 dataset, plotted in gray, was not int
 
 Next, the program begins the calculation procedure. In general, it will first calculate elevation change rates at each interpolation point in the cross-section and, upon completion, will then calculate their mean.
 
-Prior to the interpolation point calculations, it will check if we have chosen to exclude any parts of our survey data pair from consideration. There are 
+Prior to the interpolation point calculations, it will slice through the second starting DataFrame to see if we have chosen to exclude any parts of our survey data pair from consideration. The resulting exclusion zone is simply a range of stations.
 
-<p aling="center">
+<p align="center">
   <img width="658" height="380" alt="Screenshot 2025-11-07 at 5 09 28 PM" src="https://github.com/user-attachments/assets/eaab15cf-e367-4cc6-b6e9-4c0d716f7a25" />
 <p/>
+
+The choice to exclude any part of a survey dataset from the rate calculations are either specific to the transect or that dataset's data year. In general, we have three reasons to set exclusion zones: 
+1. Over elevation-measurement discontinuities due to sampling gaps or, for 1855, the limits of detectable legacy sediment (see Wood et al., 2025b). Any elevation change calculated within such discontinuities are meaningless.  
+2. Where the elevation changes calculated with at least one boring derived surface profile (1855 or 1939) are negative. Elevation data derived from boring data are inherently incapable of capturing erosion. 
+4. 1939 1965 boring specific erroneous deposition in channel
   
 ## transect_sed_rate_statistics.py
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
