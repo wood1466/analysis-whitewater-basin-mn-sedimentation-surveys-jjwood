@@ -189,7 +189,7 @@ This section begins the calculation loop at the starting transect.
 The top subplot below shows that transect elevations were not measured at the same points/spacings between sedimentation surveys. To enable vertical elevation change calculations, we resample both datasets by linearly interpolating them onto their shared x-axis with a systematic spacing of 0.1 ft. The bottom subplot displays the interpolated elevation data. Note 
 
 <p align="center">
-  <img width="1920" height="1440" alt="2_interp" src="https://github.com/user-attachments/assets/b2c5579b-a189-4e87-a420-2acb7c188133" />
+  <img width="640" height="480" alt="2_interp" src="https://github.com/user-attachments/assets/b2c5579b-a189-4e87-a420-2acb7c188133" />
 <p/>
 
 ## transect_sed_rate_statistics.py
