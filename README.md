@@ -124,15 +124,15 @@ With a cartesian coordinate system, *θ*, in general, can be calculated with,
 
 $θ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
   
-where *(x1, y1)* and *(x2, y2)* are the starting and ending coordinates, respectively.
+where *(x<sub>1</sub>, y<sub>1</sub>)* and *(x<sub>2</sub>, y<sub>2</sub>)* are the starting and ending coordinates, respectively.
 
 Each *r<sub>i</sub> = elevation station<sub>i</sub> - starting monument station*.
 
 The program then calculates the component displacements North (*Δy*) and East (*Δx*) required to travel an *r<sub>i</sub>* length down the transect to the elevation station. Its subsequent coordinates are:
 
-*Northing<sub>i</sub> = Δy + y1*, and
+*Northing<sub>i</sub> = Δy + y<sub>1</sub>*, and
 
-*Easting<sub>i</sub> = Δx + x1*.
+*Easting<sub>i</sub> = Δx + x<sub>1</sub>*.
 
 The newly calculated elevation coordinates are compiled and appended onto the input elevation DataFrame to use the points' precompiled metadata as attribute fields and values.
 
@@ -224,12 +224,19 @@ The choice to exclude any part of a survey dataset from the rate calculations ar
 2. When calculated elevation changes are negative and one of the input elevation datasets is derived from historical borings (1855 and sometimes 1939; see Wood et al., 2025b). Surface profiles partially derived from boring data cannot capture any erosion so neither can calculations using their data. 
 4. When calculated elevation changes record channel deposition between 1939 boring derived elevations and 1965 elevations. Surface profiles partially derived from boring data cannot capture channel geometry, just floodplain elevations, which makes any measured channel filling an artifact.
 
-With the existence of exclusion zones checked, the program calculates the elevation change at the interpolation points using,
+With potential exclusion zones checked, the program calculates the elevation change at each ith interpolation point with,
 
-$Δ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
+*Δz<sub>i</sub> = z<sub>2</sub> - z<sub>1</sub>*,
 
-If an exclusion zone for one of the present datasets was recovered, the program compares the interpolation point stations with the exclusion range. If it is within the range, the interpolation point calculation is excluded from the mean.
+where *z<sub>1</sub>* and *z<sub>2</sub>* are the elevations at time 1 and 2, respectively.
 
+If an exclusion zone for one of the present datasets was recovered, the program compares the interpolation point station with the exclusion range. If it is within the range, the interpolation point calculation is excluded from the mean. 
+
+The program then calculates the mean elevation change of all interpolation points and then the mean elevation change rate with,
+
+$η = \frac{Δz}{Δt}$
+
+$θ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
 
   
 ## transect_sed_rate_statistics.py
