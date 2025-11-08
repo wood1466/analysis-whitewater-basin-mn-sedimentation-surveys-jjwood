@@ -1,4 +1,4 @@
-# Stream and valley sedimentation survey transect data analysis
+# Geomorphic floodplain transect data analysis
 
 [![Release version](https://img.shields.io/badge/Release-1.0.0-brightgreen)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentmgmation-surveys-jjwood/blob/main)
 [![Python version](https://img.shields.io/badge/python-3.10.4-yellow)](https://www.python.org/downloads/release/python-3104/)
