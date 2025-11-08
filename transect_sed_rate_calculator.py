@@ -445,4 +445,4 @@ df_mean_elev_change_all.to_csv(
         index=False)
 
 print('\n\033[1m' + 'ELEVATION CHANGE RATES CALCULATED!!!' + '\033[0m', 
-      df_mean_elev_change_all, '\n...\n')  # Signals end.
+      '\n...\n', df_mean_elev_change_all)  # Signals end.
