@@ -224,11 +224,11 @@ The choice to exclude any part of a survey dataset from the rate calculations ar
 
 With potential exclusion zones checked, the program calculates the elevation change at each ith interpolation point with,
 
-*Δz<sub>i</sub> = z<sub>2</sub> - z<sub>1</sub>*,
+*Δz<sub>i</sub>* = *z<sub>2</sub>* - *z<sub>1</sub>*,
 
 where *z<sub>1</sub>* and *z<sub>2</sub>* are the elevations of time 1 and 2, respectively.
 
-If an exclusion zone for one of the present datasets was recovered, the program compares the interpolation point station with the exclusion range. If it is within the range, the interpolation point calculation is excluded from the mean. 
+If an exclusion zone for one of the present datasets was recovered, the program compares the interpolation point station with the exclusion range. If it is within the range, the interpolation point calculation is excluded from the mean calculation. 
 
 The program then calculates the mean elevation change of all interpolation points (*Δz*) and then the mean elevation change rate with,
 
@@ -236,9 +236,9 @@ $η = \frac{Δz}{Δt} = \frac{Δz}{t2-t1}$,
 
 where *t<sub>1</sub>* and *t<sub>2</sub>* are the data years of time 1 and 2, respectively.
 
-The newly calculated mean elevation change quantities and identifying info such as transect and data years are compiled into a new DataFrame.
+The newly calculated mean transect elevation change depths/heights and rates are compiled into a new DataFrame.
 
-When the message below is visible, your output DataFrame (previewed) has been exported.
+When the message below is visible, your output DataFrame has been exported.
 
 <p align="center">
   <img width="642" height="48" alt="Screenshot 2025-11-07 at 6 28 40 PM" src="https://github.com/user-attachments/assets/3146ff6e-f1d4-4725-889f-17cdfb2b20a7" />
