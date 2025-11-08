@@ -243,7 +243,7 @@ The newly calculated mean elevation change quantities and identifying info such 
 When the message below is visible, your output DataFrame (previewed) has been exported.
 
 <p align="center">
-  <img width="642" height="136" alt="Screenshot 2025-11-07 at 6 28 40 PM" src="https://github.com/user-attachments/assets/5d6aeae6-d29b-4a87-ae65-e3902c5b2709" />
+  <img width="642" height="48" alt="Screenshot 2025-11-07 at 6 28 40 PM" src="https://github.com/user-attachments/assets/3146ff6e-f1d4-4725-889f-17cdfb2b20a7" />
 <p/>
   
 ## transect_sed_rate_statistics.py
@@ -257,8 +257,25 @@ When the message below is visible, your output DataFrame (previewed) has been ex
 
 ### General
 
+This code performs a suite of ANOVA tests to compare mean transect elevation rates by time interval to determine if they are significantly different. For the Whitewater Watershed data, our rates groups are 1855–1939, 1939–1965, and 1965–1994. The program's output are various tables of *p*-values and test statistics. 
+
 ### Initialization
 
+In the same location as the digitizer program, create a new folder named *Input* where you will store the code's required input files. 
+There are three:
+1. The elevation data to be digitized,
+2. monument/reference coordinate data, and
+3. reference coordinate metadata.
+
+In the same location as the rate calculator program, create a new folder named *Input* where you will store the code's required input files. 
+There are two:
+1. The elevation data from which to calculate change rates, and
+2. transect calculation exclusion zones.
+   
+<p align="center">
+  <img width="644" height="182" alt="Screenshot 2025-11-05 at 6 32 23 AM" src="https://github.com/user-attachments/assets/0e8f1fcd-9fae-4051-93d2-75ec0416fc4f" />
+<p/>
+  
 ### Data operations
 
 ## transect_analysis_functions.py
