@@ -1,0 +1,26 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Digitizing and analysis programs for historical floodplain
+  transect data from the Whitewater River Valley, Minnesota,
+  United States.
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Jimmy
+    name-particle: J.
+    family-names: Wood
+    email: jimmyjwood24@gmail.com
+    affiliation: >-
+      Saint Anthony Falls Laboratory, University of
+      Minnesota Twin Cities, 2 3rd Ave SE, Minneapolis, MN
+      55414
+    orcid: 'https://orcid.org/0009-0009-7263-433X'
+repository-code: >-
+  https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood
+license: MIT
+version: 1.0.0
