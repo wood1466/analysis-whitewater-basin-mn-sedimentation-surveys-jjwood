@@ -69,7 +69,7 @@ Lastly, you'll need to set the program's spatial operational limits and the coor
   
 *TRANSECT_NUM_START* and *TRANSECT_NUM_END*, together, determine which transect datasets are digitized. Their input is a *transect number*, an integer ID that provides a convenient framework for looping the digitizer through each transect (two different numbers must be set for the loop to function). Starting at *1* and an ending at *107* will digitize every Whitewater transect elevation dataset.
 
-Declare the *CRS* with its unique EPSG (European Petroleum Survey Group) code. *EPSG:26915* sets the *CRS* to *NAD83 / UTM zone 15N* for Minnesota.
+Declare the CRS with its unique EPSG (European Petroleum Survey Group) code. *EPSG:26915* sets the CRS to *NAD83 / UTM zone 15N* for Minnesota.
 
 ### Data operations
   
