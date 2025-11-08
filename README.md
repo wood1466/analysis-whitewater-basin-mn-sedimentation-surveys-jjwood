@@ -329,7 +329,7 @@ This code houses the user-defined functions, for repetitive or specialized tasks
 **Author:** Jimmy J. Wood
 - Institution: University of Minnesota Twin Cities, Saint Anthony Falls Laboratory
 - Email: <jimmyjwood24@gmail.com>
-- ORCID: 0009-0009-7263-433X
+- ORCID: [0009-0009-7263-433X](https://orcid.org/0009-0009-7263-433X)
 
 **Related publications**
 - **Wood, J. J.,** Svien, L., Christianson, D. & Claas, L. Historical stream and valley sedimentation survey data for the Whitewater River Valley, Minnesota, United States (1855–1994). *University of Minnesota Twin Cities Data Repository for U of M* https://doi.org/10.13020/2ggx-qk28 (2025a).
