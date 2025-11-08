@@ -219,10 +219,18 @@ Prior to the interpolation point calculations, it will slice through the second 
   <img width="658" height="380" alt="Screenshot 2025-11-07 at 5 09 28 PM" src="https://github.com/user-attachments/assets/eaab15cf-e367-4cc6-b6e9-4c0d716f7a25" />
 <p/>
 
-The choice to exclude any part of a survey dataset from the rate calculations are either specific to the transect or that dataset's data year. In general, we have three reasons to set exclusion zones: 
-1. Over elevation-measurement discontinuities due to sampling gaps or, for 1855, the limits of detectable legacy sediment (see Wood et al., 2025b). Any elevation change calculated within such discontinuities are meaningless.  
-2. Where the elevation changes calculated with at least one boring derived surface profile (1855 or 1939) are negative. Elevation data derived from boring data are inherently incapable of capturing erosion. 
-4. 1939 1965 boring specific erroneous deposition in channel
+The choice to exclude any part of a survey dataset from the rate calculations are either specific to the transect or that dataset's data year. In general, we set exclusion zones for the following reasons: 
+1. The existence of elevation-measurement discontinuities due to sampling gaps or, for 1855 datasets, the limits of detectable legacy sediment (see Wood et al., 2025b). Any elevation change calculated over such discontinuities are meaningless.  
+2. When calculated elevation changes are negative and one of the input elevation datasets is derived from historical borings (1855 and sometimes 1939; see Wood et al., 2025b). Surface profiles partially derived from boring data cannot capture any erosion so neither can calculations using their data. 
+4. When calculated elevation changes record channel deposition between 1939 boring derived elevations and 1965 elevations. Surface profiles partially derived from boring data cannot capture channel geometry, just floodplain elevations, which makes any measured channel filling an artifact.
+
+With the existence of exclusion zones checked, the program calculates the elevation change at the interpolation points using,
+
+$Δ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
+
+If an exclusion zone for one of the present datasets was recovered, the program compares the interpolation point stations with the exclusion range. If it is within the range, the interpolation point calculation is excluded from the mean.
+
+
   
 ## transect_sed_rate_statistics.py
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
