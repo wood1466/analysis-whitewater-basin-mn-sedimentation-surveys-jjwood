@@ -186,9 +186,9 @@ Lastly, set the program's spatial operational limits—*TRANSECT_NUM_START* and 
 This section begins the calculation loop at the starting transect. 
 
 First, it slices through the elevation DataFrame to select the cross-section components required to complete the elevation change rate calculations:
-1. The survey stations of the first (earliest) elevation dataset,
+1. The survey stations of the first elevation dataset (time 1),
 2. the elevations of the first dataset, 
-3. the survey stations of a second (later) elevation dataset, and
+3. the survey stations of a second elevation dataset (time 2), and
 4. the elevations of the second dataset.
 
 With the requisite data selected, a message displays which transect data pair the mean elevation change rate will be calculated for by identifying the transect ID and elevation data years.
@@ -228,16 +228,23 @@ With potential exclusion zones checked, the program calculates the elevation cha
 
 *Δz<sub>i</sub> = z<sub>2</sub> - z<sub>1</sub>*,
 
-where *z<sub>1</sub>* and *z<sub>2</sub>* are the elevations at time 1 and 2, respectively.
+where *z<sub>1</sub>* and *z<sub>2</sub>* are the elevations of time 1 and 2, respectively.
 
 If an exclusion zone for one of the present datasets was recovered, the program compares the interpolation point station with the exclusion range. If it is within the range, the interpolation point calculation is excluded from the mean. 
 
-The program then calculates the mean elevation change of all interpolation points and then the mean elevation change rate with,
+The program then calculates the mean elevation change of all interpolation points (*Δz*) and then the mean elevation change rate with,
 
-$η = \frac{Δz}{Δt}$
+$η = \frac{Δz}{Δt}$ = \frac{Δz}{t2-t1}$,
 
-$θ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
+where *t<sub>1</sub>* and *t<sub>2</sub>* are the data years of time 1 and 2, respectively.
 
+The newly calculated mean elevation change quantities and identifying info such as transect and data years are compiled into a new DataFrame.
+
+When the message below is visible, your output DataFrame (previewed) has been exported.
+
+<p align="center">
+  <img width="642" height="136" alt="Screenshot 2025-11-07 at 6 28 40 PM" src="https://github.com/user-attachments/assets/5d6aeae6-d29b-4a87-ae65-e3902c5b2709" />
+<p/>
   
 ## transect_sed_rate_statistics.py
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
