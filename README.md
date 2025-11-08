@@ -44,8 +44,7 @@ The maps below highlight this program's function. The left one—starting condit
 
 ### Initialization
 
-In the same location as the digitizer program, create a new folder named *Input* where you will store the code's required input files. 
-There are three:
+In the same location as the digitizer program, create a new folder named *Input* where you will store the code's required input files:
 1. The elevation data to be digitized,
 2. monument/reference coordinate data, and
 3. reference coordinate metadata.
