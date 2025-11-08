@@ -307,7 +307,7 @@ The code performs three ANOVA test suites to account for assumption violations a
 
 When the message below is visible, your tests have completed.
 
-<p aling="center">
+<p align="center">
   <img width="633" height="55" alt="Screenshot 2025-11-08 at 9 29 48 AM" src="https://github.com/user-attachments/assets/85b6316a-de4c-4575-a243-ee3d1ff0139d" />
 <p/>
 
@@ -318,11 +318,13 @@ When the message below is visible, your tests have completed.
 
 ### General
 
+This code houses the user-defined functions, for repetitive or specialized tasks, called in the previous three programs. 
+
 ## General information
 
-**Documentation date:** 20251104
+**Documentation date:** 20251108
 
-**Date finalized:** 20250703
+**Date finalized:** 202501108
 
 **Author:** Jimmy J. Wood
 - Institution: University of Minnesota Twin Cities, Saint Anthony Falls Laboratory
