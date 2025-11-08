@@ -255,12 +255,11 @@ When the message below is visible, your output DataFrame has been exported.
 
 ### General
 
-This code performs a suite of ANOVA tests to compare mean transect elevation rates by time interval to determine if they are significantly different. For the Whitewater Watershed data, our rates groups are 1855–1939, 1939–1965, and 1965–1994. The program's output are various tables of *p*-values and test statistics—they are printed rather than exported. 
+This code performs a suite of ANOVA tests to compare mean transect elevation change rates over time to determine if they are significantly different. For the Whitewater Watershed data, our rate groups are 1855–1939, 1939–1965, and 1965–1994. The program's output are tables of *p*-values and test statistics—they are printed rather than exported. 
 
 ### Initialization
 
-In the same location as the statistics program, create a new folder named *Input*, if one does not yet exist, where you will store the code's required input files. 
-There is one:
+In the same location as the statistics program, create a new folder named *Input*, if one does not yet exist, where you will store the code's required input file:
 1. The mean transect elevation change rates to be tested.
    
 <p align="center">
@@ -269,13 +268,13 @@ There is one:
 
 It is converted into a pandas DataFrame at the end of the *Initialization* section to enable program manipulation. 
 
-Then, set the level of significance (*α*) and identify the column labels, from the input file, that identify your data groups—*GROUP_COLUMN_1, etc.*
+Then, set the level of significance (*α*) and identify the column labels, from the input file, that identify your data groups—*GROUP_COLUMN_1*, etc.
 
 ### Data operations
 
 This section begins the statistical hypohtesis testing. 
 
-First, it slices through the rate DataFrame to select the time intervals required to complete the ANOVA tests:
+First, it slices through the input DataFrame to select the time intervals required to complete the ANOVA tests:
 1. The mean transect elevation change rates of interval 1,
 2. the mean transect elevation change rates of interval 2, and
 3. the mean transect elevation change rates of interval 3.
@@ -288,7 +287,7 @@ Second, the program investigates the datas' distribution characteristics to veri
 1. Group normality, and
 2. group homoscedasticity (variance equality).
 
-This step is necessary to properly decide which ANOVA suite is applicable and lend meaning to our results.  
+This step is necessary to properly decide which ANOVA suite best fits our data and lend significance to our results.  
 
 The program checks for normality visually with histograms, box plots, and Q-Q plots, and statistically with the Kolomogorov–Smirnov test. It then checks for variance equality with the Brown–Forsythe test. 
 
@@ -298,7 +297,7 @@ The results of these, and all of the following tests, is printed on screen.
   <img width="633" height="78" alt="Screenshot 2025-11-08 at 9 18 56 AM" src="https://github.com/user-attachments/assets/eb1eed2c-ee29-4257-b663-fda60d51073d" />
 <p/>
 
-The code performs three ANOVA test suites to account for assumption violations and/or to cross-reference results. The three suites are:
+The code performs three ANOVA test suites to account for assumption violations and/or to cross-reference results:
 1. Kruskal–Wallis H- omnibus test and Dunn's post-hoc pairwise comparison test (nonparametric),
 2. traditional ANOVA omnibus test and Tukey's HSD post-hoc pairwise comparison test (parametric), and
 3. Welch's ANOVA omnibus test and Games–Howell's post-hoc pairwise comparison test (parametric, allows for unequal variances).
