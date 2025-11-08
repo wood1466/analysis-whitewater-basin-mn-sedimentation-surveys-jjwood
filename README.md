@@ -159,7 +159,7 @@ This code compares successive elevation datasets to measure vertical topograpic 
   
 ### Initialization
 
-In the same location as the rate calculator program, create a new folder named *Input* where you will store the code's required input files. 
+In the same location as the rate calculator program, create a new folder named *Input*, if one does not yet exist, where you will store the code's required input files. 
 There are two:
 1. The elevation data from which to calculate change rates, and
 2. transect calculation exclusion zones.
@@ -257,25 +257,22 @@ When the message below is visible, your output DataFrame (previewed) has been ex
 
 ### General
 
-This code performs a suite of ANOVA tests to compare mean transect elevation rates by time interval to determine if they are significantly different. For the Whitewater Watershed data, our rates groups are 1855–1939, 1939–1965, and 1965–1994. The program's output are various tables of *p*-values and test statistics. 
+This code performs a suite of ANOVA tests to compare mean transect elevation rates by time interval to determine if they are significantly different. For the Whitewater Watershed data, our rates groups are 1855–1939, 1939–1965, and 1965–1994. The program's output are various tables of *p*-values and test statistics—they are printed rather than exported. 
 
 ### Initialization
 
-In the same location as the digitizer program, create a new folder named *Input* where you will store the code's required input files. 
-There are three:
-1. The elevation data to be digitized,
-2. monument/reference coordinate data, and
-3. reference coordinate metadata.
-
-In the same location as the rate calculator program, create a new folder named *Input* where you will store the code's required input files. 
-There are two:
-1. The elevation data from which to calculate change rates, and
-2. transect calculation exclusion zones.
+In the same location as the statistics program, create a new folder named *Input*, if one does not yet exist, where you will store the code's required input files. 
+There is one:
+1. The mean transect elevation change rates to be tested.
    
 <p align="center">
-  <img width="644" height="182" alt="Screenshot 2025-11-05 at 6 32 23 AM" src="https://github.com/user-attachments/assets/0e8f1fcd-9fae-4051-93d2-75ec0416fc4f" />
+  <img width="646" height="240" alt="Screenshot 2025-11-08 at 8 46 30 AM" src="https://github.com/user-attachments/assets/0f9841a7-725e-4906-b201-219b2a32ae7d" />
 <p/>
-  
+
+It is converted into a pandas DataFrame at the end of the *Initialization* section to enable program manipulation. 
+
+Then, set the level of significance (*α*) and identify the column labels, from the input file, that identify your data groups—*GROUP_COLUMN_1, etc.*
+
 ### Data operations
 
 ## transect_analysis_functions.py
