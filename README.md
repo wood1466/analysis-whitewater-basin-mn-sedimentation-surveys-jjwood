@@ -150,7 +150,7 @@ When the message below is visible, your output GeoPackage has been exported.
 
 ### General
   
-This code compares successive elevation datasets to measure vertical topograpic change over time on a transect. The paired cross-sections below show the typical data year comparions: 1855–1939, 1939–1965, and 1965–1994. The program's output is a table of mean transect elevation change in terms of depths (f and cm) and rates (cm/y).
+This code measures vertical topograpic change between successive elevation datasets (over time) on a transect. The paired cross-sections below show the typical data year comparions: 1855–1939, 1939–1965, and 1965–1994. The program's output is a table of mean transect elevation change in terms of depths (f and cm) and rates (cm/y).
 
 <p align="center">
   <img width="640" height="480" alt="2_3_rateplots" src="https://github.com/user-attachments/assets/287b5414-4637-4c8d-bb7b-46abb547f28f" />
