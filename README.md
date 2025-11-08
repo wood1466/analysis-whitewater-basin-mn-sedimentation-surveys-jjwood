@@ -234,7 +234,7 @@ If an exclusion zone for one of the present datasets was recovered, the program 
 
 The program then calculates the mean elevation change of all interpolation points (*Δz*) and then the mean elevation change rate with,
 
-$η = \frac{Δz}{Δt}$ = \frac{Δz}{t2-t1}$,
+$η = \frac{Δz}{Δt} = \frac{Δz}{t2-t1}$,
 
 where *t<sub>1</sub>* and *t<sub>2</sub>* are the data years of time 1 and 2, respectively.
 
