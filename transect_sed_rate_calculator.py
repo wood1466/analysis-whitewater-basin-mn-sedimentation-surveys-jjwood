@@ -184,11 +184,11 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
 
             exc_station_start_i_j, exc_station_end_i_j, exc_pair_year_i_j = \
                  calculation_exclusion_checker(
-                         transect_exc_check_i, 'PYr', 'ESttnFt1', 'ESttnFt2', 
+                         transect_exc_check_i, 'PYr', 'ESttn1Ft', 'ESttn2Ft', 
                          'ExcPrYr', 0, transect_p_year_i_j, 0)  # Calls UDF.
             exc_station_start_i_k, exc_station_end_i_k, exc_pair_year_i_k = \
                 calculation_exclusion_checker(
-                        transect_exc_check_i, 'PYr', 'ESttnFt1', 'ESttnFt2', 
+                        transect_exc_check_i, 'PYr', 'ESttn1Ft', 'ESttn2Ft', 
                         'ExcPrYr', 0, transect_p_year_i_k, 0)
 
             # Handle exception: 1939–1965 survey pair exclusion zones.
