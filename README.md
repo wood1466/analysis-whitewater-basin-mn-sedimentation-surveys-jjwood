@@ -123,15 +123,15 @@ With a cartesian coordinate system, *θ*, in general, can be calculated with,
 
 $θ = tan\biggl(\frac{x2-x1}{y2-y1}\biggr)^{-1}$,
   
-where *(x<sub>1</sub>, y<sub>1</sub>)* and *(x<sub>2</sub>, y<sub>2</sub>)* are the starting and ending coordinates, respectively.
+where (*x<sub>1</sub>*, *y<sub>1</sub>*) and (*x<sub>2</sub>*, *y<sub>2</sub>*) are the starting and ending coordinates, respectively.
 
-Each *r<sub>i</sub> = elevation station<sub>i</sub> - starting monument station*.
+Each *r<sub>i</sub>* = *elevation station<sub>i</sub>* - *starting monument station*.
 
 The program then calculates the component displacements North (*Δy*) and East (*Δx*) required to travel an *r<sub>i</sub>* length down the transect to the elevation station. Its subsequent coordinates are:
 
-*Northing<sub>i</sub> = Δy + y<sub>1</sub>*, and
+*Northing<sub>i</sub>* = *Δy* + *y<sub>1</sub>*, and
 
-*Easting<sub>i</sub> = Δx + x<sub>1</sub>*.
+*Easting<sub>i</sub>* = *Δx* + *x<sub>1</sub>*.
 
 The newly calculated elevation coordinates are compiled and appended onto the input elevation DataFrame to use the points' precompiled metadata as attribute fields and values.
 
