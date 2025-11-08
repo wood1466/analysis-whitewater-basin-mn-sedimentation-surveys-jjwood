@@ -282,6 +282,10 @@ First, it slices through the rate DataFrame to select the time intervals require
 2. the mean transect elevation change rates of interval 2, and
 3. the mean transect elevation change rates of interval 3.
 
+<p aling="center">
+  <img width="645" height="180" alt="Screenshot 2025-11-08 at 9 31 42 AM" src="https://github.com/user-attachments/assets/23f1ebd7-c0d9-4d81-9c01-7a696f89ba24" />
+<p/>
+  
 Second, the program investigates the datas' distribution characteristics to verify whether or not ANOVA's corresponding underlying assumptions are being violated:
 1. Group normality, and
 2. group homoscedasticity (variance equality).
