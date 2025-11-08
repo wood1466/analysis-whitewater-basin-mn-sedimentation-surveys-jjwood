@@ -158,8 +158,7 @@ This code measures vertical topograpic change between successive elevation datas
   
 ### Initialization
 
-In the same location as the rate calculator program, create a new folder named *Input*, if one does not yet exist, where you will store the code's required input files. 
-There are two:
+In the same location as the rate calculator program, create a new folder named *Input*, if one does not yet exist, where you will store the code's required input files:
 1. The elevation data from which to calculate change rates, and
 2. transect calculation exclusion zones.
    
@@ -184,13 +183,13 @@ Lastly, set the program's spatial operational limits—*TRANSECT_NUM_START* and 
   
 This section begins the calculation loop at the starting transect. 
 
-First, it slices through the elevation DataFrame to select the cross-section components required to complete the elevation change rate calculations:
+First, it slices through the elevation DataFrame to select the cross-section components required to complete the mean transect elevation change rate calculations:
 1. The survey stations of the first elevation dataset (time 1),
 2. the elevations of the first dataset, 
 3. the survey stations of a second elevation dataset (time 2), and
 4. the elevations of the second dataset.
 
-With the requisite data selected, a message displays which transect data pair the mean elevation change rate will be calculated for by identifying the transect ID and elevation data years.
+With the requisite data selected, a message displays which transect data pair the mean transect elevation change rate will be calculated for by identifying the transect ID and elevation data years.
 
 <p align="center">
   <img width="640" height="99" alt="Screenshot 2025-11-07 at 4 34 15 PM" src="https://github.com/user-attachments/assets/cf01b779-9b12-483b-adcc-029c246e987a" />
@@ -208,7 +207,7 @@ The top subplot below shows that transect elevations are not measured at the sam
   <img width="640" height="480" alt="2_interp" src="https://github.com/user-attachments/assets/b2c5579b-a189-4e87-a420-2acb7c188133" />
 <p/>
 
-In this example, note how part of the 1965 dataset, plotted in gray, was not interpolated. The relevant points do not share any stations measurements with the 1939 dataset and so were excluded from the interpoltion step. Any transect data excluded from this step, by default, is not included in later elevation change calculations.
+In this example, note how part of the 1965 dataset, plotted in gray, was not interpolated. These points do not share any transect stations with the 1939 dataset and so were excluded not interpolted. Any transect data excluded from this step, by default, is not included in later elevation change calculations.
 
 Next, the program begins the calculation procedure. In general, it will first calculate elevation change rates at each interpolation point in the cross-section and, upon completion, will then calculate their mean.
 
