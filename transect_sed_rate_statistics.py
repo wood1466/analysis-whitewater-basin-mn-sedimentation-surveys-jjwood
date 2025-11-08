@@ -16,6 +16,7 @@ from transect_analysis_functions import *   # Imports all functions from
 
 INPUT_FOLDER = 'Input'  # Input folder where all input data will be stored.
 
+# Define data files.
 INPUT_FILE = INPUT_FOLDER + '/WRV_MN_1855_1994_sedimentation_statistics.csv'  
 # Input file with data to be analyzed.
 
