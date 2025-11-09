@@ -321,7 +321,7 @@ This code houses the user-defined functions, for repetitive or specialized tasks
 
 **Documentation date:** 20251109
 
-**Date finalized:** 202501108
+**Date finalized:** 202501109
 
 **Author:** Jimmy J. Wood
 - Institution: University of Minnesota Twin Cities, Saint Anthony Falls Laboratory
