@@ -20,10 +20,10 @@ The hillslope–floodplain–channel cross-section below displays the kind of tr
   <img width="561.25" height="302.25" alt="2_3_8plots" src="https://github.com/user-attachments/assets/df71b17f-f69c-4efa-be20-82a849f75460" />
 </p>
 
-This repository (analysis-whitewater-basin-mn-sedimentation-surveys-jjwood) includes 4 programs:
+This repository includes 4 programs:
 - **transect_cogo_digitizer.py:** Performs coordinate geometry (COGO) calculations to digitize tabular transect elevation data into GIS files.
-- **transect_sed_rate_calculator.py:** Calculates mean transect elevation change rates between successive elevation datasets to measure topographic change.
-- **transect_sed_rate_statistics.py:** Performs Analysis of Variance (ANOVA) hypothesis testing suites to compare all mean elevation change rates over the time interval represented in this dataset—1855–1994.
+- **transect_sed_rate_calculator.py:** Calculates mean-transect-elevation-change rates between successive elevation datasets to measure topographic change.
+- **transect_sed_rate_statistics.py:** Performs Analysis of Variance (ANOVA) hypothesis testing suites to compare all mean-transect-elevation-change rates over the time interval represented in this dataset—1855–1994.
 - **transect_analysis_functions.py:** The user-defined functions (UDFs) executed in the other programs.
 
 We will briefly describe how these programs operate and how to use them; see the programs' line comments for in-depth descriptions of their contents. Retreive and use the input data files from Wood et al. (2025a) as you follow along. The relevant files per program will be identified by screenshot.
@@ -36,7 +36,7 @@ We will briefly describe how these programs operate and how to use them; see the
 
 ### General
 
-The maps below highlight this program's function. The left one—starting condition—displays a transect's GNSS surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line). The right map—post-run condition—displays that transect trace populated with elevation measurements (magenta circles). This program takes the monuments' GNSS coordinates and compares their field-surveyed transect positions to that of the elevations' to calculate coordinates for the elevation data (Easting and Northing). Its output is a GeoPackage of elevation point layers grouped by data year—1855, 1939, 1965, 1975, 1978, and 1994 (for the Whitewater data).
+The maps below highlight this program's function. The left one—starting condition—displays a transect's GNSS-surveyed monuments (cyan circles) and the transect's trace extending between them (dashed line). The right map—post-run condition—displays that transect trace populated with elevation measurements (magenta circles). This program takes the monuments' GNSS coordinates and compares their field-surveyed transect positions to that of the elevations' to calculate coordinates for the elevation data (Easting and Northing). Its output is a GeoPackage of elevation point layers grouped by data year—1855, 1939, 1965, 1975, 1978, and 1994 (for the Whitewater data).
 
 <p align="center">
   <img width="6781" height="3474" alt="Digitizer1" src="https://github.com/user-attachments/assets/f03cc682-5fc8-4c56-8c2a-f0165f1a5ea3" />
@@ -150,7 +150,7 @@ When the message below is visible, your output GeoPackage has been exported.
 
 ### General
   
-This code measures vertical topograpic change between successive elevation datasets (over time) on a transect. The paired cross-sections below show the typical data year comparions: 1855–1939, 1939–1965, and 1965–1994. The program's output is a table of mean transect elevation change in terms of depths (f and cm) and rates (cm/y).
+This code measures vertical topograpic change between successive elevation datasets (over time) on a transect. The paired cross-sections below show the typical data year comparions: 1855–1939, 1939–1965, and 1965–1994. The program's output is a table of mean-transect-elevation change in terms of depths (f and cm) and rates (cm/y).
 
 <p align="center">
   <img width="640" height="480" alt="2_3_rateplots" src="https://github.com/user-attachments/assets/287b5414-4637-4c8d-bb7b-46abb547f28f" />
@@ -183,13 +183,13 @@ Lastly, set the program's spatial operational limits—*TRANSECT_NUM_START* and 
   
 This section begins the calculation loop at the starting transect. 
 
-First, it slices through the elevation DataFrame to select the cross-section components required to complete the mean transect elevation change rate calculations:
+First, it slices through the elevation DataFrame to select the cross-section components required to complete the mean-transect-elevation-change rate calculations:
 1. The survey stations of the first elevation dataset (time 1),
 2. the elevations of the first dataset, 
 3. the survey stations of a second elevation dataset (time 2), and
 4. the elevations of the second dataset.
 
-With the requisite data selected, a message displays which transect data pair the mean transect elevation change rate will be calculated for by identifying the transect ID and elevation data years.
+With the requisite data selected, a message displays which transect data pair the mean-transect-elevation-change rate will be calculated for by identifying the transect ID and elevation data years.
 
 <p align="center">
   <img width="640" height="99" alt="Screenshot 2025-11-07 at 4 34 15 PM" src="https://github.com/user-attachments/assets/cf01b779-9b12-483b-adcc-029c246e987a" />
@@ -209,7 +209,7 @@ The top subplot below shows that transect elevations are not measured at the sam
 
 In this example, note how part of the 1965 dataset, plotted in gray, was not interpolated. These points do not share any transect stations with the 1939 dataset and so were excluded not interpolted. Any transect data excluded from this step, by default, is not included in later elevation change calculations.
 
-Next, the program begins the calculation procedure. In general, it will first calculate elevation change rates at each interpolation point in the cross-section and, upon completion, will then calculate their mean.
+Next, the program begins the calculation procedure. In general, it will first calculate elevation-change rates at each interpolation point in the cross-section and, upon completion, will then calculate their mean.
 
 Prior to the interpolation point calculations, it will slice through the second starting DataFrame to see if we have chosen to exclude any parts of our survey data pair from consideration. The resulting exclusion zone is simply a range of stations.
 
@@ -230,13 +230,13 @@ where *z<sub>1</sub>* and *z<sub>2</sub>* are the elevations of time 1 and 2, re
 
 If an exclusion zone for one of the present datasets was recovered, the program compares the interpolation point station with the exclusion range. If it is within the range, the interpolation point calculation is excluded from the mean calculation. 
 
-The program then calculates the mean elevation change of all interpolation points (*Δz*) and then the mean elevation change rate with,
+The program then calculates the mean-transect-elevation change of all interpolation points (*Δz*) and then the mean-transect-elevation-change rate with,
 
 $η = \frac{Δz}{Δt} = \frac{Δz}{t2-t1}$,
 
 where *t<sub>1</sub>* and *t<sub>2</sub>* are the data years of time 1 and 2, respectively.
 
-The newly calculated mean transect elevation change depths/heights and rates are compiled into a new DataFrame.
+The newly calculated mean-transect-elevation-change depths/heights and rates are compiled into a new DataFrame.
 
 When the message below is visible, your output DataFrame has been exported.
 
@@ -255,12 +255,12 @@ When the message below is visible, your output DataFrame has been exported.
 
 ### General
 
-This code performs a suite of ANOVA tests to compare mean transect elevation change rates over time to determine if they are significantly different. For the Whitewater Watershed data, our rate groups are 1855–1939, 1939–1965, and 1965–1994. The program's output are tables of *p*-values and test statistics—they are printed rather than exported. 
+This code performs a suite of ANOVA tests to compare mean-transect-elevation-change rates over time to determine if they are significantly different. For the Whitewater Watershed data, our rate groups are 1855–1939, 1939–1965, and 1965–1994. The program's output are tables of *p*-values and test statistics—they are printed rather than exported. 
 
 ### Initialization
 
 In the same location as the statistics program, create a new folder named *Input*, if one does not yet exist, where you will store the code's required input file:
-1. The mean transect elevation change rates to be tested.
+1. The mean-transect-elevation-change rates to be tested.
    
 <p align="center">
   <img width="646" height="240" alt="Screenshot 2025-11-08 at 8 46 30 AM" src="https://github.com/user-attachments/assets/0f9841a7-725e-4906-b201-219b2a32ae7d" />
@@ -275,9 +275,9 @@ Then, set the level of significance (*α*) and identify the column labels, from 
 This section begins the statistical hypohtesis testing. 
 
 First, it slices through the input DataFrame to select the time intervals required to complete the ANOVA tests:
-1. The mean transect elevation change rates of interval 1,
-2. the mean transect elevation change rates of interval 2, and
-3. the mean transect elevation change rates of interval 3.
+1. The mean-transect-elevation-change rates of interval 1,
+2. the mean-transect-elevation-change rates of interval 2, and
+3. the mean-transect-elevation-change rates of interval 3.
 
 <p aling="center">
   <img width="645" height="180" alt="Screenshot 2025-11-08 at 9 31 42 AM" src="https://github.com/user-attachments/assets/23f1ebd7-c0d9-4d81-9c01-7a696f89ba24" />
