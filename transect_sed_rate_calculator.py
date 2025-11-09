@@ -1,8 +1,8 @@
 # STREAM AND VALLEY SEDIMENTATION SURVEY TRANSECT DATA ANALYSIS * -------------
 # WHITEWATER RIVER VALLEY, MN, US * -------------------------------------------
-# TRANSECT DATA ELEVATION CHANGE RATE CALCULATOR * ----------------------------
+# TRANSECT DATA ELEVATION-CHANGE RATE CALCULATOR * ----------------------------
 
-print('\n\033[1m' + 'START TRANSECT ELEVATION CHANGE RATE CALCULATIONS!!!' 
+print('\n\033[1m' + 'START TRANSECT ELEVATION-CHANGE RATE CALCULATIONS!!!' 
       + '\033[0m', '\n...\n')  # Displays objects to signal run.
 
 # INITIALIZATION ==============================================================
@@ -61,7 +61,7 @@ df_calc_exceptions = convert_CSV_to_dataframe(INPUT_FILE2, 0)
 
 # Select transect data.
 for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
-    # elevation change rates.
+    # elevation-change rates.
     df_transect_elevs_i = slice_dataframe_rows(
             'Equals', df_transect_elevs, 'TNum', i, 0)  # Calls UDF to slice
     # DataFrame and define resultant DataFrame of single transect data.
@@ -73,7 +73,7 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
     # numbers associated with present transect.
 
     for j in transect_surv_nums:  # Begins loop through transect survey pairs
-        # to calculate elevation change rates between.
+        # to calculate elevation-change rates between.
         if j < transect_surv_nums[-1]:  # Begins conditional statement to omit
             # selection of the most recent survey as it has no later data to
             # compare to.
@@ -171,7 +171,7 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
             # plt.plot(stations_i_k, elevs_i_k, c='Yellow', marker='o', alpha=0.9)
             # plt.show()  # Shows plot.
 
-            # CALCULATE ELEVATION CHANGE RATES. -------------------------------
+            # CALCULATE ELEVATION-CHANGE RATES. -------------------------------
 
             # Check data for calculation exclusion zones/exceptions. ----------
 
@@ -273,7 +273,7 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
             # Defines array of indices for looping survey pair calculation.
 
             for x in interp_indices:  # Begins loop through interpolation point
-                # indices to calculates elevation change rates per point.
+                # indices to calculates elevation-change rates per point.
                 interp_station_i_jk_x = interp_stations_i_jk[x]
                 # Interpolation point station.
 
@@ -406,7 +406,7 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
             else:
                 pass
 
-            # Calculate mean transect elevation change rate. ---------------------
+            # Calculate mean-transect-elevation-change rate. ---------------------
 
             mean_elev_change_i_jk = np.mean(elev_change_i_jk) * FT_TO_CM
             # Calculates mean elevation change.
@@ -414,7 +414,7 @@ for i in TRANSECT_NUMS:  # Begins loop through transects to calculate
             mean_elev_change_rate_i_jk = (mean_elev_change_i_jk / 
                                           (transect_p_year_i_k 
                                            - transect_p_year_i_j))
-            # Calculates mean elevation change rate.
+            # Calculates mean-transect-elevation-change rate.
 
             # EXPORT RESULTS. --------------------------------------------------
  
@@ -444,5 +444,5 @@ df_mean_elev_change_all.to_csv(
         OUTPUT_FOLDER + '/' + CALC_FOLDER + CALC_NAME, header=True, 
         index=False)
 
-print('\n\033[1m' + 'ELEVATION CHANGE RATES CALCULATED!!!' + '\033[0m', 
+print('\n\033[1m' + 'ELEVATION-CHANGE RATES CALCULATED!!!' + '\033[0m', 
       '\n...\n', df_mean_elev_change_all)  # Signals end.
