@@ -2,7 +2,7 @@
 # WHITEWATER RIVER VALLEY, MN, US * -------------------------------------------
 # TRANSECT DATA ELEVATION CHANGE RATE STATISTICAL ANALYZER * ------------------
 
-print('\n\033[1m' + 'START TRANSECT ELEVATION CHANGE RATE STATISTICAL' 
+print('\n\033[1m' + 'START TRANSECT ELEVATION-CHANGE RATE STATISTICAL' 
       + ' ANALYSIS!!!\033[0m', '\n...\n')  # Displays objects to signal run.
 
 # INITIALIZATION ==============================================================
@@ -176,5 +176,5 @@ g_h_test = pg.pairwise_gameshowell(
 print('Games-Howell test:\n' + str(g_h_test) + '\n')
 
 print('\n\033[1m'
-      + 'TRANSECT ELEVATION CHANGE RATE STATISTICAL ANALYSIS COMPLETED!!!'
+      + 'TRANSECT ELEVATION-CHANGE RATE STATISTICAL ANALYSIS COMPLETED!!!'
       + '\033[0m', '\n...\n')  # Signals end.
