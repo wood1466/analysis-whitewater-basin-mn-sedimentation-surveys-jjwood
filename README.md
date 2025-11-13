@@ -192,7 +192,7 @@ First, it slices through the elevation DataFrame to select the cross-section com
 With the requisite data selected, a message displays which transect data pair the mean-transect-elevation-change rate will be calculated for by identifying the transect ID and elevation data years.
 
 <p align="center">
-  <img width="640" height="99" alt="Screenshot 2025-11-07 at 4 34 15 PM" src="https://github.com/user-attachments/assets/cf01b779-9b12-483b-adcc-029c246e987a" />
+  <img width="639" height="108" alt="Screenshot 2025-11-13 at 5 46 35 PM" src="https://github.com/user-attachments/assets/2a2e8b6c-c87a-41f2-bf57-77db7bd5bb0c" />
 <p/>
 
 Second, the program resamples the two cross-sections onto the same set of survey stations via linear interpolation. 
@@ -241,9 +241,9 @@ The newly calculated mean-transect-elevation-change depths/heights and rates are
 When the message below is visible, your output DataFrame has been exported.
 
 <p align="center">
-  <img width="642" height="48" alt="Screenshot 2025-11-07 at 6 28 40 PM" src="https://github.com/user-attachments/assets/3146ff6e-f1d4-4725-889f-17cdfb2b20a7" />
+  <img width="639" height="53" alt="Screenshot 2025-11-13 at 5 49 33 PM" src="https://github.com/user-attachments/assets/49eac1cc-7451-48d2-8ba5-f5336f81dc20" />
 <p/>
-  
+
 ## transect_sed_rate_statistics.py
 [![Matplotlib version](https://img.shields.io/badge/matplotlib-3.10.3-brightgreen)](https://pypi.org/project/matplotlib/)
 [![NumPy version](https://img.shields.io/badge/numpy-2.2.6-yellow)](https://pypi.org/project/numpy/2.2.6/)
@@ -305,7 +305,7 @@ The code performs three ANOVA test suites to account for assumption violations a
 When the message below is visible, your tests have completed.
 
 <p align="center">
-  <img width="633" height="55" alt="Screenshot 2025-11-08 at 9 29 48 AM" src="https://github.com/user-attachments/assets/85b6316a-de4c-4575-a243-ee3d1ff0139d" />
+  <img width="639" height="57" alt="Screenshot 2025-11-13 at 5 54 40 PM" src="https://github.com/user-attachments/assets/e929bc80-da5c-45ed-a2ed-ea96a191baf3" />
 <p/>
 
 ## transect_analysis_functions.py
