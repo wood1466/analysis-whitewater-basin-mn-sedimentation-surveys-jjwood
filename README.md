@@ -1,7 +1,7 @@
 # Geomorphic floodplain transect data analysis
 
 [![Release version](https://img.shields.io/badge/Release-1.0.0-brightgreen)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentmgmation-surveys-jjwood/blob/main)
-[![DOI](https://zenodo.org/badge/539590590.svg)](https://doi.org/10.5281/zenodo.17618440)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17618566.svg)](https://doi.org/10.5281/zenodo.17618566)
 [![Python version](https://img.shields.io/badge/python-3.10.4-yellow)](https://www.python.org/downloads/release/python-3104/)
 [![Progress](https://img.shields.io/badge/Progress-Complete-informational)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentmgmation-surveys-jjwood/blob/main)
 [![Update frequency](https://img.shields.io/badge/Updates-as--needed-informational)](https://github.com/wood1466/analysis-whitewater-basin-mn-sedimentation-surveys-jjwood/blob/main)
